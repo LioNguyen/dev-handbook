@@ -1,0 +1,17 @@
+.node {
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+  font-size: 50px;
+  border-width: 4px;
+  border-color: #ff66aa;
+  background-color: #ffdfed;
+}
+
+.node :global .react-flow__handle {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+}
