@@ -6,6 +6,9 @@
 - list all type names defined in Python, divided them into 2 groups: frequently used, and rarely used
 - summarize all in markdown file
 
+- Create new md file with numeric for each heading, JS comparision, and divide into 2 groups frequently used and rarely used
+- Create new md file with table of contents of all questions of 15 multiple choice questions, which help me deeply understand this topic. All answers should be explained clearly and put in collapsible section
+
 ## CLI
 
 ```bash
