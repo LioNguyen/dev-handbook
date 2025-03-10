@@ -6,9 +6,6 @@
 - list all type names defined in Python, divided them into 2 groups: frequently used, and rarely used
 - summarize all in markdown file
 
-- Create new md file with numeric for each heading, JS comparision, and divide into 2 groups frequently used and rarely used
-- Create new md file with table of contents of all questions of 15 multiple choice questions, which help me deeply understand this topic. All answers should be explained clearly and put in collapsible section
-
 ## CLI
 
 ```bash
@@ -39,3 +36,44 @@ If the implementation is hard to explain, it's a bad idea.
 If the implementation is easy to explain, it may be a good idea.
 Namespaces are one honking great idea -- let's do more of those!
 ```
+
+Create a comprehensive Python reference guide in markdown format with the following specifications:
+
+1. Structure:
+
+   - Include an auto-generated table of contents with clickable links
+   - Use hierarchical numeric headings (1, 1.1, 1.1.1, etc.)
+   - Divide content into two main sections: "Frequently Used Features" and "Advanced Concepts"
+   - Use collapsible sections (HTML <details>/<summary> tags) for subsections to improve readability while keeping all content accessible
+
+2. File organization:
+
+   - Prioritize containing all content in a single markdown file
+   - Only split into two separate files if the content exceeds markdown rendering capabilities
+   - If splitting is necessary, the first file should contain the table of contents, introduction, and "Frequently Used Features"
+   - The second file should contain "Advanced Concepts" with its own mini table of contents
+
+3. Content:
+
+   - For each Python concept, provide a direct comparison with JavaScript in table format
+   - Include practical code examples for both languages
+   - Cover language fundamentals, data structures, functions, OOP, error handling, and modern features
+
+4. Comparison tables should include:
+
+   - Syntax differences
+   - Performance characteristics
+   - Common gotchas and edge cases
+   - Best practices for each language
+
+5. Coverage depth:
+
+   - "Frequently Used Features" should include everyday programming concepts
+   - "Advanced Concepts" should cover topics typically asked in senior developer interviews
+   - Include interview-focused notes highlighting key differences senior developers should understand
+
+6. Interview preparation focus:
+   - Highlight architectural differences between Python and JavaScript
+   - Include sections on performance optimization techniques in both languages
+   - Cover modern features (Python 3.9+ and ES2020+)
+   - Address system design considerations when using either language
