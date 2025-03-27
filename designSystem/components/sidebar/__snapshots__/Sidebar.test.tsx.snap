@@ -10,14 +10,14 @@ exports[`Sidebar Snapshots > should match collapsed sidebar snapshot 1`] = `
     data-variant="sidebar"
   >
     <div
-      class="duration-200 relative h-svh w-[--sidebar-width] lg:w-[--sidebar-width-small] xl:w-[--sidebar-width] 3xl:w-[--sidebar-width-large] bg-transparent transition-[width] ease-linear group-data-[collapsible=offcanvas]:w-0 group-data-[side=right]:rotate-180 group-data-[collapsible=icon]:w-[--sidebar-width-icon]"
+      class="duration-200 relative h-svh w-(--sidebar-width) lg:w-(--sidebar-width-small) xl:w-(--sidebar-width) 3xl:w-(--sidebar-width-large) bg-transparent transition-[width] ease-linear group-data-[collapsible=offcanvas]:w-0 group-data-[side=right]:rotate-180 group-data-[collapsible=icon]:w-(--sidebar-width-icon)"
       data-testid="sidebar-handles-test"
     />
     <div
-      class="duration-200 fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] lg:w-[--sidebar-width-small] xl:w-[--sidebar-width] 3xl:w-[--sidebar-width-large] transition-[left,right,width] ease-linear md:flex left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l"
+      class="duration-200 fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) lg:w-(--sidebar-width-small) xl:w-(--sidebar-width) 3xl:w-(--sidebar-width-large) transition-[left,right,width] ease-linear md:flex left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l"
     >
       <div
-        class="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
+        class="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow-sm"
         data-sidebar="sidebar"
       >
         <div
@@ -41,7 +41,7 @@ exports[`Sidebar Snapshots > should match collapsed sidebar snapshot 1`] = `
               data-sidebar="menu-item"
             >
               <button
-                class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-sidebar-foreground text-left outline-none ring-sidebar-ring transition-[width,height,padding] hover:font-semibold focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-10 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm"
+                class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-sidebar-foreground text-left outline-hidden ring-sidebar-ring transition-[width,height,padding] hover:font-semibold focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm"
                 data-active="false"
                 data-sidebar="menu-button"
                 data-size="default"
@@ -54,7 +54,7 @@ exports[`Sidebar Snapshots > should match collapsed sidebar snapshot 1`] = `
               data-sidebar="menu-item"
             >
               <button
-                class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-sidebar-foreground text-left outline-none ring-sidebar-ring transition-[width,height,padding] hover:font-semibold focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-10 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm"
+                class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-sidebar-foreground text-left outline-hidden ring-sidebar-ring transition-[width,height,padding] hover:font-semibold focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm"
                 data-active="false"
                 data-sidebar="menu-button"
                 data-size="default"
@@ -88,14 +88,14 @@ exports[`Sidebar Snapshots > should match expanded sidebar snapshot 1`] = `
     data-variant="sidebar"
   >
     <div
-      class="duration-200 relative h-svh w-[--sidebar-width] lg:w-[--sidebar-width-small] xl:w-[--sidebar-width] 3xl:w-[--sidebar-width-large] bg-transparent transition-[width] ease-linear group-data-[collapsible=offcanvas]:w-0 group-data-[side=right]:rotate-180 group-data-[collapsible=icon]:w-[--sidebar-width-icon]"
+      class="duration-200 relative h-svh w-(--sidebar-width) lg:w-(--sidebar-width-small) xl:w-(--sidebar-width) 3xl:w-(--sidebar-width-large) bg-transparent transition-[width] ease-linear group-data-[collapsible=offcanvas]:w-0 group-data-[side=right]:rotate-180 group-data-[collapsible=icon]:w-(--sidebar-width-icon)"
       data-testid="sidebar-handles-test"
     />
     <div
-      class="duration-200 fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] lg:w-[--sidebar-width-small] xl:w-[--sidebar-width] 3xl:w-[--sidebar-width-large] transition-[left,right,width] ease-linear md:flex left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l"
+      class="duration-200 fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) lg:w-(--sidebar-width-small) xl:w-(--sidebar-width) 3xl:w-(--sidebar-width-large) transition-[left,right,width] ease-linear md:flex left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l"
     >
       <div
-        class="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
+        class="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow-sm"
         data-sidebar="sidebar"
       >
         <div
@@ -119,7 +119,7 @@ exports[`Sidebar Snapshots > should match expanded sidebar snapshot 1`] = `
               data-sidebar="menu-item"
             >
               <button
-                class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-sidebar-foreground text-left outline-none ring-sidebar-ring transition-[width,height,padding] hover:font-semibold focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-10 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm"
+                class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-sidebar-foreground text-left outline-hidden ring-sidebar-ring transition-[width,height,padding] hover:font-semibold focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm"
                 data-active="false"
                 data-sidebar="menu-button"
                 data-size="default"
@@ -132,7 +132,7 @@ exports[`Sidebar Snapshots > should match expanded sidebar snapshot 1`] = `
               data-sidebar="menu-item"
             >
               <button
-                class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-sidebar-foreground text-left outline-none ring-sidebar-ring transition-[width,height,padding] hover:font-semibold focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-10 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm"
+                class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-sidebar-foreground text-left outline-hidden ring-sidebar-ring transition-[width,height,padding] hover:font-semibold focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm"
                 data-active="false"
                 data-sidebar="menu-button"
                 data-size="default"

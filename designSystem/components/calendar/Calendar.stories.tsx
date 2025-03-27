@@ -39,7 +39,7 @@ const meta = {
   },
   decorators: [
     Story => (
-      <div className="w-[320px] p-4 border rounded-lg shadow-sm">
+      <div className="w-[320px] p-4 border rounded-lg shadow-xs">
         <Story />
       </div>
     ),

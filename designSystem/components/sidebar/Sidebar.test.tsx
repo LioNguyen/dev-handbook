@@ -323,7 +323,7 @@ describe("Sidebar Core Components", () => {
 
       expect(screen.getByText("None Collapsible Content")).toBeInTheDocument();
       expect(screen.getByText("None Collapsible Content").parentElement).toHaveClass(
-        "flex h-full w-[--sidebar-width] flex-col bg-sidebar text-sidebar-foreground",
+        "flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground",
       );
     });
 
@@ -346,7 +346,7 @@ describe("Sidebar Core Components", () => {
       expect(screen.getByText("Mobile Content")).toBeInTheDocument();
       expect(screen.getByText("Mobile Content")?.parentElement).toHaveClass("flex h-full w-full flex-col");
       expect(screen.getByText("Mobile Content")?.parentElement?.parentElement).toHaveClass(
-        "w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden",
+        "w-(--sidebar-width) bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden",
       );
     });
 
@@ -362,14 +362,14 @@ describe("Sidebar Core Components", () => {
       const content = screen.getByText("Test Content");
       expect(content).toBeInTheDocument();
       expect(content?.parentElement?.parentElement).toHaveClass(
-        "duration-200 fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] ease-linear md:flex",
+        "duration-200 fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] ease-linear md:flex",
         "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]",
-        "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]",
+        "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]",
       );
 
       expect(screen.queryByTestId("sidebar-handles-test")).toHaveClass(
-        "duration-200 relative h-svh w-[--sidebar-width] bg-transparent transition-[width] ease-linear",
-        "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4))]",
+        "duration-200 relative h-svh w-(--sidebar-width) bg-transparent transition-[width] ease-linear",
+        "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]",
       );
     });
 
@@ -385,7 +385,7 @@ describe("Sidebar Core Components", () => {
       const content = screen.getByText("Test Content");
       expect(content).toBeInTheDocument();
       expect(content?.parentElement?.parentElement).toHaveClass(
-        "duration-200 fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] ease-linear md:flex",
+        "duration-200 fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] ease-linear md:flex",
         "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
       );
     });
@@ -456,7 +456,7 @@ describe("Sidebar Core Components", () => {
       expect(screen.getByRole("main")).toBeInTheDocument();
       expect(screen.getByRole("main")).toHaveClass(
         "relative flex min-h-svh flex-1 flex-col bg-background",
-        "peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow",
+        "peer-data-[variant=inset]:min-h-[calc(100svh-(--spacing(4)))] md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm",
       );
     });
 

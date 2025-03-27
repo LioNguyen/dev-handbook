@@ -19,7 +19,7 @@ exports[`DropdownMenu Component > DropdownMenu Snapshots > should match snapshot
         sideoffset="4"
       >
         <div
-          class="relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-secondary focus:text-text-primary data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
+          class="relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden transition-colors focus:bg-secondary focus:text-text-primary data-disabled:pointer-events-none data-disabled:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
           data-testid="dropdown-item"
         >
           Custom Item
@@ -59,7 +59,7 @@ exports[`DropdownMenu Component > DropdownMenu Snapshots > should match snapshot
           data-testid="dropdown-separator"
         />
         <div
-          class="relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-secondary focus:text-text-primary data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
+          class="relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden transition-colors focus:bg-secondary focus:text-text-primary data-disabled:pointer-events-none data-disabled:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
           data-testid="dropdown-item"
         >
           Profile
@@ -68,7 +68,7 @@ exports[`DropdownMenu Component > DropdownMenu Snapshots > should match snapshot
           data-testid="dropdown-sub"
         >
           <div
-            class="flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent data-[state=open]:bg-accent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+            class="flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-hidden focus:bg-accent data-[state=open]:bg-accent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
             data-testid="dropdown-sub-trigger"
           >
             More Options
@@ -81,7 +81,7 @@ exports[`DropdownMenu Component > DropdownMenu Snapshots > should match snapshot
             data-testid="dropdown-sub-content"
           >
             <div
-              class="relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-secondary focus:text-text-primary data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
+              class="relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden transition-colors focus:bg-secondary focus:text-text-primary data-disabled:pointer-events-none data-disabled:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
               data-testid="dropdown-item"
             >
               Sub Item
@@ -92,7 +92,7 @@ exports[`DropdownMenu Component > DropdownMenu Snapshots > should match snapshot
           data-testid="dropdown-radio-group"
         >
           <div
-            class="relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+            class="relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-hidden transition-colors focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50"
             data-testid="dropdown-radio-item"
             value="1"
           >
@@ -110,7 +110,7 @@ exports[`DropdownMenu Component > DropdownMenu Snapshots > should match snapshot
             Option 1
           </div>
           <div
-            class="relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+            class="relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-hidden transition-colors focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50"
             data-testid="dropdown-radio-item"
             value="2"
           >
@@ -129,7 +129,7 @@ exports[`DropdownMenu Component > DropdownMenu Snapshots > should match snapshot
           </div>
         </div>
         <div
-          class="relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-secondary focus:text-text-primary data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+          class="relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-hidden transition-colors focus:bg-secondary focus:text-text-primary data-disabled:pointer-events-none data-disabled:opacity-50"
           data-testid="dropdown-checkbox-item"
         >
           <span

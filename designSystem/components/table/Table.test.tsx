@@ -136,7 +136,7 @@ describe("Table Component", () => {
       expect(footer).toHaveClass("border-t");
       expect(footer).toHaveClass("bg-muted/50");
       expect(footer).toHaveClass("font-medium");
-      expect(footer).toHaveClass("[&>tr]:last:border-b-0");
+      expect(footer).toHaveClass("last:[&>tr]:border-b-0");
     });
   });
 

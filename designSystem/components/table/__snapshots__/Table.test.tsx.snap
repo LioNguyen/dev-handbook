@@ -94,7 +94,7 @@ exports[`Table Component > Table Snapshots > should match snapshot with custom c
         </tr>
       </tbody>
       <tfoot
-        class="border-t bg-muted/50 font-medium [&>tr]:last:border-b-0"
+        class="border-t bg-muted/50 font-medium last:[&>tr]:border-b-0"
       >
         <tr
           class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
@@ -211,7 +211,7 @@ exports[`Table Component > Table Snapshots > should match snapshot with default 
         </tr>
       </tbody>
       <tfoot
-        class="border-t bg-muted/50 font-medium [&>tr]:last:border-b-0"
+        class="border-t bg-muted/50 font-medium last:[&>tr]:border-b-0"
       >
         <tr
           class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"

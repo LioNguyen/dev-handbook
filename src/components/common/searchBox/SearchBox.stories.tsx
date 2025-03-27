@@ -65,7 +65,7 @@ const InteractiveComponent = () => {
   const [value, setValue] = useState("");
   return (
     <div className="space-y-4">
-      <SearchBox value={value} onChange={setValue} placeholder="Type to search..." className="shadow-sm" />
+      <SearchBox value={value} onChange={setValue} placeholder="Type to search..." className="shadow-xs" />
       <div className="text-sm">
         Current value: <span className="font-medium">{value}</span>
       </div>

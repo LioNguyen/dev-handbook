@@ -1,6 +1,61 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@config '../tailwind.config.js';
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+/* Custom scrollbar styles */
+@utility custom-scrollbar {
+  --scrollbar-width: 8px;
+  --scrollbar-track-bg: transparent;
+  --scrollbar-thumb-bg: hsl(var(--color-border));
+
+  &::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+    height: var(--scrollbar-width);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-bg);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-bg);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover-bg);
+  }
+
+  /* For Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb-bg) var(--scrollbar-track-bg);
+
+  /* For Edge and other browsers */
+}
+@utility overflow-overlay {
+  /* For Edge and other browsers */
+  @supports (overflow: overlay) {
+    overflow: overlay;
+  }
+}
 
 @layer base {
   :root {
@@ -82,45 +137,5 @@
   body {
     @apply bg-white text-text;
     pointer-events: auto;
-  }
-}
-
-/* Custom scrollbar styles */
-@layer components {
-  .custom-scrollbar {
-    --scrollbar-width: 8px;
-    --scrollbar-track-bg: transparent;
-    --scrollbar-thumb-bg: hsl(var(--color-border));
-  }
-
-  .custom-scrollbar::-webkit-scrollbar {
-    width: var(--scrollbar-width);
-    height: var(--scrollbar-width);
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: var(--scrollbar-track-bg);
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb-bg);
-    border-radius: 4px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: var(--scrollbar-thumb-hover-bg);
-  }
-
-  /* For Firefox */
-  .custom-scrollbar {
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-thumb-bg) var(--scrollbar-track-bg);
-  }
-
-  /* For Edge and other browsers */
-  @supports (overflow: overlay) {
-    .overflow-overlay {
-      overflow: overlay;
-    }
   }
 }

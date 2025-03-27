@@ -20,7 +20,7 @@ const renderComponent = (props: Partial<BadgePropsWithRef> = {}) => {
 
 describe("Badge Component", () => {
   const defaultClass =
-    "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2";
+    "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2";
 
   // Snapshot Tests
   it("should match snapshot with default props", () => {
@@ -74,7 +74,7 @@ describe("Badge Component", () => {
 
         switch (variant) {
           case "default":
-            expect(badge).toHaveClass("border-transparent bg-primary text-text-secondary shadow hover:bg-primary/80");
+            expect(badge).toHaveClass("border-transparent bg-primary text-text-secondary shadow-sm hover:bg-primary/80");
             break;
           case "secondary":
             expect(badge).toHaveClass("border-transparent bg-secondary text-text-primary hover:bg-secondary/80");

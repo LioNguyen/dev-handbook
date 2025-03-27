@@ -43,7 +43,7 @@ const SearchBox: FC<ISearchBoxProps> = ({ className, inputDelay, inputProps, onC
   return (
     <div data-testid="search-box-test" className={cn("search-box relative flex items-center", className)}>
       <Input
-        className={cn("h-full px-4 py-2 rounded-md bg-white focus:outline-none w-full", inputClassName)}
+        className={cn("h-full px-4 py-2 rounded-md bg-white focus:outline-hidden w-full", inputClassName)}
         onChange={handleInputChange}
         placeholder={placeholder || t("form.search_placeholder")}
         type="text"

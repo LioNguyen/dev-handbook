@@ -32,7 +32,7 @@ describe("Textarea Component", () => {
     const textarea = getTextarea();
     expect(textarea).toBeInTheDocument();
     expect(textarea).toHaveClass(
-      "flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-sm placeholder:text-text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+      "flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs placeholder:text-text-muted-foreground focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
     );
   });
 
@@ -75,7 +75,7 @@ describe("Textarea Component", () => {
       expect(handleChange).toHaveBeenCalled();
     });
 
-    it("should handle focus and blur states", () => {
+    it("should handle focus and blur-sm states", () => {
       renderComponent();
 
       const textarea = getTextarea();

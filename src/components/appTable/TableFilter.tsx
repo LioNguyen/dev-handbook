@@ -181,7 +181,7 @@ const TableFilter: FC<ITableFilterProps> = ({
                     >
                       <div className="flex items-center justify-between w-full cursor-pointer">
                         <div className="flex items-center gap-2 min-w-0">
-                          <div className="border border-input w-4 h-4 rounded flex items-center justify-center flex-shrink-0">
+                          <div className="border border-input w-4 h-4 rounded flex items-center justify-center shrink-0">
                             {selectedFields.includes(option.value) && <Check className="h-3 w-3" />}
                           </div>
                           {/* Use our custom OverflowingText component */}

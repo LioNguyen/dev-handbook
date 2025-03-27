@@ -165,7 +165,7 @@ const FormMultiSelect: FC<IFormMultiSelectProps> = ({
                       <Badge key={option.value} variant="secondary" className="rounded-sm px-1 font-normal">
                         {option.label}
                         <div
-                          className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                          className="ml-1 ring-offset-background rounded-full outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2"
                           onClick={e => handleRemove(option.value, e)}
                         >
                           <X
@@ -183,7 +183,7 @@ const FormMultiSelect: FC<IFormMultiSelectProps> = ({
               <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+          <PopoverContent className="w-(--radix-popover-trigger-width) p-0" align="start">
             <div className="flex flex-col max-h-[450px]">
               <Command {...commandProps} className="overflow-hidden">
                 <CommandInput

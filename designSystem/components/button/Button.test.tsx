@@ -23,7 +23,7 @@ const renderComponent = (props: Partial<ButtonPropsWithRef> = {}) => {
 
 describe("Button Component", () => {
   const defaultClass =
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0";
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0";
 
   // Snapshot Tests
   it("should match snapshot with default props", () => {
@@ -100,12 +100,12 @@ describe("Button Component", () => {
             break;
           case "secondary":
             expect(button).toHaveClass(
-              "border-none bg-button-secondary text-button-foreground shadow-sm hover:bg-button-secondary/80 dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-slate-800/80",
+              "border-none bg-button-secondary text-button-foreground shadow-xs hover:bg-button-secondary/80 dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-slate-800/80",
             );
             break;
           case "outline":
             expect(button).toHaveClass(
-              "border border-input bg-none shadow-sm hover:bg-accent hover:text-accent-foreground",
+              "border border-input bg-none shadow-xs hover:bg-accent hover:text-accent-foreground",
             );
             break;
           case "ghost":

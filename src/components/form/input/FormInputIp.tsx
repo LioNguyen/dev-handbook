@@ -123,12 +123,12 @@ const FormInputIp: FC<IFormInputIpProps> = ({
                 </Text>
               )}
             </Text>
-            {tooltip && <AppPopover trigger={<HelpCircle className="h-4 w-4 flex-shrink-0" />} content={tooltip} />}
+            {tooltip && <AppPopover trigger={<HelpCircle className="h-4 w-4 shrink-0" />} content={tooltip} />}
           </div>
         </div>
       )}
 
-      <div className="flex flex-col gap-1 flex-shrink-0">
+      <div className="flex flex-col gap-1 shrink-0">
         <div className={cn("input-wrapper flex items-center justify-between", inputWrapperClassName)}>
           {Array(INPUT_COUNT)
             .fill(0)
@@ -154,7 +154,7 @@ const FormInputIp: FC<IFormInputIpProps> = ({
                   aria-readonly={readOnly}
                   {...inputProps}
                 />
-                <div className="flex-shrink-0 mx-1">
+                <div className="shrink-0 mx-1">
                   <span className={cn("text-text-muted-foreground", index === INPUT_COUNT - 1 && "invisible")}>
                     {SEPARATOR}
                   </span>

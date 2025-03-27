@@ -166,7 +166,7 @@ function AppTableHeader<TData, TValue>({
             <Text variant="label" className="truncate">
               {title}
             </Text>
-            <div className="h-4 w-4 flex-shrink-0">{renderSortIcon()}</div>
+            <div className="h-4 w-4 shrink-0">{renderSortIcon()}</div>
           </Button>
         </DropdownMenuTrigger>
         {renderDropdownContent()}

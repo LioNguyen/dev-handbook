@@ -207,7 +207,7 @@ describe("Command Components", () => {
         "bg-transparent",
         "py-3",
         "text-sm",
-        "outline-none",
+        "outline-hidden",
       );
     });
 
@@ -284,7 +284,7 @@ describe("Command Components", () => {
         "px-2",
         "py-1.5",
         "text-sm",
-        "outline-none",
+        "outline-hidden",
       );
     });
 

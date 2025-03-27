@@ -6,7 +6,7 @@ exports[`Select Component > Select Snapshots > should match snapshot with custom
     data-testid="select-root"
   >
     <button
-      class="flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+      class="flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs ring-offset-background placeholder:text-muted-foreground focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
       data-testid="select-trigger"
     >
       <span
@@ -41,7 +41,7 @@ exports[`Select Component > Select Snapshots > should match snapshot with custom
           data-testid="select-viewport"
         >
           <div
-            class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-secondary focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+            class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-hidden focus:bg-secondary focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50"
             data-testid="select-item"
             value="custom"
           >
@@ -83,7 +83,7 @@ exports[`Select Component > Select Snapshots > should match snapshot with defaul
     data-testid="select-root"
   >
     <button
-      class="flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+      class="flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs ring-offset-background placeholder:text-muted-foreground focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
       data-testid="select-trigger"
     >
       <span
@@ -127,7 +127,7 @@ exports[`Select Component > Select Snapshots > should match snapshot with defaul
               Fruits
             </div>
             <div
-              class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-secondary focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+              class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-hidden focus:bg-secondary focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50"
               data-testid="select-item"
               value="apple"
             >
@@ -149,7 +149,7 @@ exports[`Select Component > Select Snapshots > should match snapshot with defaul
               </span>
             </div>
             <div
-              class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-secondary focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+              class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-hidden focus:bg-secondary focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50"
               data-testid="select-item"
               value="banana"
             >
@@ -175,7 +175,7 @@ exports[`Select Component > Select Snapshots > should match snapshot with defaul
               data-testid="select-separator"
             />
             <div
-              class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-secondary focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+              class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-hidden focus:bg-secondary focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50"
               data-testid="select-item"
               value="orange"
             >

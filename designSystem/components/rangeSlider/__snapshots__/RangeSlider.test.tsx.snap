@@ -16,14 +16,14 @@ exports[`RangeSlider Component > should match snapshot with default props 1`] = 
         0
       </span>
       <div
-        class="relative flex-grow"
+        class="relative grow"
       >
         <div
           class="absolute z-20 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
           style="left: 0%; top: 50%;"
         >
           <div
-            class="w-4 h-4 rounded-full bg-white border-2 border-background-secondary shadow-sm"
+            class="w-4 h-4 rounded-full bg-white border-2 border-background-secondary shadow-xs"
           />
           <div
             class="absolute w-full text-center text-sm top-5 font-medium text-background-secondary"

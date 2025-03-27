@@ -16,7 +16,7 @@ const Switch = React.forwardRef<
     }
     className={cn(
       "peer inline-flex h-4 shrink-0 cursor-pointer items-center rounded-full shadow-md transition-colors",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+      "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
       "disabled:cursor-not-allowed disabled:opacity-50",
       "data-[state=checked]:bg-background-secondary data-[state=unchecked]:bg-input",
       "px-0.5", // Add padding for thumb
@@ -30,7 +30,7 @@ const Switch = React.forwardRef<
       className={cn(
         "pointer-events-none block h-3 w-3 rounded-full bg-white shadow-md transition-transform",
         // Calculate translation: container width - thumb width - padding * 2
-        "data-[state=checked]:translate-x-[calc(var(--switch-width)_-_theme(width.3)_-_theme(spacing.1))] data-[state=unchecked]:translate-x-0",
+        "data-[state=checked]:translate-x-[calc(var(--switch-width)-theme(width.3)-(--spacing(1)))] data-[state=unchecked]:translate-x-0",
       )}
     />
   </SwitchPrimitives.Root>

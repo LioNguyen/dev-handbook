@@ -171,7 +171,7 @@ describe("DropdownMenu Component", () => {
         "px-2",
         "py-1.5",
         "text-sm",
-        "outline-none",
+        "outline-hidden",
         "focus:bg-secondary",
         "focus:text-text-primary",
       );
@@ -315,7 +315,7 @@ describe("DropdownMenu Component", () => {
         "px-2",
         "py-1.5",
         "text-sm",
-        "outline-none",
+        "outline-hidden",
       );
       expect(subTrigger).toHaveClass("pl-8");
 

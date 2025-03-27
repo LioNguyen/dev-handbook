@@ -44,7 +44,7 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
             <span className="text-sm font-medium text-background-secondary">{min}</span>
 
             {/* Track container */}
-            <div className="relative flex-grow">
+            <div className="relative grow">
               {/* Custom Thumb */}
               <div
                 className="absolute z-20 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
@@ -54,7 +54,7 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
                 }}
               >
                 {/* Thumb Circle */}
-                <div className="w-4 h-4 rounded-full bg-white border-2 border-background-secondary shadow-sm" />
+                <div className="w-4 h-4 rounded-full bg-white border-2 border-background-secondary shadow-xs" />
                 {/* Value below thumb */}
                 <div className="absolute w-full text-center text-sm top-5 font-medium text-background-secondary">
                   {value}

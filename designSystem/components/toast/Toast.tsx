@@ -88,7 +88,7 @@ const Toast = ({ toasts, closeToast }: IToastProps) => {
 
   return (
     // Container cho tất cả toasts
-    <div className="fixed top-4 right-4 z-[60] flex flex-col gap-2">
+    <div className="fixed top-4 right-4 z-60 flex flex-col gap-2">
       {toasts.map(toast => (
         <div
           data-testid="toast-test"
@@ -111,7 +111,7 @@ const Toast = ({ toasts, closeToast }: IToastProps) => {
               data-testid="close-button-test"
               onClick={() => handleClose(toast.id, toast?.duration)}
               className="shrink-0 rounded-full p-1 transition-colors duration-200
-                hover:bg-black/10 focus:bg-black/10 focus:outline-none"
+                hover:bg-black/10 focus:bg-black/10 focus:outline-hidden"
             >
               <XCircle size={20} />
             </button>

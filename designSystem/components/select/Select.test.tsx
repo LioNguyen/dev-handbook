@@ -145,7 +145,7 @@ describe("Select Component", () => {
         "px-3",
         "py-2",
         "text-sm",
-        "shadow-sm",
+        "shadow-xs",
         "ring-offset-background",
         "[&>span]:line-clamp-1",
       );
@@ -203,7 +203,7 @@ describe("Select Component", () => {
           "pl-2",
           "pr-8",
           "text-sm",
-          "outline-none",
+          "outline-hidden",
           "focus:bg-secondary",
         );
       });

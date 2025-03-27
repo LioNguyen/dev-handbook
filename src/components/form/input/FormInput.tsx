@@ -139,7 +139,7 @@ const FormInput: FC<IFormInputProps> = ({
           <Button
             className={cn(
               "absolute right-3 top-[18px] -translate-y-1/2 px-0",
-              "text-text-muted-foreground hover:bg-transparent focus:outline-none",
+              "text-text-muted-foreground hover:bg-transparent focus:outline-hidden",
               "transition-colors duration-200",
               disabled && "cursor-not-allowed opacity-50",
               getReadOnlyClassName(),
@@ -163,7 +163,7 @@ const FormInput: FC<IFormInputProps> = ({
           <Button
             className={cn(
               "absolute right-3 top-[18px] -translate-y-1/2 px-0",
-              "text-text-muted-foreground hover:bg-transparent focus:outline-none",
+              "text-text-muted-foreground hover:bg-transparent focus:outline-hidden",
               "transition-colors duration-200",
             )}
             onClick={handleCopy}

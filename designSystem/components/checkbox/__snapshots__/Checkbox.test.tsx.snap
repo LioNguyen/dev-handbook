@@ -2,7 +2,7 @@
 
 exports[`Checkbox Component > should match snapshot with default props 1`] = `
 <button
-  class="peer h-4 w-4 shrink-0 rounded-sm border border-secondary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-background-secondary data-[state=checked]:text-primary-foreground"
+  class="peer h-4 w-4 shrink-0 rounded-sm border border-secondary shadow-sm focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-background-secondary data-[state=checked]:text-primary-foreground"
   data-state="unchecked"
   data-testid="checkbox-root"
   type="button"
