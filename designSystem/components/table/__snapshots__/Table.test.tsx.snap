@@ -1,0 +1,235 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Table Component > Table Snapshots > should match snapshot with custom className 1`] = `
+<div>
+  <div
+    class="relative w-full overflow-auto"
+  >
+    <table
+      class="w-full caption-bottom text-sm custom-table"
+    >
+      <caption
+        class="mt-4 text-sm text-muted-foreground"
+      >
+        A list of your recent invoices.
+      </caption>
+      <thead
+        class="[&_tr]:border-b"
+      >
+        <tr
+          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+        >
+          <th
+            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            Invoice
+          </th>
+          <th
+            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            Status
+          </th>
+          <th
+            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            Method
+          </th>
+          <th
+            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            Amount
+          </th>
+        </tr>
+      </thead>
+      <tbody
+        class="[&_tr:last-child]:border-0"
+      >
+        <tr
+          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+        >
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            INV001
+          </td>
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            Paid
+          </td>
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            Credit Card
+          </td>
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            $250.00
+          </td>
+        </tr>
+        <tr
+          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+        >
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            INV002
+          </td>
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            Pending
+          </td>
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            PayPal
+          </td>
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            $150.00
+          </td>
+        </tr>
+      </tbody>
+      <tfoot
+        class="border-t bg-muted/50 font-medium [&>tr]:last:border-b-0"
+      >
+        <tr
+          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+        >
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+            colspan="3"
+          >
+            Total
+          </td>
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            $400.00
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+`;
+
+exports[`Table Component > Table Snapshots > should match snapshot with default props 1`] = `
+<div>
+  <div
+    class="relative w-full overflow-auto"
+  >
+    <table
+      class="w-full caption-bottom text-sm"
+    >
+      <caption
+        class="mt-4 text-sm text-muted-foreground"
+      >
+        A list of your recent invoices.
+      </caption>
+      <thead
+        class="[&_tr]:border-b"
+      >
+        <tr
+          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+        >
+          <th
+            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            Invoice
+          </th>
+          <th
+            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            Status
+          </th>
+          <th
+            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            Method
+          </th>
+          <th
+            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            Amount
+          </th>
+        </tr>
+      </thead>
+      <tbody
+        class="[&_tr:last-child]:border-0"
+      >
+        <tr
+          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+        >
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            INV001
+          </td>
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            Paid
+          </td>
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            Credit Card
+          </td>
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            $250.00
+          </td>
+        </tr>
+        <tr
+          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+        >
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            INV002
+          </td>
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            Pending
+          </td>
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            PayPal
+          </td>
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            $150.00
+          </td>
+        </tr>
+      </tbody>
+      <tfoot
+        class="border-t bg-muted/50 font-medium [&>tr]:last:border-b-0"
+      >
+        <tr
+          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+        >
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+            colspan="3"
+          >
+            Total
+          </td>
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            $400.00
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+`;

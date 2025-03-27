@@ -1,0 +1,62 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`RangeSlider Component > should match snapshot with default props 1`] = `
+<div
+  class="relative max-w-xl w-full pb-8"
+>
+  <div
+    class="relative"
+  >
+    <div
+      class="absolute inset-x-0 top-0 flex items-center gap-4"
+    >
+      <span
+        class="text-sm font-medium text-background-secondary"
+      >
+        0
+      </span>
+      <div
+        class="relative flex-grow"
+      >
+        <div
+          class="absolute z-20 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+          style="left: 0%; top: 50%;"
+        >
+          <div
+            class="w-4 h-4 rounded-full bg-white border-2 border-background-secondary shadow-sm"
+          />
+          <div
+            class="absolute w-full text-center text-sm top-5 font-medium text-background-secondary"
+          >
+            0
+          </div>
+        </div>
+        <input
+          class="absolute z-30 w-full h-2 appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:bg-transparent [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:bg-transparent [&::-webkit-slider-runnable-track]:appearance-none [&::-moz-range-track]:appearance-none"
+          max="100"
+          min="0"
+          step="1"
+          type="range"
+          value="0"
+        />
+        <div
+          class="relative h-2"
+        >
+          <div
+            class="absolute z-10 inset-0 rounded-full bg-gray-200"
+          />
+          <div
+            class="absolute z-10 left-0 h-full rounded-full bg-background-secondary"
+            style="width: 0%;"
+          />
+        </div>
+      </div>
+      <span
+        class="text-sm font-medium text-right text-background-secondary"
+      >
+        100
+      </span>
+    </div>
+  </div>
+</div>
+`;

@@ -1,0 +1,206 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Command Components > Command Snapshots > basic command 1`] = `
+<div>
+  <div
+    class="flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground"
+    data-testid="command"
+  >
+    <div
+      class="flex items-center border-b px-3"
+      cmdk-input-wrapper=""
+    >
+      <div
+        data-testid="search-icon"
+      />
+      <div
+        class="flex items-center border-b px-3"
+        data-testid="command-input-wrapper"
+      >
+        <input
+          class="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+          data-testid="command-input"
+          placeholder="Type a command..."
+        />
+      </div>
+    </div>
+    <div
+      class="max-h-[300px] overflow-y-auto overflow-x-hidden custom-scrollbar"
+      data-testid="command-list"
+    >
+      <div
+        class="py-6 text-center text-sm"
+        data-testid="command-empty"
+      >
+        No results found.
+      </div>
+      <div
+        class="overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-text-muted-foreground"
+        data-testid="command-group"
+        heading="Suggestions"
+      >
+        <div
+          class="relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-secondary data-[selected=true]:text-text-primary data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+          data-testid="command-item"
+        >
+          Calendar
+        </div>
+        <div
+          class="relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-secondary data-[selected=true]:text-text-primary data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+          data-testid="command-item"
+        >
+          Search
+        </div>
+        <div
+          class="relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-secondary data-[selected=true]:text-text-primary data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+          data-testid="command-item"
+        >
+          Settings
+        </div>
+      </div>
+      <div
+        class="-mx-1 h-px bg-border"
+        data-testid="command-separator"
+      />
+      <div
+        class="overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-text-muted-foreground"
+        data-testid="command-group"
+        heading="Settings"
+      >
+        <div
+          class="relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-secondary data-[selected=true]:text-text-primary data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+          data-testid="command-item"
+        >
+          Profile
+        </div>
+        <div
+          class="relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-secondary data-[selected=true]:text-text-primary data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+          data-testid="command-item"
+        >
+          Billing
+        </div>
+        <div
+          class="relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-secondary data-[selected=true]:text-text-primary data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+          data-testid="command-item"
+        >
+          Settings
+          <span
+            class="ml-auto text-xs tracking-widest text-text-muted-foreground"
+          >
+            ⌘S
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Command Components > Command Snapshots > command dialog 1`] = `
+<div>
+  <div
+    data-testid="dialog"
+  >
+    <div
+      class="overflow-hidden p-0"
+      data-testid="dialog-content"
+    >
+      <div
+        class="flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5"
+        data-testid="command"
+      >
+        <div
+          class="flex items-center border-b px-3"
+          cmdk-input-wrapper=""
+        >
+          <div
+            data-testid="search-icon"
+          />
+          <div
+            class="flex items-center border-b px-3"
+            data-testid="command-input-wrapper"
+          >
+            <input
+              class="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+              data-testid="command-input"
+              placeholder="Type a command..."
+            />
+          </div>
+        </div>
+        <div
+          class="max-h-[300px] overflow-y-auto overflow-x-hidden custom-scrollbar"
+          data-testid="command-list"
+        >
+          <div
+            class="py-6 text-center text-sm"
+            data-testid="command-empty"
+          >
+            No results found.
+          </div>
+          <div
+            class="overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-text-muted-foreground"
+            data-testid="command-group"
+            heading="Suggestions"
+          >
+            <div
+              class="relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-secondary data-[selected=true]:text-text-primary data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+              data-testid="command-item"
+            >
+              Command 1
+            </div>
+            <div
+              class="relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-secondary data-[selected=true]:text-text-primary data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+              data-testid="command-item"
+            >
+              Command 2
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Command Components > Command Snapshots > command with shortcuts 1`] = `
+<div>
+  <div
+    class="flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground"
+    data-testid="command"
+  >
+    <div
+      class="max-h-[300px] overflow-y-auto overflow-x-hidden custom-scrollbar"
+      data-testid="command-list"
+    >
+      <div
+        class="overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-text-muted-foreground"
+        data-testid="command-group"
+        heading="Actions"
+      >
+        <div
+          class="relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-secondary data-[selected=true]:text-text-primary data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+          data-testid="command-item"
+        >
+          New File
+          <span
+            class="ml-auto text-xs tracking-widest text-text-muted-foreground"
+          >
+            ⌘N
+          </span>
+        </div>
+        <div
+          class="relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-secondary data-[selected=true]:text-text-primary data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+          data-testid="command-item"
+        >
+          Save
+          <span
+            class="ml-auto text-xs tracking-widest text-text-muted-foreground"
+          >
+            ⌘S
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

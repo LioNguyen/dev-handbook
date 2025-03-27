@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Separator component > should match snapshot with default props 1`] = `
+<div
+  class="shrink-0 bg-border h-[1px] w-full"
+  data-testid="radix-separator-test"
+  orientation="horizontal"
+/>
+`;

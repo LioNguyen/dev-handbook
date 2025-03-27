@@ -1,0 +1,45 @@
+{
+  "errors": {
+    "invalid_string_length": "30 characters maximum"
+  },
+  "form": {
+    "create_title": "Create new License",
+    "create_description": "Fill form and submit to create new License",
+    "update_title": "Update License",
+    "update_description": "Edit form and submit to update License",
+    "view_detail_title": "License detail",
+    "label_key": "License Key",
+    "label_product_id": "Product",
+    "label_creator": "Creator",
+    "label_customer": "Customer",
+    "label_description": "Description"
+  },
+  "key": {
+    "creator": "Creator",
+    "customer": "Customer",
+    "createdDate": "Created Date",
+    "expiredDate": "Expired Date",
+    "key": "License Key",
+    "product": "Product",
+    "status": "Status",
+    "description": "Description"
+  },
+  "messageCode": {
+    "LICENSE_DOWNLOAD_SUCCESS": "Download License Successfully.",
+    "LICENSE_GET_SUCCESS": "Get License Successfully.",
+    "LICENSE_CREATE_SUCCESS": "Create License Successfully.",
+    "LICENSE_UPDATE_SUCCESS": "Update License Successfully.",
+    "LICENSE_DELETE_SUCCESS": "Delete License Successfully."
+  },
+  "table": {
+    "label_filter_manager": "Manager",
+    "label_filter_owner": "Owner",
+    "label_filter_creator": "Creator",
+    "label_filter_customer": "Customer",
+    "label_filter_product": "Product",
+    "label_filter_status": "Status",
+    "placeholder_filter_by_license_key": "Filter by License Key..."
+  },
+  "title": "Licenses",
+  "description": "Manage licenses"
+}

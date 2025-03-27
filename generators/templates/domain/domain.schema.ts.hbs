@@ -1,0 +1,17 @@
+import { z } from "zod";
+
+import { booleanSchema, numberSchema, stringSchema } from "@/shared/constants/schema";
+
+const {{ camelCase domainName }}BaseSchema = z.object({  
+  id: numberSchema
+});
+
+const create{{ properCase domainName }}Schema = {{ camelCase domainName }}BaseSchema.omit({  
+  id: true,
+});  
+
+const update{{ properCase domainName }}Schema = {{ camelCase domainName }}BaseSchema.extend({  
+  id: numberSchema,  
+});  
+
+export { create{{ properCase domainName }}Schema, {{ camelCase domainName }}BaseSchema, update{{ properCase domainName }}Schema };

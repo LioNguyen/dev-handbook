@@ -1,0 +1,51 @@
+{
+  "errors": {
+    "invalid_string_length": "30 characters maximum"
+  },
+  "form": {
+    "active": "Active",
+    "create_title": "Create new User",
+    "create_description": "Fill form and submit to create new User",
+    "update_title": "Update User",
+    "update_description": "Edit form and submit to update User",
+    "update_user_account_title": "Update User Account",
+    "update_user_account_description": "Edit form and submit to update Account Info",
+    "review_title": "Review and active User",
+    "label_email": "Email",
+    "label_username": "Username",
+    "label_password": "Password",
+    "label_department": "Department",
+    "label_role": "Role",
+    "label_status": "Status",
+    "placeholder_password": "******"
+  },
+  "key": {
+    "name": "Name",
+    "email": "Email",
+    "username": "Username",
+    "role": "Role",
+    "department": "Department",
+    "status": "Status"
+  },
+  "messageCode": {
+    "USER_ROLE_GET_SUCCESS": "Get User Role Successfully.",
+    "USER_GET_SUCCESS": "Get User Successfully.",
+    "USER_CREATE_SUCCESS": "Create User Successfully.",
+    "USER_UPDATE_SUCCESS": "Update User Successfully.",
+    "USER_DELETE_SUCCESS": "Delete User Successfully."
+  },
+  "role": {
+    "admin": "Admin",
+    "manager": "Manager",
+    "user": "User"
+  },
+  "table": {
+    "label_filter_role": "Role",
+    "placeholder_filter_name": "Filter name...",
+    "active": "Activate user",
+    "deactive": "Deactivate user",
+    "edit": "Edit info"
+  },
+  "title": "Users",
+  "description": "Manage licence Users"
+}

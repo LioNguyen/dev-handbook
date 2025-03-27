@@ -1,0 +1,23 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Avatar test suite > should match snapshot with default props 1`] = `
+<div>
+  <div
+    class="avatar relative flex items-center justify-center rounded-full bg-background-secondary overflow-hidden"
+    data-testid="avatar-test"
+    style="width: 40px; height: 40px;"
+  >
+    <span
+      class="text-white font-medium block"
+      style="font-size: 16px;"
+    >
+      LM
+    </span>
+    <img
+      alt="License Manager"
+      class="w-full h-full object-cover hidden"
+      src="./avatar.jpg"
+    />
+  </div>
+</div>
+`;

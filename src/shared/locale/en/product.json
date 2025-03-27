@@ -1,0 +1,34 @@
+{
+  "errors": {
+    "invalid_string_length": "30 characters maximum"
+  },
+  "form": {
+    "create_title": "Create new Product",
+    "create_description": "Fill form and submit to create new Product",
+    "update_title": "Update Product",
+    "update_description": "Edit form and submit to update Product",
+    "label_key": "Key",
+    "label_name": "Name",
+    "label_owner_name": "Owner",
+    "label_fields": "Fields"
+  },
+  "key": {
+    "name": "Product Name",
+    "key": "Product Key",
+    "fields": "Fields",
+    "creator": "Creator"
+  },
+  "messageCode": {
+    "PRODUCT_GET_SUCCESS": "Get Product Successfully.",
+    "PRODUCT_CREATE_SUCCESS": "Create Product Successfully.",
+    "PRODUCT_UPDATE_SUCCESS": "Update Product Successfully.",
+    "PRODUCT_DELETE_SUCCESS": "Delete Product Successfully."
+  },
+  "table": {
+    "label_filter_creator": "Creator",
+    "label_filter_field": "Field",
+    "placeholder_filter_name": "Filter name..."
+  },
+  "title": "Products",
+  "description": "Manage licence products"
+}

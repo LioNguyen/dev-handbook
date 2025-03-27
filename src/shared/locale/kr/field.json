@@ -1,0 +1,44 @@
+{
+  "form": {
+    "create_title": "Create new Field",
+    "create_description": "Fill form and submit to create new Field",
+    "update_title": "Update Field",
+    "update_description": "Edit form and submit to update Field",
+    "label_name": "Field Name",
+    "label_type": "Type",
+    "label_variable": "Variable",
+    "label_required": "Is Required?",
+    "placeholder_type": "Select a Type"
+  },
+  "key": {
+    "name": "Field Name",
+    "variable": "Field Key",
+    "type": "Type",
+    "required": "Required?",
+    "data": "Default Data"
+  },
+  "messageCode": {
+    "FIELD_GET_SUCCESS": "Get Field Successfully.",
+    "FIELD_CREATE_SUCCESS": "Create Field Successfully.",
+    "FIELD_UPDATE_SUCCESS": "Update Field Successfully.",
+    "FIELD_DELETE_SUCCESS": "Delete Field Successfully."
+  },
+  "table": {
+    "label_filter_type": "Filter",
+    "placeholder_filter_name": "Filter name..."
+  },
+  "type": {
+    "string": "String",
+    "number": "Number",
+    "options": "Options",
+    "datetime": "DateTime",
+    "mac-address": "MAC",
+    "ip-address": "IP",
+    "checkbox": "Check Options",
+    "range": "Range",
+    "switch": "Switch",
+    "volumns": "Volumns"
+  },
+  "title": "Fields",
+  "description": "Manage licence fields"
+}

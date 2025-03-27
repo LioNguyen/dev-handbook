@@ -1,0 +1,160 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";  
+import { useTranslation } from "react-i18next";  
+import { z } from "zod";  
+
+import { MODAL_NAME, TOAST_TYPE, TToastTypeValue, useGlobal } from "@/domains/global";  
+import { FORM_FIELD_CONFIG } from "@/shared/constants";  
+import { useForm } from "@/shared/hooks/useForm";  
+import { {{ properCase domainName }}Service } from "./{{ properCase domainName }}.service";  
+import {  
+  ICreate{{ properCase domainName }}RequestData,  
+  ICreate{{ properCase domainName }}Response,  
+  IDelete{{ properCase domainName }}BulkRequestData,  
+  IDelete{{ properCase domainName }}BulkResponse,  
+  IDelete{{ properCase domainName }}Response,  
+  I{{ properCase domainName }}Item,  
+  IGet{{ properCase domainName }}AllParams,  
+  IGet{{ properCase domainName }}AllResponse,  
+  IGet{{ properCase domainName }}RequestData,  
+  IGet{{ properCase domainName }}Response,  
+  IUpdate{{ properCase domainName }}RequestData,  
+  IUpdate{{ properCase domainName }}Response,  
+} from "./{{ properCase domainName }}.types";  
+
+// Create instance for {{ properCase domainName }}Api  
+const {{ camelCase domainName }}Api = new {{ properCase domainName }}Service();  
+
+function use{{ properCase domainName }}() {  
+  const { closeModal, showToast } = useGlobal();  
+  const queryClient = useQueryClient();  
+  const { t } = useTranslation();  
+
+  const handleToast = (messageCode?: string, type: TToastTypeValue = "success") => {  
+    switch (type) {  
+      case TOAST_TYPE.success:  
+        showToast({  
+          type: "success",  
+          message: t(`messageCode.${messageCode}`, { ns: "{{ camelCase domainName }}", defaultValue: t("successful") }),  
+        });  
+        break;  
+
+      default:  
+        break;  
+    }  
+  };  
+
+  // Hook to get all {{ camelCase domainName }}s  
+  const useGet{{ properCase domainName }}All = (params: IGet{{ properCase domainName }}AllParams) => {  
+    return useQuery<IGet{{ properCase domainName }}AllResponse, Error>({  
+      queryKey: ["{{ camelCase domainName }}s", params],  
+      queryFn: () => {{ camelCase domainName }}Api.get{{ properCase domainName }}All(params),  
+    });  
+  };  
+
+  // Hook to get {{ camelCase domainName }}  
+  const useGet{{ properCase domainName }} = () => {  
+    return useMutation<IGet{{ properCase domainName }}Response, Error, IGet{{ properCase domainName }}RequestData>({  
+      mutationFn: (data: IGet{{ properCase domainName }}RequestData) => {{ camelCase domainName }}Api.get{{ properCase domainName }}(data),  
+    });  
+  };  
+
+  // Hook to create {{ camelCase domainName }} form  
+  const use{{ properCase domainName }}Form = ({   
+    schema,   
+    initialValues   
+  }: {   
+    schema?: z.ZodSchema;   
+    initialValues?: Partial<I{{ properCase domainName }}Item>   
+  }) => {  
+    const form = useForm({  
+      fields: [  
+        // Add your specific form fields here  
+        // Example: FORM_FIELD_CONFIG.itemName,  
+      ],  
+      schema,  
+      initialValues,  
+    });  
+
+    return {  
+      ...form,  
+    };  
+  };  
+
+  // Hook to create {{ camelCase domainName }}  
+  const useCreate{{ properCase domainName }} = () => {  
+    return useMutation<ICreate{{ properCase domainName }}Response, Error, ICreate{{ properCase domainName }}RequestData>({  
+      mutationFn: (data: ICreate{{ properCase domainName }}RequestData) => {{ camelCase domainName }}Api.create{{ properCase domainName }}(data),  
+      onSuccess: res => {  
+        handleToast(res?.messageCode);  
+
+        queryClient.invalidateQueries({  
+          queryKey: ["{{ camelCase domainName }}s"],  
+        });  
+      },  
+    });  
+  };  
+
+  // Hook to update {{ camelCase domainName }}  
+  const useUpdate{{ properCase domainName }} = () => {  
+    return useMutation<IUpdate{{ properCase domainName }}Response, Error, IUpdate{{ properCase domainName }}RequestData>({  
+      mutationFn: (data: IUpdate{{ properCase domainName }}RequestData) => {{ camelCase domainName }}Api.update{{ properCase domainName }}(data),  
+      onSuccess: res => {  
+        handleToast(res?.messageCode);  
+
+        queryClient.invalidateQueries({  
+          queryKey: ["{{ camelCase domainName }}s"],  
+        });  
+      },  
+    });  
+  };  
+
+  // Hook to delete {{ camelCase domainName }}  
+  const useDelete{{ properCase domainName }} = () => {  
+    return useMutation<IDelete{{ properCase domainName }}Response, Error, number>({  
+      mutationFn: (deletedId: number) => {{ camelCase domainName }}Api.delete{{ properCase domainName }}(deletedId),  
+      onSuccess: (res, deletedId) => {  
+        closeModal(MODAL_NAME.{{ camelCase domainName }}DeleteConfirm);  
+        handleToast(res?.messageCode);  
+
+        queryClient.invalidateQueries({  
+          queryKey: ["{{ camelCase domainName }}s"],  
+        });  
+        queryClient.removeQueries({  
+          queryKey: ["{{ camelCase domainName }}", deletedId],  
+        });  
+      },  
+    });  
+  };  
+
+  // Hook to delete {{ camelCase domainName }} in bulk  
+  const useDelete{{ properCase domainName }}Bulk = () => {  
+    return useMutation<IDelete{{ properCase domainName }}BulkResponse, Error, IDelete{{ properCase domainName }}BulkRequestData>({  
+      mutationFn: (data: IDelete{{ properCase domainName }}BulkRequestData) => {{ camelCase domainName }}Api.delete{{ properCase domainName }}Bulk(data),  
+      onSuccess: (res, data) => {  
+        closeModal(MODAL_NAME.{{ camelCase domainName }}DeleteConfirm);  
+        handleToast(res?.messageCode);  
+
+        queryClient.invalidateQueries({  
+          queryKey: ["{{ camelCase domainName }}s"],  
+        });  
+        data.ids.forEach(deletedId => {
+          queryClient.removeQueries({
+            queryKey: ["{{ camelCase domainName }}", deletedId],
+          });
+        }); 
+      },  
+    });  
+  };  
+
+  return {  
+    useCreate{{ properCase domainName }},  
+    useDelete{{ properCase domainName }},  
+    useDelete{{ properCase domainName }}Bulk,  
+    use{{ properCase domainName }}Form,  
+    useGet{{ properCase domainName }},  
+    useGet{{ properCase domainName }}All,  
+    useUpdate{{ properCase domainName }},  
+  };  
+}  
+
+export { use{{ properCase domainName }} };

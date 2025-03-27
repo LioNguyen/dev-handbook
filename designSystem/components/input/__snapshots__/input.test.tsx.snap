@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Input Component > should match snapshot with default props 1`] = `
+<input
+  class="flex h-9 w-full rounded-md border border-input bg-transparent text-text px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-text placeholder:text-text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+  data-testid="input-test"
+  placeholder="Enter text here"
+/>
+`;

@@ -1,0 +1,16 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Image test suite > should match snapshot with default props 1`] = `
+<div>
+  <div
+    class="relative image"
+    data-testid="image-test"
+  >
+    <img
+      alt="logo"
+      class="transition-opacity duration-300 hidden"
+      src="./logo-path.svg"
+    />
+  </div>
+</div>
+`;

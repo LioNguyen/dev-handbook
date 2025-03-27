@@ -1,0 +1,77 @@
+{
+  "errors": {
+    "invalid_string_length": "30 characters maximum"
+  },
+  "form": {
+    "review_title": "Review Audit Log",
+    "label_user_email": "User Email",
+    "label_action": "Action",
+    "label_action_status": "Action Status",
+    "label_created_at": "Created At",
+    "label_updated_at": "Updated At"
+  },
+  "key": {
+    "user_email": "User Email",
+    "action": "Action",
+    "action_status": "Status",
+    "created_at": "Created At",
+    "updated_at": "Updated At"
+  },
+  "messageCode": {
+    "AUDIT_GET_SUCCESS": "Get Audit Successfully.",
+    "AUDIT_ACTION_GET_SUCCESS": "Get Audit Status Successfully.",
+    "AUDIT_LIST_GET_SUCCESS": "Get Audit List Successfully.",
+    "AUDIT_STATUS_GET_SUCCESS": "Get Audit Action Successfully."
+  },
+  "action": {
+    "login": "Login",
+    "logout": "Logout",
+    "create": "Create",
+    "update": "Update",
+    "delete": "Delete",
+    "export": "Export"
+  },
+  "status": {
+    "success": "Success",
+    "failed": "Failed",
+    "pending": "Pending"
+  },
+  "table": {
+    "label_filter_action": "Action",
+    "label_filter_status": "Status",
+    "placeholder_filter_user_email": "Filter user email..."
+  },
+  "title": "Audit Logs",
+  "description": "View system audit logs and security events",
+  "success": "Success",
+  "failed": "Failed",
+  "login": "Login",
+  "logout": "Logout",
+  "register": "Register",
+  "forgot_password": "Forgot Password",
+  "reset_password": "Reset Password",
+  "create_field": "Create Field",
+  "read_field": "View Field",
+  "read_fields": "View Fields",
+  "update_field": "Update Field",
+  "delete_field": "Delete Field",
+  "create_product": "Create Product",
+  "read_product": "View Product",
+  "read_products": "View Products",
+  "update_product": "Update Product",
+  "delete_product": "Delete Product",
+  "create_license": "Create License",
+  "read_license": "View License",
+  "read_licenses": "View Licenses",
+  "update_license": "Update License",
+  "active_license": "Activate License",
+  "deactive_license": "Deactivate License",
+  "download_license": "Download License",
+  "create_user": "Create User",
+  "read_user": "View User",
+  "read_users": "View Users",
+  "update_user": "Update User",
+  "delete_user": "Delete User",
+  "active_user": "Activate User",
+  "deactive_user": "Deactivate User"
+}

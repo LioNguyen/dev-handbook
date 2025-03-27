@@ -1,0 +1,103 @@
+import { z } from "zod";  
+
+import { ISearchConfig, ISortConfig } from "@/shared/hooks/useTable";
+import { IApiResponse, IPagination, IPaginationFilter } from "@/shared/types";  
+import { create{{ properCase domainName }}Schema, {{ camelCase domainName }}BaseSchema, update{{ properCase domainName }}Schema } from "./{{ properCase domainName }}.schema";  
+
+type ICreate{{ properCase domainName }}Form = z.infer<typeof create{{ properCase domainName }}Schema>;  
+type IUpdate{{ properCase domainName }}Form = z.infer<typeof update{{ properCase domainName }}Schema>;  
+type I{{ properCase domainName }}Base = z.infer<typeof {{ camelCase domainName }}BaseSchema>;
+
+// {{ properCase domainName }} context type  
+interface I{{ properCase domainName }}Context {  
+  {{ camelCase domainName }}Store?: I{{ properCase domainName }}Item | null;  
+  set{{ properCase domainName }}Store?: ({{ camelCase domainName }}: I{{ properCase domainName }}Item) => void;  
+  remove{{ properCase domainName }}Store?: () => void;  
+}  
+
+// Base item interface  
+interface I{{ properCase domainName }}Item extends I{{ properCase domainName }}Base {  
+  created_at: string; // ISO date string  
+  updated_at: string; // ISO date string  
+}  
+
+interface I{{ properCase domainName }}Data {  
+  item: I{{ properCase domainName }}Item;  
+}  
+
+// Create  
+interface ICreate{{ properCase domainName }}RequestData {}  
+
+interface ICreate{{ properCase domainName }}Response extends IApiResponse {  
+  data: I{{ properCase domainName }}Data;  
+}  
+
+// Get  
+interface IGet{{ properCase domainName }}RequestData {  
+  id: number;  
+}  
+
+interface IGet{{ properCase domainName }}Response extends IApiResponse {  
+  data: I{{ properCase domainName }}Data;  
+}  
+
+// Get all  
+interface IGet{{ properCase domainName }}AllData extends IPagination {  
+  items: I{{ properCase domainName }}Item[];  
+}  
+
+interface IGet{{ properCase domainName }}AllParams extends IPaginationFilter {  
+  filters?: Record<string, string>;  
+  search: ISearchConfig[];
+  sort: ISortConfig[];
+}  
+
+interface IGet{{ properCase domainName }}AllResponse extends IApiResponse {  
+  data: IGet{{ properCase domainName }}AllData;  
+}  
+
+// Update  
+interface IUpdate{{ properCase domainName }}RequestData extends ICreate{{ properCase domainName }}RequestData {  
+  id: number;  
+}  
+
+interface IUpdate{{ properCase domainName }}Response extends IApiResponse {  
+  data: I{{ properCase domainName }}Data;  
+}
+
+// Delete
+interface IDelete{{ properCase domainName }}Response extends IApiResponse {
+  data: {
+    item: Pick<I{{ properCase domainName }}Item, "id">;
+  };
+}
+
+interface IDelete{{ properCase domainName }}BulkRequestData {
+  ids: number[];
+}
+
+interface IDelete{{ properCase domainName }}BulkResponse extends IApiResponse {
+  data: {
+    items: { id: number }[];
+  };
+}
+
+export type {  
+  ICreate{{ properCase domainName }}Form,  
+  ICreate{{ properCase domainName }}RequestData,  
+  ICreate{{ properCase domainName }}Response,
+  IDelete{{ properCase domainName }}BulkRequestData,
+  IDelete{{ properCase domainName }}BulkResponse,
+  IDelete{{ properCase domainName }}Response,  
+  I{{ properCase domainName }}Base,
+  I{{ properCase domainName }}Context,  
+  I{{ properCase domainName }}Item,  
+  IGet{{ properCase domainName }}AllData,  
+  IGet{{ properCase domainName }}AllParams,  
+  IGet{{ properCase domainName }}AllResponse,  
+  IGet{{ properCase domainName }}RequestData,  
+  IGet{{ properCase domainName }}Response,  
+  IUpdate{{ properCase domainName }}Form,  
+  IUpdate{{ properCase domainName }}RequestData,  
+  IUpdate{{ properCase domainName }}Response,  
+};

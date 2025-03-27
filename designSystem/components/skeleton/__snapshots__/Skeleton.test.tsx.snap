@@ -1,0 +1,8 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Skeleton Component > should match snapshot 1`] = `
+<div
+  class="animate-pulse rounded-md bg-background-skeleton"
+  data-testid="skeleton-test"
+/>
+`;

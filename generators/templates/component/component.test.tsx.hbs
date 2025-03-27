@@ -1,0 +1,28 @@
+import { screen } from "@testing-library/react";
+import { ComponentPropsWithRef } from "react";
+
+import { renderWithTheme } from "@/shared/utils";
+import {{ properCase componentName }} from "./{{properCase componentName}}";
+
+type {{ properCase componentName }}PropsWithRef = ComponentPropsWithRef<typeof {{ properCase componentName }}>;
+
+const defaultProps: Partial<{{ properCase componentName }}PropsWithRef> = {}
+
+const renderComponent = async (props: Partial<{{ properCase componentName }}PropsWithRef>) => {
+  return renderWithTheme(<{{ properCase componentName }} data-testid="{{dashCase componentName}}-test" {...defaultProps} {...props} />);
+};
+
+describe("{{ properCase componentName }} test suite", () => {
+  it("should render correctly", async () => {
+    await renderComponent({});
+
+    expect(screen.queryByTestId("{{dashCase componentName}}-test")).toBeInTheDocument();
+  });
+
+  it("should render class correctly", async () => {
+    const className = "custom-class";
+    await renderComponent({className});
+
+    expect(screen.queryByTestId("{{dashCase componentName}}-test")).toHaveClass(className);
+  });
+});

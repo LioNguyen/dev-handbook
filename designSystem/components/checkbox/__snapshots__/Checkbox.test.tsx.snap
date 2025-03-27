@@ -1,0 +1,19 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Checkbox Component > should match snapshot with default props 1`] = `
+<button
+  class="peer h-4 w-4 shrink-0 rounded-sm border border-secondary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-background-secondary data-[state=checked]:text-primary-foreground"
+  data-state="unchecked"
+  data-testid="checkbox-root"
+  type="button"
+>
+  <span
+    class="flex items-center justify-center text-current"
+    data-testid="checkbox-indicator"
+  >
+    <div
+      data-testid="check-icon"
+    />
+  </span>
+</button>
+`;

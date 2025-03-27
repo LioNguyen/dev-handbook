@@ -1,0 +1,39 @@
+import { useCallback, useMemo, useState } from "react";
+
+import { createContext } from "@/shared/utils";
+import { I{{ properCase domainName }}Context, I{{ properCase domainName }}Item } from "./{{ properCase domainName }}.types";
+
+const [Provider, use{{ properCase domainName }}Context] = createContext<I{{ properCase domainName }}Context>();
+
+const {{ properCase domainName }}Provider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [{{ camelCase domainName }}, set{{ properCase domainName }}] = useState<I{{ properCase domainName }}Item | undefined>();
+
+  const set{{ properCase domainName }}Store = useCallback(({{ camelCase domainName }}: I{{ properCase domainName }}Item) => {
+    set{{ properCase domainName }}({{ camelCase domainName }});
+  }, []);
+
+  const remove{{ properCase domainName }}Store = useCallback(() => {
+    set{{ properCase domainName }}(undefined);
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      {{ camelCase domainName }},
+      remove{{ properCase domainName }}Store,
+      set{{ properCase domainName }}Store,
+    }),
+    [
+      {{ camelCase domainName }},
+      remove{{ properCase domainName }}Store,
+      set{{ properCase domainName }}Store,
+    ]
+  );
+
+  return (
+    <Provider value={value}>{children}</Provider>
+  );
+};
+
+export { {{ properCase domainName }}Provider, use{{ properCase domainName }}Context };

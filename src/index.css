@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: "Poppins", sans-serif;
+
+    --color-primary: 170 100% 38%; /* #00c3a4 */
+    --color-secondary: 210 40% 96%; /* #f1f5f9 */
+    --color-black: 0 0% 0%; /* #000000 */
+    --color-white: 0 0% 100%; /* #ffffff */
+    --color-accent: 210 40% 96%; /* #f1f5f9 */
+    --color-accent-foreground: 240 5% 6%; /* #09090b - like text-primary */
+    --color-input: 240 5% 96%; /* #f3f3f5 */
+
+    --color-background-primary: 0 0% 100%; /* #ffffff */
+    --color-background-secondary: 240 5.9% 10%; /* #18181b */
+
+    --color-badge-active-border: 214 100% 67%; /* #56a0ff */
+    --color-badge-active-background: 203 100% 92%; /* #d5efff */
+    --color-badge-active-foreground: 225 100% 46%; /* #003beb */
+    --color-badge-inactive-border: 240 1% 84%; /* #cececf */
+    --color-badge-inactive-background: 240 5% 96%; /* #f3f3f5 */
+    --color-badge-inactive-foreground: 240 6% 10%; /* #18181b */
+    --color-badge-expired-border: 0 88% 71%; /* #f67373 */
+    --color-badge-expired-background: 0 93% 94%; /* #fee2e2 */
+    --color-badge-expired-foreground: 0 71% 51%; /* #da2828 */
+
+    --color-button-primary: 170 100% 38%; /* #00c3a4 */
+    --color-button-secondary: 240 5.9% 10%; /* #18181b */
+    --color-button-tertiary: 210 14% 48%; /* #667a8a */
+    --color-button-foreground: 0 0% 98%; /* #fafafa */
+    --color-button-progress-bar: 170 94% 30%; /* #05947d */
+
+    --color-text-primary: 240 5% 6%; /* #09090b */
+    --color-text-secondary: 0 0% 95%; /* #f2f1f1 */
+    --color-text-tertiary: 215 16% 47%; /* #64748b */
+    --color-text-quaternary: 211 100% 50%; /* ##007aff */
+    --color-text-menu: 209 18% 44%; /* #5d7285 */
+    --color-text-muted-foreground: 240 4% 48%; /* #71717a */
+    --color-text-popover-foreground: 240 8% 5%; /* #020617 */
+    --color-text-sidebar-foreground: 210 22% 29%; /* #334155 */
+
+    --color-border: 240 9% 90%; /* #e4e4e7 */
+    --color-border-secondary: 214 32% 91%; /* #e2e8f0 */
+    --color-error: 0 100% 67%; /* #ff4c4c */
+    --color-success: 134 61% 43%; /* #28a745 */
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%; /* #fafafa */
+    --sidebar-foreground: 209 18% 44%; /* #667A8A */
+    --sidebar-primary: 240 5.9% 10%; /* #18181b */
+    --sidebar-primary-foreground: 0 0% 98%; /* #fafafa */
+    --sidebar-accent: 170 100% 38%; /* #00c37a */
+    --sidebar-accent-foreground: 0 0% 0%; /* #000000 */
+    --sidebar-border: 220 13% 91%; /* #e5e7eb */
+    --sidebar-ring: 217.2 91.2% 59.8%; /* #3b82f6 */
+  }
+  .dark {
+    --sidebar-background: 240 5.9% 10%; /* #18181b */
+    --sidebar-foreground: 240 4.8% 95.9%; /* #f4f4f5 */
+    --sidebar-primary: 224.3 76.3% 48%; /* #4f46e5 */
+    --sidebar-primary-foreground: 0 0% 100%; /* #ffffff */
+    --sidebar-accent: 240 3.7% 15.9%; /* #232323 */
+    --sidebar-accent-foreground: 240 4.8% 95.9%; /* #f4f4f5 */
+    --sidebar-border: 240 3.7% 15.9%; /* #232323 */
+    --sidebar-ring: 217.2 91.2% 59.8%; /* #3b82f6 */
+  }
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-white text-text;
+    pointer-events: auto;
+  }
+}
+
+/* Custom scrollbar styles */
+@layer components {
+  .custom-scrollbar {
+    --scrollbar-width: 8px;
+    --scrollbar-track-bg: transparent;
+    --scrollbar-thumb-bg: hsl(var(--color-border));
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+    height: var(--scrollbar-width);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-bg);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-bg);
+    border-radius: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover-bg);
+  }
+
+  /* For Firefox */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb-bg) var(--scrollbar-track-bg);
+  }
+
+  /* For Edge and other browsers */
+  @supports (overflow: overlay) {
+    .overflow-overlay {
+      overflow: overlay;
+    }
+  }
+}

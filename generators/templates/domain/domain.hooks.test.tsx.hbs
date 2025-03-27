@@ -1,0 +1,534 @@
+import { QueryClient, QueryClientProvider, useMutation, useQuery } from "@tanstack/react-query";  
+import { renderHook } from "@testing-library/react-hooks";  
+import { afterEach, beforeEach, describe, expect, it, Mock, vi } from "vitest";  
+
+import { use{{ properCase domainName }} } from "@/domains/{{ camelCase domainName }}";  
+import { GlobalProvider, MODAL_NAME } from "@/domains/global";  
+import { FORM_FIELD_CONFIG } from "@/shared/constants";  
+import { useForm } from "@/shared/hooks/useForm";  
+
+// START: Mock react-query  
+const mockQueryClient = {  
+  invalidateQueries: vi.fn(),  
+  removeQueries: vi.fn(),  
+};  
+
+vi.mock("@tanstack/react-query", async importOriginal => {  
+  const actual: any = await importOriginal();  
+  return {  
+    ...actual,  
+    useQuery: vi.fn(),  
+    useMutation: vi.fn(),  
+    useQueryClient: vi.fn(() => mockQueryClient),  
+  };  
+});  
+
+// START: Mock global domain
+const mockCloseModal = vi.fn();
+const mockShowToast = vi.fn();  
+
+vi.mock("@/domains/global/Global.context", async importOriginal => {
+  const actual: any = await importOriginal();
+  return {
+    ...actual,
+    useGlobal: () => ({
+      closeModal: mockCloseModal,
+      showToast: mockShowToast,
+      modals: {
+        instances: [],
+      },
+      sheets: {
+        instances: [],
+      },
+    }),
+  };
+});
+
+
+// START: Mock {{ properCase domainName }}.service  
+const mockGet{{ properCase domainName }}All = vi.fn();  
+const mockGet{{ properCase domainName }} = vi.fn();  
+const mockCreate{{ properCase domainName }} = vi.fn();  
+const mockUpdate{{ properCase domainName }} = vi.fn();  
+const mockDelete{{ properCase domainName }} = vi.fn();  
+const mockDelete{{ properCase domainName }}Bulk = vi.fn();  
+
+vi.mock("@/domains/{{ camelCase domainName }}/{{ properCase domainName }}.service", () => ({  
+  {{ properCase domainName }}Service: vi.fn().mockImplementation(() => ({  
+    get{{ properCase domainName }}All: (props: any) => mockGet{{ properCase domainName }}All(props),  
+    get{{ properCase domainName }}: (props: any) => mockGet{{ properCase domainName }}(props),  
+    create{{ properCase domainName }}: (props: any) => mockCreate{{ properCase domainName }}(props),  
+    update{{ properCase domainName }}: (props: any) => mockUpdate{{ properCase domainName }}(props),  
+    delete{{ properCase domainName }}: (props: any) => mockDelete{{ properCase domainName }}(props),
+    delete{{ properCase domainName }}Bulk: (props: any) => mockDelete{{ properCase domainName }}Bulk(props),
+  })),  
+}));  
+
+// START: Mock useForm hook  
+const defaultMock{{ properCase domainName }}FormData = {  
+  formErrors: {},  
+  formValues: {  
+    name: "",  
+    type: "",  
+  },  
+  formFields: [  
+    {  
+      name: "name",  
+      type: "input",  
+      label: "form.label_{{ camelCase domainName }}_name",  
+      data: {  
+        error: "",  
+        inputDelay: 0,  
+        placeholder: "form.placeholder_{{ camelCase domainName }}_name",  
+        required: true,  
+        value: "",  
+      },  
+    },  
+  ],  
+  formValidate: vi.fn(),  
+  setFormValues: vi.fn(),  
+  setFormErrors: vi.fn(),  
+};  
+
+vi.mock("@/shared/hooks/useForm", () => ({  
+  useForm: vi.fn(() => ({  
+    ...defaultMock{{ properCase domainName }}FormData,  
+  })),  
+}));  
+
+// Helper functions  
+const doMockUseMutation = ({ data, isError = false, error = null }: { data?: any; isError?: boolean; error?: any }) => {  
+  (useMutation as Mock).mockReturnValue({  
+    data,  
+    isError,  
+    error,  
+    mutate: vi.fn(),  
+  });  
+};  
+
+const doMockUseQuery = ({ data, isError = false, error = null }: { data?: any; isError?: boolean; error?: any }) => {  
+  (useQuery as Mock).mockReturnValue({  
+    data,  
+    isError,  
+    error,  
+  });  
+};  
+
+describe("use{{ properCase domainName }}", () => {  
+  let queryClient: QueryClient;  
+
+  beforeEach(() => {  
+    queryClient = new QueryClient({  
+      defaultOptions: {  
+        mutations: { retry: 0 },  
+        queries: { retry: false },  
+      },  
+    });  
+  });  
+
+  afterEach(() => {  
+    vi.clearAllMocks();  
+    queryClient.clear();  
+    mockShowToast.mockClear();  
+  });  
+
+  const wrapper = ({ children }: { children: React.ReactNode }) => (  
+    <QueryClientProvider client={queryClient}>  
+      <GlobalProvider>{children}</GlobalProvider>  
+    </QueryClientProvider>  
+  );  
+
+  describe("use{{ properCase domainName }}Form", () => {  
+    it("should initialize form with correct fields", () => {  
+      const { result } = renderHook(  
+        () => {  
+          const { use{{ properCase domainName }}Form } = use{{ properCase domainName }}();  
+          return use{{ properCase domainName }}Form({});  
+        },  
+        { wrapper },  
+      );  
+
+      expect(useForm).toHaveBeenCalledWith({  
+        fields: [  
+          FORM_FIELD_CONFIG.{{ camelCase domainName }}Name,  
+          FORM_FIELD_CONFIG.{{ camelCase domainName }}Type,  
+        ],  
+        schema: undefined,  
+        initialValues: undefined,  
+      });  
+
+      expect(result.current).toEqual(defaultMock{{ properCase domainName }}FormData);  
+    });  
+
+    it("should initialize form with initial values", () => {  
+      const initialValues = {};  
+
+      renderHook(  
+        () => {  
+          const { use{{ properCase domainName }}Form } = use{{ properCase domainName }}();  
+          return use{{ properCase domainName }}Form({ initialValues });  
+        },  
+        { wrapper },  
+      );  
+
+      expect(useForm).toHaveBeenCalledWith(  
+        expect.objectContaining({  
+          initialValues,  
+        }),  
+      );  
+    });  
+  });  
+
+  describe("useGet{{ properCase domainName }}All", () => {  
+    const mockParams = { page: 1, limit: 10, search: [], sort: [] };  
+    const mockResponse = {  
+      data: [  
+        { id: 1, name: "{{ properCase domainName }} 1" },  
+        { id: 2, name: "{{ properCase domainName }} 2" },  
+      ],  
+      total: 2,  
+    };  
+
+    it("should initialize useGet{{ properCase domainName }}All hook", () => {  
+      doMockUseQuery({ data: mockResponse });  
+
+      const { result } = renderHook(  
+        () => {  
+          const { useGet{{ properCase domainName }}All } = use{{ properCase domainName }}();  
+          return useGet{{ properCase domainName }}All(mockParams);  
+        },  
+        { wrapper },  
+      );  
+
+      expect(useQuery).toHaveBeenCalledWith({  
+        queryKey: ["{{ camelCase domainName }}s", mockParams],  
+        queryFn: expect.any(Function),  
+      });  
+      expect(result.current.data).toBe(mockResponse);  
+    });  
+
+    it("should handle error from API", () => {  
+      const mockError = new Error("API Error");  
+      doMockUseQuery({ isError: true, error: mockError });  
+
+      const { result } = renderHook(  
+        () => {  
+          const { useGet{{ properCase domainName }}All } = use{{ properCase domainName }}();  
+          return useGet{{ properCase domainName }}All(mockParams);  
+        },  
+        { wrapper },  
+      );  
+
+      expect(result.current.isError).toBe(true);  
+      expect(result.current.error).toBe(mockError);  
+    });  
+  });  
+
+  describe("useGet{{ properCase domainName }}", () => {  
+    it("should initialize useGet{{ properCase domainName }} hook", () => {  
+      const mockResponse = { id: 1, name: "Test {{ properCase domainName }}" };  
+      doMockUseMutation({ data: mockResponse });  
+
+      const { result } = renderHook(  
+        () => {  
+          const { useGet{{ properCase domainName }} } = use{{ properCase domainName }}();  
+          return useGet{{ properCase domainName }}();  
+        },  
+        { wrapper },  
+      );  
+
+      expect(useMutation).toHaveBeenCalledWith({  
+        mutationFn: expect.any(Function),  
+      });  
+      expect(result.current.data).toBe(mockResponse);  
+    });  
+  });  
+
+  describe("useCreate{{ properCase domainName }}", () => {  
+    const mockCreateResponse = {  
+      id: 1,  
+      name: "New {{ properCase domainName }}",  
+    };  
+
+    it("should initialize useCreate{{ properCase domainName }} hook", () => {  
+      doMockUseMutation({ data: mockCreateResponse });  
+
+      const { result } = renderHook(  
+        () => {  
+          const { useCreate{{ properCase domainName }} } = use{{ properCase domainName }}();  
+          return useCreate{{ properCase domainName }}();  
+        },  
+        { wrapper },  
+      );  
+
+      expect(useMutation).toHaveBeenCalledWith({  
+        mutationFn: expect.any(Function),  
+        onSuccess: expect.any(Function),  
+      });  
+      expect(result.current.data).toBe(mockCreateResponse);  
+    });  
+
+    it("should call showToast on successful creation", () => {  
+      const mockResponse = {  
+        id: 1,  
+        name: "New {{ properCase domainName }}",  
+        messageCode: "CREATE_SUCCESS",  
+      };  
+      doMockUseMutation({ data: mockResponse });  
+
+      renderHook(  
+        () => {  
+          const { useCreate{{ properCase domainName }} } = use{{ properCase domainName }}();  
+          return useCreate{{ properCase domainName }}();  
+        },  
+        { wrapper },  
+      );  
+
+      const onSuccess = (useMutation as Mock).mock.calls[0][0].onSuccess;  
+      onSuccess(mockResponse);  
+
+      expect(mockShowToast).toHaveBeenCalledWith({  
+        type: "success",  
+        message: "messageCode.CREATE_SUCCESS",  
+      });  
+    });  
+
+    it("should invalidate queries with exact params", () => {  
+      doMockUseMutation({ data: mockCreateResponse });  
+
+      renderHook(  
+        () => {  
+          const { useCreate{{ properCase domainName }} } = use{{ properCase domainName }}();  
+          return useCreate{{ properCase domainName }}();  
+        },  
+        { wrapper },  
+      );  
+
+      const onSuccess = (useMutation as Mock).mock.calls[0][0].onSuccess;  
+      onSuccess();  
+
+      expect(mockQueryClient.invalidateQueries).toHaveBeenCalledWith({  
+        queryKey: ["{{ camelCase domainName }}s"],  
+      });  
+      expect(mockQueryClient.invalidateQueries).toHaveBeenCalledTimes(1);  
+    });  
+  });  
+
+  describe("useUpdate{{ properCase domainName }}", () => {  
+    const mockUpdateResponse = {  
+      id: 1,  
+      name: "Updated {{ properCase domainName }}",  
+    };  
+
+    it("should initialize useUpdate{{ properCase domainName }} hook", () => {  
+      doMockUseMutation({ data: mockUpdateResponse });  
+
+      const { result } = renderHook(  
+        () => {  
+          const { useUpdate{{ properCase domainName }} } = use{{ properCase domainName }}();  
+          return useUpdate{{ properCase domainName }}();  
+        },  
+        { wrapper },  
+      );  
+
+      expect(useMutation).toHaveBeenCalledWith({  
+        mutationFn: expect.any(Function),  
+        onSuccess: expect.any(Function),  
+      });  
+      expect(result.current.data).toBe(mockUpdateResponse);  
+    });  
+
+    it("should call showToast on successful update", () => {  
+      const mockResponse = {  
+        id: 1,  
+        name: "Updated {{ properCase domainName }}",  
+        messageCode: "UPDATE_SUCCESS",  
+      };  
+      doMockUseMutation({ data: mockResponse });  
+
+      renderHook(  
+        () => {  
+          const { useUpdate{{ properCase domainName }} } = use{{ properCase domainName }}();  
+          return useUpdate{{ properCase domainName }}();  
+        },  
+        { wrapper },  
+      );  
+
+      const onSuccess = (useMutation as Mock).mock.calls[0][0].onSuccess;  
+      onSuccess(mockResponse);  
+
+      expect(mockShowToast).toHaveBeenCalledWith({  
+        type: "success",  
+        message: "messageCode.UPDATE_SUCCESS",  
+      });  
+    });  
+
+    it("should handle API error", () => {  
+      const mockError = new Error("Update failed");  
+      doMockUseMutation({ isError: true, error: mockError });  
+
+      const { result } = renderHook(  
+        () => {  
+          const { useUpdate{{ properCase domainName }} } = use{{ properCase domainName }}();  
+          return useUpdate{{ properCase domainName }}();  
+        },  
+        { wrapper },  
+      );  
+
+      expect(result.current.isError).toBe(true);  
+      expect(result.current.error).toBe(mockError);  
+    });  
+  });
+
+  describe("useDelete{{ properCase domainName }}", () => {
+    const deletedId = 1;
+    const mockDeleteResponse = {
+      data: {
+        item: {
+          id: deletedId,
+        },
+      },
+      messageCode: "DELETE_SUCCESS",
+    };
+
+    it("should return correctly", async () => {
+      doMockUseMutation({ data: mockDeleteResponse.data });
+
+      const { result } = renderHook(
+        () => {
+          const { useDelete{{ properCase domainName }} } = use{{ properCase domainName }}();
+          return useDelete{{ properCase domainName }}();
+        },
+        { wrapper },
+      );
+
+      const mutationFn = (useMutation as Mock).mock.calls[0][0].mutationFn;
+      await mutationFn(deletedId);
+
+      expect(mockDelete{{ properCase domainName }}).toHaveBeenCalledWith(deletedId);
+      expect(result.current.data).toEqual(mockDeleteResponse.data);
+    });
+
+    it("should call delete{{ properCase domainName }} with correct params", async () => {
+      renderHook(
+        () => {
+          const { useDelete{{ properCase domainName }} } = use{{ properCase domainName }}();
+          return useDelete{{ properCase domainName }}();
+        },
+        { wrapper },
+      );
+
+      const mutationFn = (useMutation as Mock).mock.calls[0][0].mutationFn;
+      await mutationFn(deletedId);
+
+      expect(mockDelete{{ properCase domainName }}).toHaveBeenCalledWith(deletedId);
+    });
+
+    it("should handle onSuccess correctly", () => {
+      doMockUseMutation({ data: mockDeleteResponse.data });
+
+      renderHook(
+        () => {
+          const { useDelete{{ properCase domainName }} } = use{{ properCase domainName }}();
+          return useDelete{{ properCase domainName }}();
+        },
+        { wrapper },
+      );
+
+      const onSuccess = (useMutation as Mock).mock.calls[0][0].onSuccess;
+      onSuccess(mockDeleteResponse, deletedId);
+
+      expect(mockCloseModal).toHaveBeenCalledWith(MODAL_NAME.{{ camelCase domainName }}DeleteConfirm);
+      expect(mockShowToast).toHaveBeenCalledWith({
+        type: "success",
+        message: "messageCode.DELETE_SUCCESS",
+      });
+
+      expect(mockQueryClient.invalidateQueries).toHaveBeenCalledWith({
+        queryKey: ["{{ camelCase domainName }}s"],
+      });
+      expect(mockQueryClient.removeQueries).toHaveBeenCalledWith({
+        queryKey: ["{{ camelCase domainName }}", deletedId],
+      });
+    });
+  });
+
+  describe("useDelete{{ properCase domainName }}Bulk", () => {
+    const data = {
+      ids: [1, 2, 3],
+    };
+    const mockDeleteBulkResponse = {
+      data: {
+        items: data.ids,
+      },
+      messageCode: "DELETE_SUCCESS",
+    };
+
+    it("should return correctly", async () => {
+      doMockUseMutation({ data: mockDeleteBulkResponse.data });
+
+      const { result } = renderHook(
+        () => {
+          const { useDelete{{ properCase domainName }}Bulk } = use{{ properCase domainName }}();
+          return useDelete{{ properCase domainName }}Bulk();
+        },
+        { wrapper },
+      );
+
+      const mutationFn = (useMutation as Mock).mock.calls[0][0].mutationFn;
+      await mutationFn(data);
+
+      expect(mockDelete{{ properCase domainName }}Bulk).toHaveBeenCalledWith(data);
+      expect(result.current.data).toEqual(mockDeleteBulkResponse.data);
+    });
+
+    it("should call delete{{ properCase domainName }}Bulk with correct params", async () => {
+      renderHook(
+        () => {
+          const { useDelete{{ properCase domainName }}Bulk } = use{{ properCase domainName }}();
+          return useDelete{{ properCase domainName }}Bulk();
+        },
+        { wrapper },
+      );
+
+      const mutationFn = (useMutation as Mock).mock.calls[0][0].mutationFn;
+      await mutationFn(data);
+
+      expect(mockDelete{{ properCase domainName }}Bulk).toHaveBeenCalledWith(data);
+    });
+
+    it("should handle onSuccess correctly", () => {
+      doMockUseMutation({ data: mockDeleteBulkResponse.data });
+
+      renderHook(
+        () => {
+          const { useDelete{{ properCase domainName }}Bulk } = use{{ properCase domainName }}();
+          return useDelete{{ properCase domainName }}Bulk();
+        },
+        { wrapper },
+      );
+
+      const onSuccess = (useMutation as Mock).mock.calls[0][0].onSuccess;
+      onSuccess(mockDeleteBulkResponse, data);
+
+      expect(mockCloseModal).toHaveBeenCalledWith(MODAL_NAME.{{ camelCase domainName }}DeleteConfirm);
+      expect(mockShowToast).toHaveBeenCalledWith({
+        type: "success",
+        message: "messageCode.DELETE_SUCCESS",
+      });
+
+      expect(mockQueryClient.invalidateQueries).toHaveBeenCalledWith({
+        queryKey: ["{{ camelCase domainName }}s"],
+      });
+      expect(mockQueryClient.removeQueries).toHaveBeenCalledWith({
+        queryKey: ["{{ camelCase domainName }}", 1],
+      });
+      expect(mockQueryClient.removeQueries).toHaveBeenCalledWith({
+        queryKey: ["{{ camelCase domainName }}", 2],
+      });
+      expect(mockQueryClient.removeQueries).toHaveBeenCalledWith({
+        queryKey: ["{{ camelCase domainName }}", 3],
+      });
+    });
+  });
+});

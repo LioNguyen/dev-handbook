@@ -1,0 +1,67 @@
+import _ from "lodash";
+
+import { API_PATHS, getAuthApiInstance } from "@/shared/services";  
+import {  
+  ICreate{{ properCase domainName }}RequestData,  
+  ICreate{{ properCase domainName }}Response,
+  IDelete{{ properCase domainName }}BulkRequestData,
+  IDelete{{ properCase domainName }}BulkResponse,
+  IDelete{{ properCase domainName }}Response,
+  IGet{{ properCase domainName }}AllParams,  
+  IGet{{ properCase domainName }}AllResponse,  
+  IGet{{ properCase domainName }}RequestData,  
+  IGet{{ properCase domainName }}Response,  
+  IUpdate{{ properCase domainName }}RequestData,  
+  IUpdate{{ properCase domainName }}Response,  
+} from "./{{ properCase domainName }}.types";  
+
+const axios = getAuthApiInstance();  
+const BASE_URL = API_PATHS.{{ constantCase domainName }}S;  
+
+class {{ properCase domainName }}Service {
+  // Get all
+  public async get{{ properCase domainName }}All(params: IGet{{ properCase domainName }}AllParams): Promise<IGet{{ properCase domainName }}AllResponse> {  
+    const res = await axios.get<IGet{{ properCase domainName }}AllResponse>(`${BASE_URL}`, {  
+      params,  
+    });  
+
+    return res?.data;  
+  }  
+
+  // Get
+  public async get{{ properCase domainName }}(data: IGet{{ properCase domainName }}RequestData): Promise<IGet{{ properCase domainName }}Response> {  
+    const res = await axios.get<IGet{{ properCase domainName }}Response>(`${BASE_URL}/${data.id}`);  
+
+    return res?.data;  
+  }  
+
+  // Create
+  public async create{{ properCase domainName }}(data: ICreate{{ properCase domainName }}RequestData): Promise<ICreate{{ properCase domainName }}Response> {  
+    const res = await axios.post<ICreate{{ properCase domainName }}Response>(`${BASE_URL}`, data);  
+
+    return res?.data;  
+  }  
+
+  // Update
+  public async update{{ properCase domainName }}(data: IUpdate{{ properCase domainName }}RequestData): Promise<IUpdate{{ properCase domainName }}Response> {  
+    const res = await axios.put<IUpdate{{ properCase domainName }}Response>(`${BASE_URL}/${data.id}`, _.omit(data, ["id"]));  
+
+    return res?.data;  
+  }  
+
+  // Delete
+  public async delete{{ properCase domainName }}(id: number): Promise<IDelete{{ properCase domainName }}Response> {  
+    const res = await axios.delete(`${BASE_URL}/${id}`);  
+
+    return res?.data;
+  }  
+
+  // Delete bulk
+  public async delete{{ properCase domainName }}Bulk(data: IDelete{{ properCase domainName }}BulkRequestData): Promise<IDelete{{ properCase domainName }}BulkResponse> {  
+    const res = await axios.delete(`${BASE_URL}`, { data });  
+
+    return res?.data;  
+  }  
+}  
+
+export { {{ properCase domainName }}Service };

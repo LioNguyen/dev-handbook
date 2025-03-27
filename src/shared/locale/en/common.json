@@ -1,0 +1,173 @@
+{
+  "errors": {
+    "required": "Required.",
+    "required_email": "Email is required.",
+    "invalid_email": "Please enter a valid email.",
+    "invalid_email_domain": "Email must be an @igloo.co.kr address",
+    "invalid_ip_format": "Invalid IP address format",
+    "invalid_ip_range": "Each segment must be between 0 and 255",
+    "invalid_mac_format": "Invalid MAC address format",
+    "invalid_password": "Please enter a valid password.",
+    "invalid_datetime_format": "Invalid datetime format pattern",
+    "password_not_match": "Passwords do not match.",
+    "required_password": "Password is required."
+  },
+  "field": {
+    "datetime": {
+      "format_rules": "Format Rules",
+      "year": "Year",
+      "month": "Month",
+      "date": "Date",
+      "hour": "Hour",
+      "minute": "Minute",
+      "second": "Second",
+      "example": "Example"
+    }
+  },
+  "form": {
+    "date_picker_placeholder": "YYYY-MM-DD",
+    "date_picker_option_today": "Today",
+    "date_picker_option_tomorrow": "Tomorrow",
+    "date_picker_option_3_days": "In 3 days",
+    "date_picker_option_week": "In a week",
+    "date_picker_option_3_months": "3 Months",
+    "date_picker_option_6_months": "6 Months",
+    "date_picker_option_9_months": "9 Months",
+    "date_picker_option_1_year": "1 Year",
+    "date_picker_option_2_years": "2 Years",
+    "date_picker_option_3_years": "3 Years",
+    "option_action_button": "Add Options",
+    "option_placeholder": "Enter option value",
+    "multi_select_placeholder": "Select options...",
+    "search_placeholder": "Search...",
+    "min_placeholder": "Min Value",
+    "max_placeholder": "Max Value",
+    "switch_label_placeholder": "Switch Label",
+    "volumns_action_button": "Add Volumns",
+    "submit": "Submit",
+    "create": "Create",
+    "update": "Update"
+  },
+  "messageCode": {
+    "ERR_NETWORK": "Error Network",
+    "FORGOT_PASSWORD_SUCCESS": "Please check your email.",
+    "INVALID_TOKEN": "Invalid token.",
+    "LOGIN_SUCCESS": "Login Successfully.",
+    "LOGIN_FAILED_INVALID_CREDENTIALS": "Email or Password is invalid.",
+    "LOGOUT_SUCCESS": "Logout Successfully.",
+    "REGISTER_SUCCESS": "Register Successfully.",
+    "RESET_PASSWORD_SUCCESS": "Reset Password Successfully.",
+    "AUDIT_GET_FAILED": "Get audit failed.",
+    "FIELD_ALREADY_EXISTS": "Field already exists.",
+    "FIELD_DELETE_FAILED": "Field delete failed.",
+    "FIELD_INVALID_ID": "Invalid Field ID.",
+    "FIELD_IN_USE": "Field is already in use.",
+    "FIELD_NOT_FOUND": "Field not found.",
+    "LICENSE_NOT_FOUND": "License not found.",
+    "LICENSE_CREATE_FAILED": "Create license failed.",
+    "LICENSE_GET_FAILED": "Get license failed.",
+    "LICENSE_DELETE_FAILED": "Delete license failed.",
+    "LICENSE_FILE_NOT_FOUND": "License file not found.",
+    "LICENSE_GENERATOR_MODULE_FAILED": "License generate failed.",
+    "PRODUCT_CREATE_DUPLICATED_KEY": "Product Key already exists.",
+    "PRODUCT_DELETE_FAILED": "Delete product failed.",
+    "PRODUCT_GET_FAILED": "Get product failed.",
+    "PRODUCT_GET_CREATORS_FAILED": "Get product creators failed.",
+    "USER_ALREADY_EXISTS": "User already exists.",
+    "USER_INVALID_EMAIL": "Invalid user email.",
+    "USER_INVALID_PASSWORD": "Invalid user password.",
+    "USER_UPDATE_FAILED_INVALID_CREDENTIALS": "Current password is not correct.",
+    "USER_NOT_FOUND": "User not found.",
+    "FORBIDDEN": "No Permission.",
+    "UNKNOWN": "An unknown error occurred",
+    "No spaces allowed": "No spaces allowed"
+  },
+  "noPermission": {
+    "title": "No Access Permission",
+    "description": "You don't have permission to access this page. Please contact your administrator if you need assistance."
+  },
+  "modal": {
+    "closeSheet": {
+      "title": "Close Confirmation",
+      "description": "Are you sure you want to close? Your changes will be lost.",
+      "action": {
+        "confirm": "Close",
+        "cancel": "Cancel"
+      }
+    },
+    "delete": {
+      "single": {
+        "title": "Delete Confirmation",
+        "description": "Are you sure you want to delete this item?",
+        "description_with_name": "Are you sure you want to delete \"{{name}}\"?"
+      },
+      "multiple": {
+        "title": "Delete Items",
+        "description": "Are you sure you want to delete {{count}} selected items?"
+      },
+      "action": {
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      }
+    }
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "expired": "Expired"
+  },
+  "table": {
+    "new": "New",
+    "no_results": "No Results",
+    "toggle_columns": "Toggle Columns",
+    "actions": "Actions",
+    "view_details": "View details",
+    "open_menu": "Open menu",
+    "edit": "Edit",
+    "active": "Active",
+    "deactive": "Deactive",
+    "delete": "Delete",
+    "delete_multi": "Delete ({{count}})",
+    "download": "Download",
+    "selected_count": "{{selected}} of {{total}} item(s) selected",
+    "selected_items": "{{count}} item(s) selected",
+    "total_items": "Total: {{total}} item(s)",
+    "rows_per_page": "Rows per page",
+    "previous": "Previous",
+    "next": "Next",
+    "view": "View",
+    "sort": {
+      "ascending": "Sort ascending",
+      "descending": "Sort descending",
+      "clear": "Clear sort"
+    },
+    "column": {
+      "hide": "Hide column"
+    }
+  },
+  "title": "License Manager",
+  "fields": "Fields",
+  "products": "Products",
+  "licenses": "Licenses",
+  "users": "Users",
+  "audits": "Audits",
+  "settings": "Settings",
+  "clear_all": "Clear all",
+  "clear_filters": "Clear filters",
+  "empty": "Empty",
+  "loading": "Loading...",
+  "no_results": "No Results",
+  "successful": "Successful",
+  "yes": "Yes",
+  "no": "No",
+  "day": "Day",
+  "month": "Month",
+  "label": "Label",
+  "min": "Min",
+  "max": "Max",
+  "generate": "Generate",
+  "generating": "Generating...",
+  "example": "Example",
+  "account": "Account",
+  "logout": "Logout"
+}

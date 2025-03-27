@@ -1,0 +1,24 @@
+import { type FC, memo } from "react";
+import { useTranslation } from "react-i18next";
+
+import { IComponentBase } from "@/shared/types";
+import { cn } from "@/shared/utils";
+
+interface I{{ properCase componentName }}Props extends IComponentBase {}
+
+const {{ properCase componentName }}: FC<I{{ properCase componentName }}Props> = ({
+  children,
+  className,
+  ...restProps
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <div data-testid="{{dashCase componentName}}-test" className={cn("{{dashCase componentName}}", className)} {...restProps}>
+      {children}
+    </div>
+  );
+};
+
+export default memo({{ properCase componentName }});
+export type { I{{ properCase componentName }}Props };
