@@ -13,16 +13,28 @@
     "test:coverage": "vitest run --coverage",
     "test:ci": "vitest run",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "plop": "plop",
+    "prepare": "husky",
+    "pre-commit": "yarn lint && yarn build"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.69.0",
+    "axios": "^1.8.4",
+    "i18next": "^24.2.3",
+    "lodash": "^4.17.21",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-i18next": "^15.4.1",
+    "react-router-dom": "^7.4.0",
+    "styled-components": "^6.1.16",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3",
     "@eslint/js": "^9.21.0",
     "@storybook/addon-essentials": "^8.6.10",
+    "@storybook/addon-interactions": "^8.6.10",
     "@storybook/addon-onboarding": "^8.6.10",
     "@storybook/blocks": "^8.6.10",
     "@storybook/experimental-addon-test": "^8.6.10",
@@ -33,6 +45,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@testing-library/react-hooks": "^8.0.1",
+    "@types/lodash": "^4.17.16",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
@@ -45,7 +58,9 @@
     "eslint-plugin-storybook": "^0.12.0",
     "globals": "^15.15.0",
     "happy-dom": "^17.4.4",
+    "husky": "^9.1.7",
     "playwright": "^1.51.1",
+    "plop": "^4.0.1",
     "storybook": "^8.6.10",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",

@@ -1,54 +1,83 @@
-# React + TypeScript + Vite
+# React 19 Modern Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React 19 application built with TypeScript, featuring a comprehensive development setup with testing, documentation, and internationalization capabilities.
 
-Currently, two official plugins are available:
+## 🌟 Key Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React 19** - Leveraging the latest React features including Context Selectors
+- **TypeScript** - Type-safe development experience
+- **Internationalization** - Multi-language support with i18next
+- **Component Library** - Documented with Storybook
+- **Comprehensive Testing** - Unit and interaction testing
+- **Modern Data Fetching** - Using TanStack React Query
 
-## Expanding the ESLint configuration
+## 🛠️ Technology Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Core Technologies
+- React 19
+- TypeScript
+- Vite
+- React Router v7
+- Styled Components
+- Zod for schema validation
+- TanStack React Query
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### Testing
+- Vitest
+- React Testing Library
+- Storybook Interaction Testing
+
+### Development Tools
+- ESLint
+- Husky (Git hooks)
+- Plop (Code generator)
+- Storybook
+
+## 🚀 Getting Started
+
+```bash
+# Clone the repository
+git clone git@github.com:LioNguyen/dev-handbook.git
+
+# Install dependencies
+yarn install
+
+# Start the development server
+yarn dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📜 Available Scripts
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- `yarn dev` - Start development server
+- `yarn build` - Build for production
+- `yarn test` - Run tests
+- `yarn test:ui` - Run tests with UI
+- `yarn storybook` - Start Storybook development server
+- `yarn plop` - Generate new components using templates
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## 📚 Documentation
+
+Component documentation is available through Storybook. Run `yarn storybook` to view the component library with interactive examples and usage guidelines.
+
+## 🧪 Testing
+
+This project uses a comprehensive testing setup:
+
+- Unit and integration tests with Vitest and Testing Library
+- Component interaction testing with Storybook
+- Test coverage reporting with `yarn test:coverage`
+
+## 🌐 Internationalization
+
+Multi-language support is implemented using i18next and react-i18next, making it easy to add new languages and translate content.
+
+## 🤝 Contributing
+
+1. Ensure linting passes with `yarn lint`
+2. Make sure all tests pass with `yarn test`
+3. Follow the project's code style guidelines
+4. Submit a pull request with detailed description of changes
+
+---
+
+Built with modern best practices and a focus on developer experience and code quality.
