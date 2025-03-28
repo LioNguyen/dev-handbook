@@ -19,7 +19,6 @@
     "pre-commit": "yarn lint && yarn build"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.69.0",
     "axios": "^1.8.4",
     "i18next": "^24.2.3",
     "lodash": "^4.17.21",

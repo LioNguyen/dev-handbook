@@ -14,6 +14,7 @@ A modern React 19 application built with TypeScript, featuring a comprehensive d
 ## 🛠️ Technology Stack
 
 ### Core Technologies
+
 - React 19
 - TypeScript
 - Vite
@@ -23,11 +24,13 @@ A modern React 19 application built with TypeScript, featuring a comprehensive d
 - TanStack React Query
 
 ### Testing
+
 - Vitest
 - React Testing Library
 - Storybook Interaction Testing
 
 ### Development Tools
+
 - ESLint
 - Husky (Git hooks)
 - Plop (Code generator)
@@ -81,3 +84,202 @@ Multi-language support is implemented using i18next and react-i18next, making it
 ---
 
 Built with modern best practices and a focus on developer experience and code quality.
+
+## Project Structure
+
+```plaintext
+project-root/
+│
+├── designSystem/                          # Design system (outside src)
+│   ├── components/                        # UI components
+│   │   ├── ui/                            # shadcn/ui components
+│   │   │   ├── button/
+│   │   │   │   ├── Button.tsx
+│   │   │   │   └── index.ts
+│   │   │   ├── input/
+│   │   │   │   ├── Input.tsx
+│   │   │   │   └── index.ts
+│   │   │   └── ...
+│   │   ├── custom/                        # Your custom UI components
+│   │   │   ├── feature-card/
+│   │   │   │   ├── FeatureCard.tsx
+│   │   │   │   └── index.ts
+│   │   │   └── ...
+│   │   ├── compound/                      # Composed components
+│   │   │   ├── auth-forms/
+│   │   │   │   ├── AuthForm.tsx
+│   │   │   │   └── index.ts
+│   │   │   ├── data-tables/
+│   │   │   │   ├── DataTable.tsx
+│   │   │   │   └── index.ts
+│   │   │   └── ...
+│   │   └── layouts/                       # Layout components
+│   │       ├── container/
+│   │       │   ├── Container.tsx
+│   │       │   └── index.ts
+│   │       ├── grid/
+│   │       │   ├── Grid.tsx
+│   │       │   └── index.ts
+│   │       └── ...
+│   │
+│   ├── tokens/                            # Design tokens
+│   │   ├── colors.ts                      # Color palette definitions
+│   │   ├── typography.ts                  # Font definitions
+│   │   ├── spacing.ts                     # Spacing scale
+│   │   ├── radius.ts                      # Border radius values
+│   │   ├── shadows.ts                     # Shadow definitions
+│   │   └── index.ts                       # Exports all tokens
+│   │
+│   ├── themes/                            # Theme configuration
+│   │   ├── themeConfig.ts                 # CSS variable definitions
+│   │   ├── dark.ts                        # Dark theme overrides
+│   │   ├── light.ts                       # Light theme defaults
+│   │   └── index.ts
+│   │
+│   ├── styles/                            # Global styles
+│   │   ├── globals.css                    # Global CSS with Tailwind
+│   │   ├── reset.css                      # CSS reset/normalizations
+│   │   └── animations.css                 # Animation utilities
+│   │
+│   ├── utils/                             # Design system utilities
+│   │   ├── cn.ts                          # Class name merging utility
+│   │   └── themeUtils.ts                  # Theme helpers
+│   │
+│   ├── index.ts                           # Main exports
+│   └── tailwind.preset.ts                 # Tailwind preset config
+│
+├── src/                                   # Application code
+│   ├── core/                              # Core application framework
+│   │   ├── api/                           # API client foundation
+│   │   │   ├── client.ts                  # Base API client
+│   │   │   ├── interceptors/              # Request/response interceptors
+│   │   │   │   ├── authInterceptor.ts
+│   │   │   │   └── errorInterceptor.ts
+│   │   │   └── errorHandling.ts           # API error handling
+│   │   ├── config/                        # App configuration
+│   │   │   ├── environment.ts             # Environment variables
+│   │   │   └── settings.ts                # App settings
+│   │   ├── router/                        # Routing foundation
+│   │   │   ├── router.ts
+│   │   │   └── routes.ts
+│   │   ├── store/                         # State management foundation
+│   │   │   ├── store.ts
+│   │   │   └── rootReducer.ts
+│   │   └── i18n/                          # Internationalization setup
+│   │       ├── i18n.ts
+│   │       └── locales/
+│   │
+│   ├── shared/                            # Shared across domains
+│   │   ├── components/                    # Shared UI components
+│   │   │   ├── SearchBar.tsx
+│   │   │   ├── PageHeader.tsx
+│   │   │   └── GlobalNotifications.tsx
+│   │   ├── hooks/                         # Shared custom hooks
+│   │   │   ├── useDebounce.ts
+│   │   │   ├── usePagination.ts
+│   │   │   └── useLocalStorage.ts
+│   │   ├── utils/                         # Shared utilities
+│   │   │   ├── formatters.ts
+│   │   │   ├── validators.ts
+│   │   │   └── dateUtils.ts
+│   │   ├── assets/                        # Shared assets
+│   │   │   ├── images/
+│   │   │   └── icons/
+│   │   └── services/                      # Shared services
+│   │       ├── logService.ts
+│   │       └── analyticsService.ts
+│   │
+│   ├── domain/                            # Business domains
+│   │   ├── auth/                          # Authentication domain
+│   │   │   ├── components/                # Auth-specific components
+│   │   │   │   ├── LoginForm.tsx
+│   │   │   │   └── RegistrationForm.tsx
+│   │   │   ├── hooks/                     # Auth-specific hooks
+│   │   │   │   ├── useLogin.ts
+│   │   │   │   └── useRegistration.ts
+│   │   │   ├── services/                  # Auth business logic
+│   │   │   │   └── authService.ts
+│   │   │   ├── repositories/              # Auth data access
+│   │   │   │   └── authRepository.ts
+│   │   │   ├── api.ts                     # Auth API calls
+│   │   │   ├── slice.ts                   # Auth state management
+│   │   │   ├── types.ts                   # Auth type definitions
+│   │   │   └── constants.ts               # Auth constants
+│   │   │
+│   │   ├── products/                      # Products domain
+│   │   │   ├── components/                # Product-specific components
+│   │   │   │   ├── ProductCard.tsx
+│   │   │   │   ├── ProductList.tsx
+│   │   │   │   └── ProductDetail.tsx
+│   │   │   ├── hooks/                     # Product-specific hooks
+│   │   │   │   ├── useProductSearch.ts
+│   │   │   │   └── useProductFilter.ts
+│   │   │   ├── services/                  # Product business logic
+│   │   │   │   ├── productService.ts
+│   │   │   │   └── pricingService.ts
+│   │   │   ├── repositories/              # Product data access
+│   │   │   │   └── productRepository.ts
+│   │   │   ├── api.ts
+│   │   │   ├── slice.ts
+│   │   │   ├── types.ts
+│   │   │   └── constants.ts
+│   │   │
+│   │   └── users/                         # Users domain
+│   │       ├── components/
+│   │       │   ├── UserProfile.tsx
+│   │       │   ├── UserSettings.tsx
+│   │       │   └── UserAvatar.tsx
+│   │       ├── hooks/
+│   │       │   ├── useUserProfile.ts
+│   │       │   └── useUserSettings.ts
+│   │       ├── services/
+│   │       │   └── userService.ts
+│   │       ├── repositories/
+│   │       │   └── userRepository.ts
+│   │       ├── api.ts
+│   │       ├── slice.ts
+│   │       ├── types.ts
+│   │       └── constants.ts
+│   │
+│   ├── layouts/                           # Application-specific layouts
+│   │   ├── DashboardLayout.tsx
+│   │   ├── AuthLayout.tsx
+│   │   └── MainLayout.tsx
+│   │
+│   ├── pages/                             # Route-based page components
+│   │   ├── dashboard/
+│   │   │   ├── Dashboard.tsx
+│   │   │   ├── DashboardAnalytics.tsx
+│   │   │   └── DashboardSettings.tsx
+│   │   ├── settings/
+│   │   │   ├── Settings.tsx
+│   │   │   ├── SettingsProfile.tsx
+│   │   │   └── SettingsSecurity.tsx
+│   │   ├── auth/
+│   │   │   ├── Login.tsx
+│   │   │   ├── Register.tsx
+│   │   │   └── ForgotPassword.tsx
+│   │   └── Home.tsx
+│   │
+│   ├── constants/                         # Application constants
+│   │   ├── routes.ts
+│   │   ├── errorCodes.ts
+│   │   └── appConfig.ts
+│   │
+│   ├── App.tsx                            # Main application component
+│   ├── main.tsx                           # Entry point
+│   └── index.css                          # App-specific CSS
+│
+├── public/                                # Static assets
+│   ├── favicon.ico
+│   ├── robots.txt
+│   └── images/
+│
+├── .eslintrc.js                           # ESLint configuration
+├── .prettierrc                            # Prettier configuration
+├── tailwind.config.ts                     # Tailwind configuration (TypeScript)
+├── vite.config.ts                         # Vite configuration (TypeScript)
+├── tsconfig.json                          # TypeScript configuration
+├── package.json                           # Dependencies and scripts
+└── README.md                              # Project documentation
+```
