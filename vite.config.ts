@@ -20,11 +20,13 @@ export default defineConfig({
   publicDir: resolve(__dirname, "public"),
   resolve: {
     alias: {
-      "@designSystem": resolve(__dirname, "designSystem"),
-      "@public": resolve(__dirname, "public"),
       "@": resolve(__dirname, "src"),
       "@core": resolve(__dirname, "src/core"),
       "@shared": resolve(__dirname, "src/shared"),
+      "@assets": resolve(__dirname, "src/assets"),
+      "@domain": resolve(__dirname, "src/domain"),
+      "@designSystem": resolve(__dirname, "designSystem"),
+      "@public": resolve(__dirname, "public"),
     },
   },
 });

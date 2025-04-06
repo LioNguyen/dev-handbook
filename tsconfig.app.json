@@ -17,11 +17,13 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@designSystem/*": ["./designSystem/*"],
-      "@public/*": ["./public/*"],
       "@/*": ["./src/*"],
+      "@assets/*": ["./src/assets/*"],
       "@core/*": ["./src/core/*"],
-      "@shared/*": ["./src/shared/*"]
+      "@domain/*": ["./src/domain/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@designSystem/*": ["./designSystem/*"],
+      "@public/*": ["./public/*"]
     },
 
     /* Linting */

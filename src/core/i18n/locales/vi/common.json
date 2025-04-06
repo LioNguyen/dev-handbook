@@ -1,0 +1,28 @@
+{
+  "app": {
+    "title": "Ứng dụng của tôi",
+    "welcome": "Chào mừng đến với ứng dụng của chúng tôi"
+  },
+  "navigation": {
+    "home": "Trang chủ",
+    "about": "Giới thiệu",
+    "contact": "Liên hệ",
+    "settings": "Cài đặt"
+  },
+  "actions": {
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "submit": "Gửi"
+  },
+  "errors": {
+    "general": "Đã xảy ra lỗi",
+    "notFound": "Không tìm thấy trang"
+  },
+  "language": {
+    "english": "Tiếng Anh",
+    "vietnamese": "Tiếng Việt",
+    "select": "Chọn ngôn ngữ"
+  }
+}
