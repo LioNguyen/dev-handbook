@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, CreateAxiosDefaults } from "axios";
 
+import { ENV } from "@core/config";
 import { attachAuthInterceptor } from "./interceptors/authInterceptor";
 import { attachErrorInterceptor } from "./interceptors/errorInterceptor";
 
@@ -9,7 +10,7 @@ import { attachErrorInterceptor } from "./interceptors/errorInterceptor";
 const getApiConfig = (): CreateAxiosDefaults => {
   // Read from env variables or config file in a real app
   return {
-    baseURL: import.meta.env.VITE_BASE_API_URL || "/api",
+    baseURL: ENV.BASE_API_URL || "/api",
     timeout: 30000, // 30 seconds
     headers: {
       Accept: "application/json",

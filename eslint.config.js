@@ -42,6 +42,7 @@ export default tseslint.config(
       "@typescript-eslint/no-explicit-any": "warn", // Warn when using any type
       "@typescript-eslint/explicit-function-return-type": "off", // Turn off required function return types
       "@typescript-eslint/ban-ts-comment": "warn", // Warn when using ts-comments
+      "@typescript-eslint/no-empty-object-type": "off",
 
       // General rules
       "no-console": ["warn", { allow: ["warn", "error"] }], // Warn when using console
