@@ -1,0 +1,6 @@
+import { createContext } from "@core/store";  
+import { use{{pascalCase name}}Service } from "./{{camelCase name}}.services";  
+
+interface ContextDefaultValue extends ReturnType<typeof use{{pascalCase name}}Service> {}  
+
+export const { Provider, useValue: use{{pascalCase name}} } = createContext<ContextDefaultValue>("{{pascalCase name}}");

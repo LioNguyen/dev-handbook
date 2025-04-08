@@ -1,0 +1,10 @@
+export interface {{pascalCase name}}Response {}  
+
+// Request types (data sent to API)  
+export interface Create{{pascalCase name}}Request extends Record<string, unknown> {}  
+
+export interface Get{{pascalCase name}}AllRequest extends Record<string, unknown> {}  
+
+export interface Get{{pascalCase name}}ByIdRequest extends Record<string, unknown> {}  
+
+export interface Update{{pascalCase name}}Request extends Record<string, unknown> {}

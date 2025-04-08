@@ -1,16 +1,23 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import apiClient from "../apiClient";
 
-// Global cache with simplified interface
-const cache: Record<string, { data: any; timestamp: number; params?: any }> = {};
+// Define cache entry type
+interface CacheEntry<T> {
+  data: T;
+  timestamp: number;
+  params?: Record<string, unknown>;
+}
+
+// Global cache with proper typing
+const cache: Record<string, CacheEntry<unknown>> = {};
 
 // Create cache key from URL and params
-function getCacheKey(url: string, params?: any): string {
+function getCacheKey(url: string, params?: Record<string, unknown>): string {
   if (!params) return url;
 
   const sortedParams = Object.keys(params)
     .sort()
-    .reduce((obj: Record<string, any>, key) => {
+    .reduce<Record<string, unknown>>((obj, key) => {
       if (params[key] !== undefined) obj[key] = params[key];
       return obj;
     }, {});
@@ -18,10 +25,38 @@ function getCacheKey(url: string, params?: any): string {
   return `${url}:${JSON.stringify(sortedParams)}`;
 }
 
+// Hook options type
+interface UseGetAllOptions {
+  cacheTime: number;
+  staleTime: number;
+  paginated: boolean;
+  keepPreviousData: boolean;
+  autoFetch: boolean;
+}
+
+// Configuration for fetch function
+interface FetchConfig<TData> {
+  initialData?: TData;
+  enabled?: boolean;
+  onSuccess?: (data: TData) => void;
+  skipCache?: boolean;
+  updateCacheOnly?: boolean;
+  preservePreviousData?: boolean;
+  updateParamsState?: boolean;
+}
+
+// Pagination parameters type
+interface PaginationParams {
+  page?: number;
+  limit?: number;
+  sort?: string;
+  order?: "asc" | "desc";
+}
+
 export function useGetAll<TData, TParams extends Record<string, unknown> = Record<string, unknown>>(
   url: string,
   defaultParams?: TParams,
-  options = {
+  options: Partial<UseGetAllOptions> = {
     cacheTime: 5 * 60 * 1000, // 5 minutes
     staleTime: 60 * 1000, // 1 minute
     paginated: true,
@@ -29,6 +64,15 @@ export function useGetAll<TData, TParams extends Record<string, unknown> = Recor
     autoFetch: true, // Auto fetch on mount or params change
   },
 ) {
+  const fullOptions: UseGetAllOptions = {
+    cacheTime: 5 * 60 * 1000,
+    staleTime: 60 * 1000,
+    paginated: true,
+    keepPreviousData: true,
+    autoFetch: true,
+    ...options,
+  };
+
   // State
   const [data, setData] = useState<TData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -51,11 +95,11 @@ export function useGetAll<TData, TParams extends Record<string, unknown> = Recor
 
   // Check if data is stale
   const isStale = useCallback(
-    (params?: any) => {
-      const entry = cache[getCacheKey(url, params)];
-      return !entry || Date.now() - entry.timestamp > options.staleTime;
+    (checkParams?: Record<string, unknown>): boolean => {
+      const entry = cache[getCacheKey(url, checkParams)] as CacheEntry<TData> | undefined;
+      return !entry || Date.now() - entry.timestamp > fullOptions.staleTime;
     },
-    [url, options.staleTime],
+    [url, fullOptions.staleTime],
   );
 
   // Cleanup expired cache
@@ -63,27 +107,16 @@ export function useGetAll<TData, TParams extends Record<string, unknown> = Recor
     const cleanup = () => {
       const now = Date.now();
       Object.keys(cache).forEach((key) => {
-        if (now - cache[key].timestamp > options.cacheTime) delete cache[key];
+        if (now - cache[key].timestamp > fullOptions.cacheTime) delete cache[key];
       });
     };
     const interval = setInterval(cleanup, 60 * 1000);
     return () => clearInterval(interval);
-  }, [options.cacheTime]);
+  }, [fullOptions.cacheTime]);
 
   // Main fetch function
   const fetch = useCallback(
-    async (
-      fetchParams?: TParams & { page?: number; limit?: number; sort?: string; order?: "asc" | "desc" },
-      config?: {
-        initialData?: TData;
-        enabled?: boolean;
-        onSuccess?: (data: TData) => void;
-        skipCache?: boolean;
-        updateCacheOnly?: boolean;
-        preservePreviousData?: boolean;
-        updateParamsState?: boolean; // Flag to control params state updates
-      },
-    ): Promise<TData | null> => {
+    async (fetchParams?: TParams & PaginationParams, config?: FetchConfig<TData>): Promise<TData | null> => {
       if (config?.enabled === false) return null;
       if (activeRequest.current) return activeRequest.current;
 
@@ -96,11 +129,11 @@ export function useGetAll<TData, TParams extends Record<string, unknown> = Recor
       }
 
       const cacheKey = getCacheKey(url, paramsToUse);
-      const keepPrevious = config?.preservePreviousData ?? options.keepPreviousData;
+      const keepPrevious = config?.preservePreviousData ?? fullOptions.keepPreviousData;
 
       // Check cache first
       if (!config?.skipCache) {
-        const cached = cache[cacheKey];
+        const cached = cache[cacheKey] as CacheEntry<TData> | undefined;
         if (cached && !isStale(paramsToUse)) {
           if (!config?.updateCacheOnly) setData(cached.data);
           config?.onSuccess?.(cached.data);
@@ -159,58 +192,88 @@ export function useGetAll<TData, TParams extends Record<string, unknown> = Recor
       activeRequest.current = fetchPromise;
       return fetchPromise;
     },
-    [url, data, isStale, options.keepPreviousData, params],
+    [url, data, isStale, fullOptions.keepPreviousData, params],
   );
 
   // Auto-fetch on mount or when params change
   useEffect(() => {
-    if (options.autoFetch) {
+    if (fullOptions.autoFetch) {
       fetch(params, { updateParamsState: false }); // Prevent infinite loop
     }
-  }, [fetch, params, options.autoFetch]);
+  }, [fetch, params, fullOptions.autoFetch]);
 
   // Cache management helpers
   const invalidateCache = useCallback(
-    (invalidateParams?: any) => {
+    (invalidateParams?: Record<string, unknown>): void => {
       delete cache[getCacheKey(url, invalidateParams || params)];
     },
     [url, params],
   );
 
-  const invalidateAllCache = useCallback(() => {
+  const invalidateAllCache = useCallback((): void => {
     const prefix = `${url}:`;
     Object.keys(cache).forEach((key) => {
       if (key === url || key.startsWith(prefix)) delete cache[key];
     });
   }, [url]);
 
+  const refresh = useCallback(
+    (refreshParams?: TParams, refreshConfig?: FetchConfig<TData>): Promise<TData | null> =>
+      fetch(refreshParams || params, { ...refreshConfig, skipCache: true }),
+    [fetch, params],
+  );
+
+  const backgroundRefresh = useCallback(
+    (refreshParams?: TParams, refreshConfig?: FetchConfig<TData>): Promise<TData | null> =>
+      fetch(refreshParams || params, { ...refreshConfig, updateCacheOnly: true }),
+    [fetch, params],
+  );
+
+  const refetchLast = useCallback(
+    (): Promise<TData | null> | null =>
+      lastParams.current ? fetch(lastParams.current, { updateParamsState: false }) : null,
+    [fetch],
+  );
+
+  const getCachedPages = useCallback((): (Record<string, unknown> | undefined)[] => {
+    const prefix = `${url}:`;
+    return Object.keys(cache)
+      .filter((key) => key === url || key.startsWith(prefix))
+      .map((key) => cache[key].params)
+      .filter(Boolean);
+  }, [url]);
+
+  const clearAllCache = useCallback((): void => {
+    Object.keys(cache).forEach((key) => delete cache[key]);
+  }, []);
+
+  const reset = useCallback((): void => {
+    setData(null);
+    setError(null);
+    invalidateAllCache();
+  }, [invalidateAllCache]);
+
+  const isCached = useCallback(
+    (checkParams?: TParams): boolean => !!cache[getCacheKey(url, checkParams || params)],
+    [url, params],
+  );
+
   return {
     data,
     isLoading,
     isFetching,
     error,
-    params, // Current params accessible
+    params,
     fetch,
-    refresh: (refreshParams?: any, config?: any) => fetch(refreshParams || params, { ...config, skipCache: true }),
-    refetchLast: () => (lastParams.current ? fetch(lastParams.current, { updateParamsState: false }) : null),
-    backgroundRefresh: (refreshParams?: any, config?: any) =>
-      fetch(refreshParams || params, { ...config, updateCacheOnly: true }),
+    refresh,
+    refetchLast,
+    backgroundRefresh,
     invalidateCache,
     invalidateAllCache,
-    clearAllCache: () => Object.keys(cache).forEach((key) => delete cache[key]),
-    reset: () => {
-      setData(null);
-      setError(null);
-      invalidateAllCache();
-    },
-    isCached: (checkParams?: any) => !!cache[getCacheKey(url, checkParams || params)],
+    clearAllCache,
+    reset,
+    isCached,
     isStale,
-    getCachedPages: () => {
-      const prefix = `${url}:`;
-      return Object.keys(cache)
-        .filter((key) => key === url || key.startsWith(prefix))
-        .map((key) => cache[key].params)
-        .filter(Boolean);
-    },
+    getCachedPages,
   };
 }

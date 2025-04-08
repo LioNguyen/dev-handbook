@@ -24,7 +24,7 @@ export default defineConfig({
       "@core": resolve(__dirname, "src/core"),
       "@shared": resolve(__dirname, "src/shared"),
       "@assets": resolve(__dirname, "src/assets"),
-      "@domain": resolve(__dirname, "src/domain"),
+      "@domains": resolve(__dirname, "src/domains"),
       "@designSystem": resolve(__dirname, "designSystem"),
       "@public": resolve(__dirname, "public"),
     },

@@ -1,0 +1,21 @@
+import { FC, ReactNode, useMemo } from "react";  
+
+import { Provider } from "./{{camelCase name}}.context";  
+import { use{{pascalCase name}}Service } from "./{{camelCase name}}.services";  
+
+const {{pascalCase name}}Provider: FC<{ children: ReactNode }> = ({ children }) => {  
+  // Get {{camelCase name}} service  
+  const {{camelCase name}}Service = use{{pascalCase name}}Service();  
+
+  // Memoize the context value  
+  const value = useMemo(  
+    () => ({  
+      ...{{camelCase name}}Service,  
+    }),  
+    [{{camelCase name}}Service],  
+  );  
+
+  return <Provider value={value}>{children}</Provider>;  
+};  
+
+export { {{pascalCase name}}Provider };

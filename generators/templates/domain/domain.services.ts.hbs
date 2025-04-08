@@ -1,0 +1,22 @@
+import { useGetAll, useGetById, usePost, usePut } from "@/core/api/hooks";  
+import {  
+  {{pascalCase name}}Response,  
+  Create{{pascalCase name}}Request,  
+  Get{{pascalCase name}}AllRequest,  
+  Get{{pascalCase name}}ByIdRequest,  
+  Update{{pascalCase name}}Request,  
+} from "./{{camelCase name}}.types";  
+
+export function use{{pascalCase name}}Service() {  
+  const create{{pascalCase name}}State = usePost<{{pascalCase name}}Response, Create{{pascalCase name}}Request>("/{{camelCase name}}s");  
+  const get{{pascalCase name}}AllState = useGetAll<{{pascalCase name}}Response[], Get{{pascalCase name}}AllRequest>("/{{camelCase name}}s");  
+  const get{{pascalCase name}}ByIdState = useGetById<{{pascalCase name}}Response, Get{{pascalCase name}}ByIdRequest>(`/{{camelCase name}}s`);  
+  const update{{pascalCase name}}State = usePut<{{pascalCase name}}Response, Update{{pascalCase name}}Request>(`/{{camelCase name}}s/:id`);  
+
+  return {  
+    create{{pascalCase name}}State,  
+    get{{pascalCase name}}AllState,  
+    get{{pascalCase name}}ByIdState,  
+    update{{pascalCase name}}State,  
+  };  
+}
