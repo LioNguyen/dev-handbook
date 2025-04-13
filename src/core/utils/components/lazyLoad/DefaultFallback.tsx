@@ -1,13 +1,12 @@
 import { FC } from "react";
 
-// Fallback component props
-export interface FallbackProps {
+interface DefaultFallbackProps {
   error?: Error | null;
   retry?: () => void;
 }
 
 // Default fallback component
-const DefaultFallback: FC<FallbackProps> = ({ error, retry }) => {
+const DefaultFallback: FC<DefaultFallbackProps> = ({ error, retry }) => {
   if (error) {
     return (
       <div className="error-fallback" role="alert">
@@ -21,3 +20,4 @@ const DefaultFallback: FC<FallbackProps> = ({ error, retry }) => {
 };
 
 export default DefaultFallback;
+export type { DefaultFallbackProps };
