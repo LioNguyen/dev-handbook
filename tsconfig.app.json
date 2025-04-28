@@ -19,6 +19,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@assets/*": ["./src/assets/*"],
+      "@components/*": ["./src/components/*"],
       "@core/*": ["./src/core/*"],
       "@domains/*": ["./src/domains/*"],
       "@shared/*": ["./src/shared/*"],

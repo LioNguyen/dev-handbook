@@ -87,12 +87,14 @@ Built with modern best practices and a focus on developer experience and code qu
 
 ## Project Structure
 
+# Cấu trúc dự án hoàn chỉnh
+
 ```plaintext
 project-root/
 │
 ├── designSystem/                          # Design system (outside src)
 │   ├── components/                        # UI components
-│   │   ├── ui/                            # shadcn/ui components
+│   │   ├── ui/                            # shadCN/ui components
 │   │   │   ├── button/
 │   │   │   │   ├── Button.tsx
 │   │   │   │   └── index.ts
@@ -149,25 +151,80 @@ project-root/
 │   └── tailwind.preset.ts                 # Tailwind preset config
 │
 ├── src/                                   # Application code
-│   ├── core/                              # Core application framework
+│   ├── core/                              # Core application framework (theo ảnh)
 │   │   ├── api/                           # API client foundation
-│   │   │   ├── client.ts                  # Base API client
+│   │   │   ├── hooks/                     # API hooks tái sử dụng
+│   │   │   │   ├── index.ts               # Exports all hooks
+│   │   │   │   ├── useDelete.ts           # Hook for DELETE requests
+│   │   │   │   ├── useGetAll.ts           # Hook for GET all requests
+│   │   │   │   ├── useGetById.ts          # Hook for GET by ID requests
+│   │   │   │   ├── usePost.ts             # Hook for POST requests
+│   │   │   │   └── usePut.ts              # Hook for PUT requests
 │   │   │   ├── interceptors/              # Request/response interceptors
-│   │   │   │   ├── authInterceptor.ts
-│   │   │   │   └── errorInterceptor.ts
-│   │   │   └── errorHandling.ts           # API error handling
+│   │   │   │   ├── authInterceptor.ts     # Authentication interceptor
+│   │   │   │   ├── errorInterceptor.ts    # Error handling interceptor
+│   │   │   │   └── index.ts               # Exports all interceptors
+│   │   │   ├── apiClient.ts               # Base API client
+│   │   │   ├── apiPaths.ts                # API endpoints definitions
+│   │   │   ├── errorHandling.ts           # API error handling
+│   │   │   └── index.ts                   # API module exports
+│   │   │
 │   │   ├── config/                        # App configuration
 │   │   │   ├── environment.ts             # Environment variables
-│   │   │   └── settings.ts                # App settings
+│   │   │   ├── settings.ts                # App settings
+│   │   │   └── index.ts                   # Config exports
+│   │   │
+│   │   ├── i18n/                          # Internationalization setup
+│   │   │   ├── locales/                   # Translation files
+│   │   │   │   ├── en/                    # English translations
+│   │   │   │   │   ├── common.json        # Common English texts
+│   │   │   │   │   └── validation.json    # Validation messages in English
+│   │   │   │   ├── vi/                    # Vietnamese translations
+│   │   │   │   │   ├── common.json        # Common Vietnamese texts
+│   │   │   │   │   └── validation.json    # Validation messages in Vietnamese
+│   │   │   │   └── index.ts               # Exports all locales
+│   │   │   ├── i18n.ts                    # i18n configuration
+│   │   │   ├── useLanguageSwitcher.ts     # Hook for switching languages
+│   │   │   └── index.ts                   # i18n exports
+│   │   │
 │   │   ├── router/                        # Routing foundation
-│   │   │   ├── router.ts
-│   │   │   └── routes.ts
+│   │   │   ├── index.ts                   # Router exports
+│   │   │   ├── router.tsx                 # Main router configuration
+│   │   │   └── routes.ts                  # Route definitions
+│   │   │
 │   │   ├── store/                         # State management foundation
-│   │   │   ├── store.ts
-│   │   │   └── rootReducer.ts
-│   │   └── i18n/                          # Internationalization setup
-│   │       ├── i18n.ts
-│   │       └── locales/
+│   │   │   ├── contextFactory.ts          # Create context utilities
+│   │   │   ├── index.ts                   # Store exports
+│   │   │   └── store.ts                   # Redux store configuration
+│   │   │
+│   │   ├── utils/                         # Utilities
+│   │   │   ├── components/                # Utility components
+│   │   │   │   ├── lazyLoad/              # Lazy loading utilities
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── lazyLoad.tsx
+│   │   │   │   ├── withErrorBoundary/     # Error boundary wrapper
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   ├── withErrorBoundary.tsx
+│   │   │   │   │   └── DefaultFallback.tsx
+│   │   │   │   └── index.ts
+│   │   │   ├── formatters/                # Data formatting utilities
+│   │   │   │   ├── dateFormat.ts          # Date formatting
+│   │   │   │   ├── numberFormat.ts        # Number formatting
+│   │   │   │   └── index.ts               # Formatter exports
+│   │   │   ├── hooks/                     # Utility hooks
+│   │   │   │   ├── index.ts               # Hook exports
+│   │   │   │   ├── useDebounce.ts         # Debounce hook
+│   │   │   │   ├── useLocation.ts         # Location hook
+│   │   │   │   ├── useNavigate.ts         # Navigation hook
+│   │   │   │   ├── usePrevious.ts         # Previous value hook
+│   │   │   │   └── useScreenSize.ts       # Screen size detection
+│   │   │   ├── storage/                   # Storage utilities
+│   │   │   │   ├── index.ts               # Storage exports
+│   │   │   │   ├── storage.ts             # Abstract storage
+│   │   │   │   └── localStorage.ts        # LocalStorage implementation
+│   │   │   └── index.ts                   # Utils exports
+│   │   │
+│   │   └── index.ts                       # Core module exports
 │   │
 │   ├── shared/                            # Shared across domains
 │   │   ├── components/                    # Shared UI components
@@ -175,13 +232,8 @@ project-root/
 │   │   │   ├── PageHeader.tsx
 │   │   │   └── GlobalNotifications.tsx
 │   │   ├── hooks/                         # Shared custom hooks
-│   │   │   ├── useDebounce.ts
 │   │   │   ├── usePagination.ts
-│   │   │   └── useLocalStorage.ts
-│   │   ├── utils/                         # Shared utilities
-│   │   │   ├── formatters.ts
-│   │   │   ├── validators.ts
-│   │   │   └── dateUtils.ts
+│   │   │   └── useSearch.ts
 │   │   ├── assets/                        # Shared assets
 │   │   │   ├── images/
 │   │   │   └── icons/
@@ -266,9 +318,10 @@ project-root/
 │   │   ├── errorCodes.ts
 │   │   └── appConfig.ts
 │   │
+│   ├── App.css                            # App-specific CSS
 │   ├── App.tsx                            # Main application component
 │   ├── main.tsx                           # Entry point
-│   └── index.css                          # App-specific CSS
+│   └── vite-env.d.ts                      # Vite environment types
 │
 ├── public/                                # Static assets
 │   ├── favicon.ico

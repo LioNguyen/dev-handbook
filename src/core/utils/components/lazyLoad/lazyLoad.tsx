@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import DefaultFallback from "./DefaultFallback";
+import DefaultFallback from "../DefaultFallback";
 
 import React, { ComponentType, JSX, lazy, Suspense } from "react";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
