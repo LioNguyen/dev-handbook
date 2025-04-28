@@ -9,7 +9,6 @@ A modern React 19 application built with TypeScript, featuring a comprehensive d
 - **Internationalization** - Multi-language support with i18next
 - **Component Library** - Documented with Storybook
 - **Comprehensive Testing** - Unit and interaction testing
-- **Modern Data Fetching** - Using TanStack React Query
 
 ## 🛠️ Technology Stack
 
@@ -21,7 +20,6 @@ A modern React 19 application built with TypeScript, featuring a comprehensive d
 - React Router v7
 - Styled Components
 - Zod for schema validation
-- TanStack React Query
 
 ### Testing
 
