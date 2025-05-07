@@ -19,6 +19,12 @@ export const nodes: Node[] = [
     data: { label: 'Node 3' },
     position: { x: 0, y: 0 },
   },
+  {
+    type: 'custom',
+    id: '4',
+    data: { label: 'Node 4' },
+    position: { x: 0, y: 0 },
+  },
 ];
 
 export const edges: Edge[] = [
@@ -31,5 +37,10 @@ export const edges: Edge[] = [
     id: '1->3',
     source: '1',
     target: '3',
+  },
+  {
+    id: '1->4',
+    source: '1',
+    target: '4',
   },
 ];

@@ -1,10 +1,19 @@
-import { memo } from 'react';
-import { Handle, Position, NodeToolbar, NodeProps, useStore, useReactFlow } from 'reactflow';
+import { memo } from "react";
+import {
+  Handle,
+  Position,
+  NodeToolbar,
+  NodeProps,
+  useStore,
+  useReactFlow,
+} from "reactflow";
 
-import useDetachNodes from './useDetachNodes';
+import useDetachNodes from "./useDetachNodes";
 
 function SimpleNode({ id, data }: NodeProps) {
-  const hasParent = useStore((store) => !!store.nodeInternals.get(id)?.parentNode);
+  const hasParent = useStore(
+    (store) => !!store.nodeInternals.get(id)?.parentNode
+  );
   const { deleteElements } = useReactFlow();
   const detachNodes = useDetachNodes();
 
