@@ -1,43 +1,91 @@
-import { useEffect, useState } from 'react';
-import { Node, useReactFlow } from 'reactflow';
-import { timer } from 'd3-timer';
+import { useEffect, useState } from "react";
+import { Node, useReactFlow } from "reactflow";
+import { timer } from "d3-timer";
 
+/**
+ * Options for the animated nodes hook
+ */
 export type UseAnimatedNodeOptions = {
-  animationDuration?: number;
+  animationDuration?: number; // Duration of animations in milliseconds
 };
 
-function useAnimatedNodes(nodes: Node[], { animationDuration = 300 }: UseAnimatedNodeOptions = {}) {
+/**
+ * Custom hook that animates node position changes
+ * Rather than immediately jumping to new positions, nodes smoothly
+ * transition from their old positions to new ones.
+ *
+ * @param nodes The current nodes with their target positions
+ * @param options Configuration options including animation duration
+ * @returns Object containing the nodes with interpolated positions during animation
+ */
+function useAnimatedNodes(
+  nodes: Node[],
+  { animationDuration = 300 }: UseAnimatedNodeOptions = {}
+) {
+  // State for storing nodes during animation
   const [tmpNodes, setTmpNodes] = useState(nodes);
+  // Get access to the ReactFlow instance
   const { getNode } = useReactFlow();
 
   useEffect(() => {
-    const transitions = nodes.map((node) => ({
-      id: node.id,
-      from: getNode(node.id)?.position ?? node.position,
-      to: node.position,
-      node,
-    }));
+    console.log("Starting node animation with duration:", animationDuration);
 
+    // Create transition data for each node
+    const transitions = nodes.map((node) => {
+      const currentNode = getNode(node.id);
+      const fromPosition = currentNode?.position ?? node.position;
+
+      console.log(
+        `Node ${node.id} transition: (${fromPosition.x}, ${fromPosition.y}) → (${node.position.x}, ${node.position.y})`
+      );
+
+      return {
+        id: node.id,
+        from: fromPosition,
+        to: node.position,
+        node,
+      };
+    });
+
+    // Create timer for animation
     const t = timer((elapsed) => {
+      // Calculate progress (0 to 1)
       const s = elapsed / animationDuration;
 
+      if (elapsed % 50 === 0) {
+        console.log(
+          `Animation progress: ${Math.min(100, Math.round(s * 100))}%`
+        );
+      }
+
+      // Calculate interpolated positions for all nodes
       const currNodes = transitions.map(({ node, from, to }) => {
         return {
           ...node,
-          position: { x: from.x + (to.x - from.x) * s, y: from.y + (to.y - from.y) * s },
+          position: {
+            x: from.x + (to.x - from.x) * s,
+            y: from.y + (to.y - from.y) * s,
+          },
         };
       });
 
+      // Update nodes with interpolated positions
       setTmpNodes(currNodes);
 
+      // Stop animation when complete
       if (elapsed > animationDuration) {
-        // it's important to set the final nodes here to avoid glitches
+        console.log("Animation complete, setting final positions");
+        // Important to set final positions to avoid rounding errors
         setTmpNodes(nodes);
         t.stop();
       }
     });
 
-    return () => t.stop();
+    // Clean up timer on unmount or when nodes change
+    return () => {
+      console.log("Cleaning up animation timer");
+      t.stop();
+    };
   }, [nodes, getNode, animationDuration]);
 
   return { nodes: tmpNodes };
