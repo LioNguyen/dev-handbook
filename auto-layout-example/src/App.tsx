@@ -1,4 +1,10 @@
-import React, { useEffect, useState, MouseEvent, DragEvent, DragEventHandler } from 'react';
+import React, {
+  useEffect,
+  useState,
+  MouseEvent,
+  DragEvent,
+  DragEventHandler,
+} from "react";
 import ReactFlow, {
   MarkerType,
   ReactFlowProvider,
@@ -13,27 +19,30 @@ import ReactFlow, {
   OnEdgesChange,
   EdgeChange,
   applyEdgeChanges,
-} from 'reactflow';
+} from "reactflow";
 
-import Sidebar from './Sidebar';
-import CustomNode from './CustomNode';
-import useAutoLayout, { Direction } from './useAutoLayout';
-import * as initialElements from './initialElements';
+import Sidebar from "./Sidebar";
+import CustomNode from "./CustomNode";
+import useAutoLayout, { Direction } from "./useAutoLayout";
+import * as initialElements from "./initialElements";
 
-import 'reactflow/dist/style.css';
-import styles from './styles.module.css';
+import "reactflow/dist/style.css";
+import styles from "./styles.module.css";
 
+// Define custom node types that will be used in the flow
 const nodeTypes: NodeTypes = {
   custom: CustomNode,
 };
 
+// Pro account configuration to hide attribution
 const proOptions = {
-  account: 'paid-pro',
+  account: "paid-pro",
   hideAttribution: true,
 };
 
+// Default configuration for new edges
 const defaultEdgeOptions = {
-  type: 'smoothstep',
+  type: "smoothstep",
   markerEnd: { type: MarkerType.ArrowClosed },
   pathOptions: { offset: 5 },
 };
@@ -47,29 +56,40 @@ type NodeData = {
 };
 
 /**
- * This example shows how you can automatically arrange your nodes after adding child nodes to your graph.
+ * ReactFlowPro component - Main component for automatic node arrangement
+ * This component demonstrates how to automatically arrange nodes after adding children to the graph
  */
-function ReactFlowPro({ direction = 'TB' }: ExampleProps) {
-  // this hook handles the computation of the layout once the elements or the direction changes
+function ReactFlowPro({ direction = "TB" }: ExampleProps) {
   const { fitView } = useReactFlow();
 
+  // Use custom hook for automatic layout based on direction
   useAutoLayout({ direction });
+
+  // State for nodes and edges
   const [nodes, setNodes] = useState<Node<NodeData>[]>(initialElements.nodes);
   const [edges, setEdges] = useState<Edge[]>(initialElements.edges);
 
-  // this function adds a new node and connects it to the source node
+  /**
+   * Creates a new connection from the source node to a new target node
+   * @param sourceId ID of the source node
+   */
   const createConnection = (sourceId: string) => {
-    // create an incremental ID based on the number of elements already in the graph
+    console.log("Creating connection from node:", sourceId);
+
+    // Create incremental ID based on number of existing nodes
     const targetId: string = `${nodes.length + 1}`;
 
+    // Create new target node
     const targetNode: Node<NodeData> = {
       id: targetId,
       data: { label: `Node ${targetId}` },
-      position: { x: 0, y: 0 }, // no need to pass a position as it is computed by the layout hook
-      type: 'custom',
+      // Position will be computed by layout hook
+      position: { x: 0, y: 0 },
+      type: "custom",
       style: { opacity: 0 },
     };
 
+    // Create edge connecting source to new target
     const connectingEdge: Edge = {
       id: `${sourceId}->${targetId}`,
       source: sourceId,
@@ -77,41 +97,70 @@ function ReactFlowPro({ direction = 'TB' }: ExampleProps) {
       style: { opacity: 0 },
     };
 
+    console.log("Adding new node:", targetNode);
+    console.log("Adding new edge:", connectingEdge);
+
     setNodes((nodes) => nodes.concat([targetNode]));
     setEdges((edges) => edges.concat([connectingEdge]));
   };
 
-  // this function is called once the node from the sidebar is dropped onto a node in the current graph
+  /**
+   * Handles drop events when a node is dragged from sidebar onto an existing node
+   * @param evt Drag event object
+   */
   const onDrop: DragEventHandler = (evt: DragEvent<HTMLDivElement>) => {
-    // make sure that the event target is a DOM element
+    console.log("Drop event detected");
+
+    // Ensure target is a DOM element
     if (evt.target instanceof Element) {
-      // from the target element search for the node wrapper element which has the node id as attribute
-      const targetId = evt.target.closest('.react-flow__node')?.getAttribute('data-id');
+      // Find the closest node wrapper element with a data-id attribute
+      const targetId = evt.target
+        .closest(".react-flow__node")
+        ?.getAttribute("data-id");
 
       if (targetId) {
-        // now we can create a connection to the drop target node
+        console.log("Drop target identified:", targetId);
         createConnection(targetId);
+      } else {
+        console.log("No valid drop target found");
       }
     }
   };
 
-  // this function is called when a node in the graph is clicked
-  // enables a second possibility to add nodes to the canvas
-  const onNodeClick: NodeMouseHandler = (_: MouseEvent, node: Node<NodeData>) => {
-    // on click, we want to add create a new node connection the clicked node
+  /**
+   * Handles node click events - adds a new connected node when an existing node is clicked
+   * @param _ Mouse event (unused)
+   * @param node The clicked node
+   */
+  const onNodeClick: NodeMouseHandler = (
+    _: MouseEvent,
+    node: Node<NodeData>
+  ) => {
+    console.log("Node clicked:", node.id);
     createConnection(node.id);
   };
 
+  /**
+   * Applies changes to nodes (position, selection, etc.)
+   * @param changes Array of node changes to apply
+   */
   const onNodesChange: OnNodesChange = (changes: NodeChange[]) => {
+    console.log("Node changes:", changes);
     setNodes((nodes) => applyNodeChanges(changes, nodes));
   };
 
+  /**
+   * Applies changes to edges
+   * @param changes Array of edge changes to apply
+   */
   const onEdgesChange: OnEdgesChange = (changes: EdgeChange[]) => {
+    console.log("Edge changes:", changes);
     setEdges((edges) => applyEdgeChanges(changes, edges));
   };
 
-  // every time our nodes change, we want to center the graph again
+  // Center the graph whenever nodes are updated
   useEffect(() => {
+    console.log("Nodes updated, fitting view");
     fitView({ duration: 400 });
   }, [nodes, fitView]);
 
@@ -129,7 +178,6 @@ function ReactFlowPro({ direction = 'TB' }: ExampleProps) {
         fitView
         onDrop={onDrop}
         onNodeClick={onNodeClick}
-        // newly added edges get these options automatically
         defaultEdgeOptions={defaultEdgeOptions}
         minZoom={-Infinity}
         maxZoom={Infinity}
@@ -138,8 +186,12 @@ function ReactFlowPro({ direction = 'TB' }: ExampleProps) {
   );
 }
 
-// as we are accessing the internal React Flow state in our component, we need to wrap it with the ReactFlowProvider
+/**
+ * ReactFlowWrapper component
+ * Wraps the main component with ReactFlowProvider to access internal React Flow state
+ */
 const ReactFlowWrapper = (props: ExampleProps) => {
+  console.log("Initializing ReactFlow with props:", props);
   return (
     <ReactFlowProvider>
       <ReactFlowPro {...props} />
