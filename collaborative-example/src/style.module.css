@@ -20,7 +20,7 @@
   font-weight: 700;
 }
 
-.wrapper :global aside div[class^='react-flow__node-'] {
+.wrapper :global aside div[class^="react-flow__node-"] {
   width: 100%;
   box-sizing: border-box;
 }
