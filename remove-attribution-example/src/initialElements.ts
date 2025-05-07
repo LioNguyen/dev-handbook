@@ -1,34 +1,34 @@
-import { CSSProperties } from 'react';
-import { Node, Edge } from 'reactflow';
+import { CSSProperties } from "react";
+import { Node, Edge } from "reactflow";
 
 const nodeStyle: CSSProperties = {
-  color: '#0041d0',
-  borderColor: '#0041d0',
+  color: "#0041d0",
+  borderColor: "#0041d0",
 };
 
 export const nodes: Node[] = [
   {
-    type: 'input',
-    id: '1',
-    data: { label: 'Thanks' },
+    type: "input",
+    id: "1",
+    data: { label: "Thanks" },
     position: { x: 100, y: 0 },
     style: nodeStyle,
   },
   {
-    id: '2',
-    data: { label: 'for' },
+    id: "2",
+    data: { label: "for" },
     position: { x: 0, y: 100 },
     style: nodeStyle,
   },
   {
-    id: '3',
-    data: { label: 'using' },
+    id: "3",
+    data: { label: "using" },
     position: { x: 200, y: 100 },
     style: nodeStyle,
   },
   {
-    id: '4',
-    data: { label: 'React Flow Pro!' },
+    id: "4",
+    data: { label: "React Flow Pro!" },
     position: { x: 100, y: 200 },
     style: nodeStyle,
   },
@@ -36,27 +36,27 @@ export const nodes: Node[] = [
 
 export const edges: Edge[] = [
   {
-    id: '1->2',
-    source: '1',
-    target: '2',
+    id: "1->2",
+    source: "1",
+    target: "2",
     animated: true,
   },
   {
-    id: '1->3',
-    source: '1',
-    target: '3',
+    id: "1->3",
+    source: "1",
+    target: "3",
     animated: true,
   },
   {
-    id: '2->4',
-    source: '2',
-    target: '4',
+    id: "2->4",
+    source: "2",
+    target: "4",
     animated: true,
   },
   {
-    id: '3->4',
-    source: '3',
-    target: '4',
+    id: "3->4",
+    source: "3",
+    target: "4",
     animated: true,
   },
 ];
