@@ -12,7 +12,16 @@ import { useCanvasHandlers } from "@/domains/canvas/hooks/handlers";
 /**
  * Custom node component with enhanced functionality
  */
-export default function CustomNode({ data, id, xPos, yPos, sourcePosition, targetPosition, selected }: NodeProps) {
+export default function CustomNode({
+  data,
+  id,
+  xPos,
+  yPos,
+  sourcePosition,
+  targetPosition,
+  selected,
+  dragging,
+}: NodeProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { highlightedNodeId } = useCanvas();
 
@@ -25,17 +34,19 @@ export default function CustomNode({ data, id, xPos, yPos, sourcePosition, targe
     type = "ip", // Default type
     subtext = "IP ADDRESS",
     value = order,
+    isDragging = false,
+    isDropTarget = false,
   } = data;
 
   // Determine if this node is highlighted
   const isHighlighted = highlightedNodeId === id;
 
-  // Close popover when node is selected
+  // Close popover when node is selected or dragging
   useEffect(() => {
-    if (selected) {
+    if (selected || dragging) {
       setIsOpen(false);
     }
-  }, [selected]);
+  }, [selected, dragging]);
 
   /**
    * Adds a new child node
@@ -115,8 +126,11 @@ export default function CustomNode({ data, id, xPos, yPos, sourcePosition, targe
 
   // Determine any special styling for the node
   const getNodeStyle = () => {
-    // The node with order "2.2" is highlighted in the image
-    if (isHighlighted) {
+    if (dragging || isDragging) {
+      return "bg-blue-100 opacity-70 cursor-grabbing";
+    } else if (isDropTarget) {
+      return "bg-blue-100 outline-2 outline-dashed outline-blue-500";
+    } else if (isHighlighted) {
       return "bg-blue-100 outline-2 outline-pink-500";
     } else {
       return "bg-blue-100";
@@ -148,7 +162,6 @@ export default function CustomNode({ data, id, xPos, yPos, sourcePosition, targe
       <Handle position={targetPosition || Position.Left} type="target" className="!left-0" />
       <Handle position={sourcePosition || Position.Right} type="source" className="!right-0" />
 
-      {/* Action button with popover - styled for the new design */}
       {/* Action button with popover - styled for the new design */}
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
@@ -209,6 +222,20 @@ export default function CustomNode({ data, id, xPos, yPos, sourcePosition, targe
       >
         + add child node
       </div>
+
+      {/* Show drag status indicator if the node is being dragged */}
+      {(isDragging || dragging) && (
+        <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-2 py-0.5 rounded text-xs whitespace-nowrap">
+          Drag onto another node
+        </div>
+      )}
+
+      {/* Show drop target indicator */}
+      {isDropTarget && (
+        <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-green-600 text-white px-2 py-0.5 rounded text-xs whitespace-nowrap">
+          Drop to make child
+        </div>
+      )}
     </div>
   );
 }

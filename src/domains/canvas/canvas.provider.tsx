@@ -1,10 +1,10 @@
 // src/domains/canvas/canvas.provider.tsx
-import { FC, ReactNode, useMemo, useState } from "react";
+import { FC, ReactNode, useMemo, useState, useEffect, useCallback, useRef } from "react";
 import { Edge, Node, ReactFlowInstance, ReactFlowProvider } from "reactflow";
 
 import { Provider } from "./canvas.context";
 import { useCanvasService } from "./canvas.services";
-import useAnimatedNodes from "./hooks/useAnimatedNodes";
+import useAutoLayout from "./hooks/useAutoLayout";
 import useExpandCollapse from "./hooks/useExpandCollapse";
 
 const MainCanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
@@ -19,6 +19,12 @@ const MainCanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [highlightedNodes, setHighlightedNodes] = useState<Set<string>>(new Set());
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 
+  // Track drag operations
+  const isDraggingRef = useRef(false);
+  const wasNodeAddedRef = useRef(false);
+  const prevNodesCountRef = useRef(nodes.length);
+  const lastDragEndTimeRef = useRef(0);
+
   // Canvas settings
   const [canvasSettings, setCanvasSettings] = useState({
     treeWidth: 400,
@@ -27,16 +33,118 @@ const MainCanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
     direction: "LR" as "TB" | "LR" | "RL" | "BT",
   });
 
-  // Use custom hooks for layout and animation
+  // First use expand/collapse to determine visible nodes
   const { nodes: visibleNodes, edges: visibleEdges } = useExpandCollapse(nodes, edges, {
+    // Important: Set layoutNodes to false to let useAutoLayout handle layout
+    layoutNodes: false,
     treeWidth: canvasSettings.treeWidth,
     treeHeight: canvasSettings.treeHeight,
     direction: canvasSettings.direction,
   });
 
-  const { nodes: animatedNodes } = useAnimatedNodes(visibleNodes, {
+  // Use auto layout hook
+  const { triggerLayout } = useAutoLayout({
+    direction: canvasSettings.direction,
+    nodeWidth: canvasSettings.treeWidth,
+    nodeHeight: canvasSettings.treeHeight,
     animationDuration: canvasSettings.animationDuration,
   });
+
+  // Enhanced node state updater with drag detection
+  const enhancedSetNodes = useCallback(
+    (updater: React.SetStateAction<Node[]>) => {
+      setNodes((currentNodes) => {
+        const newNodes = typeof updater === "function" ? updater(currentNodes) : updater;
+
+        // Check if node count changed (node added or removed)
+        if (newNodes.length !== currentNodes.length) {
+          wasNodeAddedRef.current = true;
+          prevNodesCountRef.current = newNodes.length;
+        }
+
+        // Check for expand/collapse operations
+        const expandCollapseOperation = newNodes.some((newNode, index) => {
+          if (index >= currentNodes.length) return false;
+          const currentNode = currentNodes[index];
+          return newNode.id === currentNode.id && newNode.data?.expanded !== currentNode.data?.expanded;
+        });
+
+        if (expandCollapseOperation) {
+          // Schedule layout after expand/collapse with a slight delay
+          setTimeout(() => {
+            triggerLayout();
+          }, 50);
+        }
+
+        // Check if any node is being dragged
+        const hasDraggingNode = newNodes.some((node) => node.dragging);
+
+        // Track start of drag operation
+        if (hasDraggingNode && !isDraggingRef.current) {
+          isDraggingRef.current = true;
+        }
+
+        // Track end of drag operation
+        if (!hasDraggingNode && isDraggingRef.current) {
+          isDraggingRef.current = false;
+          lastDragEndTimeRef.current = Date.now();
+
+          // Schedule layout after drag ends with a slight delay
+          setTimeout(() => {
+            triggerLayout();
+          }, 200);
+        }
+
+        return newNodes;
+      });
+    },
+    [triggerLayout],
+  );
+
+  // Trigger layout when node count changes (node added)
+  useEffect(() => {
+    if (wasNodeAddedRef.current && reactFlowInstance) {
+      wasNodeAddedRef.current = false;
+
+      // Use a timeout to ensure nodes are rendered before layout
+      setTimeout(() => {
+        triggerLayout();
+      }, 200);
+    }
+  }, [nodes.length, reactFlowInstance, triggerLayout]);
+
+  // Initial layout when component mounts or direction changes
+  useEffect(() => {
+    if (reactFlowInstance && visibleNodes.length > 0) {
+      triggerLayout();
+    }
+  }, [reactFlowInstance, canvasSettings.direction, triggerLayout]);
+
+  // Toggle node expansion
+  const toggleNodeExpansion = useCallback(
+    (nodeId: string) => {
+      enhancedSetNodes((prevNodes) =>
+        prevNodes.map((node) => {
+          if (node.id === nodeId) {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                expanded: !node.data?.expanded,
+              },
+            };
+          }
+          return node;
+        }),
+      );
+    },
+    [enhancedSetNodes],
+  );
+
+  // Exposed function to manually trigger layout
+  const autoLayoutCanvas = useCallback(() => {
+    triggerLayout();
+  }, [triggerLayout]);
 
   // Memoize the context value
   const value = useMemo(
@@ -46,7 +154,7 @@ const MainCanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
       // States
       nodes,
-      setNodes,
+      setNodes: enhancedSetNodes,
       edges,
       setEdges,
       highlightedNodeId,
@@ -60,15 +168,20 @@ const MainCanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
       canvasSettings,
       setCanvasSettings,
 
+      // Functions
+      autoLayoutCanvas,
+      toggleNodeExpansion,
+
       // Derived states
       visibleNodes,
       visibleEdges,
-      animatedNodes,
+      // For API compatibility with existing code
+      animatedNodes: visibleNodes,
     }),
     [
       canvasService,
       nodes,
-      setNodes,
+      enhancedSetNodes,
       edges,
       setEdges,
       highlightedNodeId,
@@ -81,9 +194,10 @@ const MainCanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
       setReactFlowInstance,
       canvasSettings,
       setCanvasSettings,
+      autoLayoutCanvas,
+      toggleNodeExpansion,
       visibleNodes,
       visibleEdges,
-      animatedNodes,
     ],
   );
 

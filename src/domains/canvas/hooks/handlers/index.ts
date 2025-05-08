@@ -5,6 +5,7 @@ import { useViewHandlers } from "./viewHandlers";
 import { useHighlightHandlers } from "./highlightHandlers";
 import { useSettingsHandlers } from "./settingsHandlers";
 import { useChangeHandlers } from "./changeHandlers";
+import { useInteractionHandlers } from "./interactionHandlers";
 
 /**
  * Main hook to access all canvas handlers
@@ -16,6 +17,7 @@ export function useCanvasHandlers() {
   const highlightHandlers = useHighlightHandlers();
   const settingsHandlers = useSettingsHandlers();
   const changeHandlers = useChangeHandlers();
+  const interactionHandlers = useInteractionHandlers();
 
   return {
     // Node handlers
@@ -35,6 +37,9 @@ export function useCanvasHandlers() {
 
     // Change handlers
     ...changeHandlers,
+
+    // Interaction handlers
+    ...interactionHandlers,
   };
 }
 
@@ -46,4 +51,5 @@ export {
   useHighlightHandlers,
   useSettingsHandlers,
   useChangeHandlers,
+  useInteractionHandlers,
 };
