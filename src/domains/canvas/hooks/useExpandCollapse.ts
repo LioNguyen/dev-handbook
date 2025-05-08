@@ -1,9 +1,20 @@
-// src/domains/canvas/hooks/useExpandCollapse.ts
+// src/domains/canvas/hooks/useExpandCollapseStandalone.ts
 import { HierarchyNode, HierarchyPointNode, stratify, tree } from "d3-hierarchy";
 import { useMemo } from "react";
 import { Edge, Node, Position } from "reactflow";
 
-import { ExpandCollapseNode } from "../types";
+// Define the ExpandCollapseNode type
+export interface ExpandCollapseNode extends Node {
+  data: {
+    expandable?: boolean;
+    expanded?: boolean;
+    order?: string;
+    value?: string;
+    subtext?: string;
+    type?: string;
+    [key: string]: any;
+  };
+}
 
 /**
  * Options for the expand/collapse hook
@@ -13,7 +24,6 @@ export type UseExpandCollapseOptions = {
   treeWidth?: number; // Width between sibling nodes
   treeHeight?: number; // Height between parent and child nodes
   direction?: "TB" | "LR" | "RL" | "BT"; // Direction of the tree
-  fitViewOnChange?: boolean; // Whether to fit view after expand/collapse
 };
 
 /**
@@ -64,16 +74,10 @@ const getPosition = (x: number, y: number, direction: "TB" | "LR" | "RL" | "BT")
  * @param options Configuration options for the tree layout
  * @returns Object containing visible nodes and edges based on expand/collapse state
  */
-function useExpandCollapse(
+function useExpandCollapseStandalone(
   nodes: Node[],
   edges: Edge[],
-  {
-    layoutNodes = true,
-    treeWidth = 220,
-    treeHeight = 100,
-    direction = "LR",
-    fitViewOnChange = true,
-  }: UseExpandCollapseOptions = {},
+  { layoutNodes = true, treeWidth = 220, treeHeight = 100, direction = "LR" }: UseExpandCollapseOptions = {},
 ): { nodes: Node[]; edges: Edge[] } {
   // Calculate visible nodes and edges based on expand/collapse state
   const { nodes: visibleNodes, edges: visibleEdges } = useMemo(() => {
@@ -82,19 +86,35 @@ function useExpandCollapse(
     }
 
     try {
+      // Convert ReactFlow nodes to a format compatible with d3-hierarchy
+      const hierarchyNodes: ExpandCollapseNode[] = nodes.map((node) => ({
+        ...node,
+        data: {
+          ...(node.data || {}),
+          expandable: node.data?.expandable ?? false,
+          expanded: node.data?.expanded ?? false,
+        },
+      }));
+
       // Create a hierarchical structure from flat nodes and edges
       const hierarchy = stratify<ExpandCollapseNode>()
         .id((d) => d.id)
-        .parentId((d: Node) => {
-          const parentEdge = edges.find((e: Edge) => e.target === d.id);
-          const parentId = parentEdge?.source;
-          return parentId;
-        })(nodes);
+        .parentId((d) => {
+          // Find the parent edge
+          const parentEdge = edges.find((e) => e.target === d.id);
+          return parentEdge?.source || null;
+        })(hierarchyNodes);
 
       // Process nodes to determine which are expandable and which should be collapsed
       hierarchy.descendants().forEach((d) => {
         // Mark nodes as expandable if they have children
         const hasChildren = !!d.children?.length;
+
+        // Ensure data object exists
+        if (!d.data.data) {
+          d.data.data = {};
+        }
+
         d.data.data.expandable = hasChildren;
 
         if (hasChildren) {
@@ -136,7 +156,7 @@ function useExpandCollapse(
           ...d.data,
           // Create a new reference for the data object to trigger React renders
           data: { ...d.data.data },
-          type: "custom",
+          type: d.data.id === "1" ? "root" : "custom", // Set root node type
           position,
           sourcePosition,
           targetPosition,
@@ -169,4 +189,4 @@ function useExpandCollapse(
   return { nodes: visibleNodes, edges: visibleEdges };
 }
 
-export default useExpandCollapse;
+export default useExpandCollapseStandalone;

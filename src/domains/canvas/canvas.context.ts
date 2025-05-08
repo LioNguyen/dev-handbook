@@ -14,8 +14,11 @@ interface CanvasContextValue {
   edges: Edge[];
   setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
   highlightedNodeId: string | null;
+  setHighlightedNodeId: React.Dispatch<React.SetStateAction<string | null>>;
   highlightedEdges: Set<string>;
+  setHighlightedEdges: React.Dispatch<React.SetStateAction<Set<string>>>;
   highlightedNodes: Set<string>;
+  setHighlightedNodes: React.Dispatch<React.SetStateAction<Set<string>>>;
   reactFlowInstance: ReactFlowInstance | null;
   setReactFlowInstance: React.Dispatch<React.SetStateAction<ReactFlowInstance | null>>;
   canvasSettings: {
@@ -24,18 +27,6 @@ interface CanvasContextValue {
     animationDuration: number;
     direction: "TB" | "LR" | "RL" | "BT";
   };
-
-  // Derived states
-  visibleNodes: Node[];
-  visibleEdges: Edge[];
-  animatedNodes: Node[];
-
-  // Functions
-  highlightNodes: (nodeId: string) => void;
-  getNodeDescendants: (nodeId: string) => { descendants: Set<string>; edgesToHighlight: Set<string> };
-  zoomIn: () => void;
-  zoomOut: () => void;
-  fitView: () => void;
   setCanvasSettings: React.Dispatch<
     React.SetStateAction<{
       treeWidth: number;
@@ -44,6 +35,11 @@ interface CanvasContextValue {
       direction: "TB" | "LR" | "RL" | "BT";
     }>
   >;
+
+  // Derived states
+  visibleNodes: Node[];
+  visibleEdges: Edge[];
+  animatedNodes: Node[];
 }
 
 export const { Provider, useValue: useCanvas } = createContext<CanvasContextValue>("Canvas");

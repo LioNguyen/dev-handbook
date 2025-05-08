@@ -1,5 +1,5 @@
 // src/domains/canvas/canvas.provider.tsx
-import { FC, ReactNode, useCallback, useMemo, useState } from "react";
+import { FC, ReactNode, useMemo, useState } from "react";
 import { Edge, Node, ReactFlowInstance, ReactFlowProvider } from "reactflow";
 
 import { Provider } from "./canvas.context";
@@ -27,77 +27,7 @@ const MainCanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
     direction: "LR" as "TB" | "LR" | "RL" | "BT",
   });
 
-  // Function to get all descendants of a node
-  const getNodeDescendants = useCallback(
-    (nodeId: string) => {
-      const descendants = new Set<string>();
-      const edgesToHighlight = new Set<string>();
-
-      // Recursive function to find all children
-      const findChildren = (id: string) => {
-        // Add this node to the set
-        descendants.add(id);
-
-        // Find all direct children
-        edges.forEach((edge) => {
-          if (edge.source === id) {
-            // This is a connection from our node to a child
-            edgesToHighlight.add(edge.id);
-            descendants.add(edge.target);
-            // Recursively find children of this child
-            findChildren(edge.target);
-          }
-        });
-      };
-
-      findChildren(nodeId);
-      return { descendants, edgesToHighlight };
-    },
-    [edges],
-  );
-
-  // Function to highlight a node and its children
-  const highlightNodes = useCallback(
-    (nodeId: string) => {
-      if (!nodeId) {
-        // Clear highlighting
-        setHighlightedNodeId(null);
-        setHighlightedEdges(new Set());
-        setHighlightedNodes(new Set());
-        return;
-      }
-
-      // Get all descendants and related edges
-      const { descendants, edgesToHighlight } = getNodeDescendants(nodeId);
-
-      // Update state
-      setHighlightedNodeId(nodeId);
-      setHighlightedNodes(descendants);
-      setHighlightedEdges(edgesToHighlight);
-    },
-    [getNodeDescendants],
-  );
-
-  // Zoom controls with proper type checking
-  const zoomIn = useCallback(() => {
-    if (reactFlowInstance) {
-      reactFlowInstance.zoomIn();
-    }
-  }, [reactFlowInstance]);
-
-  const zoomOut = useCallback(() => {
-    if (reactFlowInstance) {
-      reactFlowInstance.zoomOut();
-    }
-  }, [reactFlowInstance]);
-
-  const fitView = useCallback(() => {
-    if (reactFlowInstance) {
-      reactFlowInstance.fitView();
-    }
-  }, [reactFlowInstance]);
-
-  // Use custom hooks
+  // Use custom hooks for layout and animation
   const { nodes: visibleNodes, edges: visibleEdges } = useExpandCollapse(nodes, edges, {
     treeWidth: canvasSettings.treeWidth,
     treeHeight: canvasSettings.treeHeight,
@@ -108,7 +38,7 @@ const MainCanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
     animationDuration: canvasSettings.animationDuration,
   });
 
-  // Memoize the context value - this is where the type error occurs
+  // Memoize the context value
   const value = useMemo(
     () => ({
       // Include only what's defined in your context type
@@ -120,42 +50,40 @@ const MainCanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
       edges,
       setEdges,
       highlightedNodeId,
+      setHighlightedNodeId,
       highlightedEdges,
+      setHighlightedEdges,
       highlightedNodes,
+      setHighlightedNodes,
       reactFlowInstance,
       setReactFlowInstance,
       canvasSettings,
+      setCanvasSettings,
 
       // Derived states
       visibleNodes,
       visibleEdges,
       animatedNodes,
-
-      // Functions
-      highlightNodes,
-      getNodeDescendants,
-      zoomIn,
-      zoomOut,
-      fitView,
-      setCanvasSettings,
     }),
     [
       canvasService,
       nodes,
+      setNodes,
       edges,
+      setEdges,
       highlightedNodeId,
+      setHighlightedNodeId,
       highlightedEdges,
+      setHighlightedEdges,
       highlightedNodes,
+      setHighlightedNodes,
       reactFlowInstance,
+      setReactFlowInstance,
       canvasSettings,
+      setCanvasSettings,
       visibleNodes,
       visibleEdges,
       animatedNodes,
-      highlightNodes,
-      getNodeDescendants,
-      zoomIn,
-      zoomOut,
-      fitView,
     ],
   );
 

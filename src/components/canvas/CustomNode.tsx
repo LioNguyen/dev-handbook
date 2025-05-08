@@ -1,25 +1,27 @@
 // src/components/canvas/CustomNode.tsx
 import { ChevronDown, ChevronUp, CircleAlert, Info, Star, Trash2 } from "lucide-react";
 import React, { MouseEventHandler, useEffect, useState } from "react";
-import { Handle, NodeProps, Position, useReactFlow } from "reactflow";
+import { Handle, NodeProps, Position } from "reactflow";
 
 import { Button } from "@designSystem/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@designSystem/components/ui/popover";
 import "./styles.css";
+import { useCanvas } from "@/domains/canvas";
+import { useCanvasHandlers } from "@/domains/canvas/hooks/handlers";
 
 /**
  * Custom node component with enhanced functionality
  */
 export default function CustomNode({ data, id, xPos, yPos, sourcePosition, targetPosition, selected }: NodeProps) {
-  const { addNodes, addEdges, deleteElements, getNodes } = useReactFlow();
   const [isOpen, setIsOpen] = useState(false);
+  const { highlightedNodeId } = useCanvas();
+
+  // Get handlers from the hook
+  const { toggleNodeExpansion, addChildNode, deleteNode, highlightNodes } = useCanvasHandlers();
 
   // Destructure data props
   const {
-    toggleNodeExpansion,
     order = "",
-    highlightNodes,
-    highlightedNodeId,
     type = "ip", // Default type
     subtext = "IP ADDRESS",
     value = order,
@@ -38,58 +40,19 @@ export default function CustomNode({ data, id, xPos, yPos, sourcePosition, targe
   /**
    * Adds a new child node
    */
-  const addChildNode: MouseEventHandler = (evt) => {
+  const handleAddChildNode: MouseEventHandler = (evt) => {
     evt.preventDefault();
     evt.stopPropagation();
 
-    // Generate a unique ID for the new node using timestamp
-    const newNodeId = `${id}__${new Date().getTime()}`;
-
-    // Determine position offset based on source position
-    let posOffset = { x: 0, y: 100 }; // Default for bottom
-    if (sourcePosition === Position.Right) {
-      posOffset = { x: 100, y: 0 };
-    } else if (sourcePosition === Position.Left) {
-      posOffset = { x: -100, y: 0 };
-    } else if (sourcePosition === Position.Top) {
-      posOffset = { x: 0, y: -100 };
-    }
-
-    // Get the count of existing children to determine the new order
-    const existingNodes = getNodes();
-    const childrenCount = existingNodes.filter((n) => n.id.startsWith(`${id}__`)).length;
-    const newOrder = `${order}.${childrenCount + 1}`;
-
-    // Create a new node and connect it to the parent
-    addNodes({
-      id: newNodeId,
-      type: "custom",
-      position: {
-        x: Number(xPos) + posOffset.x,
-        y: Number(yPos) + posOffset.y,
-      },
-      data: {
-        order: newOrder,
-        value: `127.0.0.${Math.floor(Math.random() * 255)}`,
-        expandable: false,
-        expanded: false,
-        toggleNodeExpansion,
-        highlightNodes,
-        type: "ip",
-        subtext: "IP ADDRESS",
-      },
-      sourcePosition,
-      targetPosition,
-    });
-
-    addEdges({
-      id: `${id}->${newNodeId}`,
-      source: id,
-      target: newNodeId,
-    });
+    addChildNode(
+      id,
+      { x: Number(xPos), y: Number(yPos) },
+      sourcePosition || Position.Right,
+      targetPosition || Position.Left,
+    );
 
     // If not expanded, expand it
-    if (!data.expanded) {
+    if (!data.expanded && data.expandable) {
       handleToggleExpand(evt);
     }
   };
@@ -119,10 +82,10 @@ export default function CustomNode({ data, id, xPos, yPos, sourcePosition, targe
   /**
    * Deletes the current node
    */
-  const deleteNode = (evt: React.MouseEvent) => {
+  const handleDeleteNode = (evt: React.MouseEvent) => {
     evt.stopPropagation();
     setIsOpen(false);
-    deleteElements({ nodes: [{ id }] });
+    deleteNode(id);
   };
 
   /**
@@ -185,17 +148,7 @@ export default function CustomNode({ data, id, xPos, yPos, sourcePosition, targe
       <Handle position={targetPosition || Position.Left} type="target" className="!left-0" />
       <Handle position={sourcePosition || Position.Right} type="source" className="!right-0" />
 
-      {/* Warning icon for specific node */}
-      {/* {order === "2.2" && (
-        <div className="absolute -bottom-1 left-4">
-          <div className="w-5 h-5 rounded-full bg-white p-0.5 border border-pink-500">
-            <div className="w-full h-full bg-pink-500 text-white rounded-full flex items-center justify-center text-xs">
-              !
-            </div>
-          </div>
-        </div>
-      )} */}
-
+      {/* Action button with popover - styled for the new design */}
       {/* Action button with popover - styled for the new design */}
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
@@ -242,7 +195,7 @@ export default function CustomNode({ data, id, xPos, yPos, sourcePosition, targe
               variant="ghost"
               size="sm"
               className="flex justify-start text-sm text-red-500 hover:text-red-600 hover:bg-red-50"
-              onClick={deleteNode}
+              onClick={handleDeleteNode}
             >
               <Trash2 className="mr-2 h-4 w-4" /> Delete Node
             </Button>
@@ -252,7 +205,7 @@ export default function CustomNode({ data, id, xPos, yPos, sourcePosition, targe
 
       <div
         className="font-mono text-[9px] absolute -bottom-5 left-1/2 -translate-x-1/2 w-[100px] text-center text-white hover:text-slate-100 cursor-pointer"
-        onClick={addChildNode}
+        onClick={handleAddChildNode}
       >
         + add child node
       </div>

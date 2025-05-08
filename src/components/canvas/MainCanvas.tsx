@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef } from "react";
 import ReactFlow, { Background, Panel, ReactFlowInstance } from "reactflow";
 
 import { useCanvas } from "@/domains/canvas";
-import { useCanvasHandlers } from "@/domains/canvas/hooks/useCanvasHandlers";
+import { useCanvasHandlers } from "@/domains/canvas/hooks/handlers";
 import "reactflow/dist/style.css";
 import CustomNode from "./CustomNode";
 import RootNode from "./RootNode";
@@ -19,33 +19,24 @@ const nodeTypes = {
 /**
  * Props for the Canvas component
  */
-type CanvasProps = {
-  treeWidth?: number; // Width between nodes in the tree
-  treeHeight?: number; // Height between node layers
-  animationDuration?: number; // Duration of node movement animations in ms
-  direction?: "TB" | "LR" | "RL" | "BT"; // Direction of the tree layout
-};
+// type CanvasProps = {
+//   treeWidth?: number; // Width between nodes in the tree
+//   treeHeight?: number; // Height between node layers
+//   animationDuration?: number; // Duration of node movement animations in ms
+//   direction?: "TB" | "LR" | "RL" | "BT"; // Direction of the tree layout
+// };
 
 /**
  * Main Canvas component for the expandable/collapsible tree
  */
-function Canvas(props: CanvasProps) {
+function Canvas() {
   // Get state and functions from context
-  const {
-    animatedNodes,
-    visibleEdges,
-    highlightedNodeId,
-    highlightedNodes,
-    highlightedEdges,
-    highlightNodes,
-    setReactFlowInstance,
-    zoomIn,
-    zoomOut,
-    fitView,
-  } = useCanvas();
+  const { animatedNodes, visibleEdges, highlightedNodeId, highlightedNodes, highlightedEdges, setReactFlowInstance } =
+    useCanvas();
 
   // Get handlers
-  const { onNodesChange, onEdgesChange, toggleNodeExpansion, onPaneClick } = useCanvasHandlers();
+  const { onNodesChange, onEdgesChange, toggleNodeExpansion, onPaneClick, zoomIn, zoomOut, fitView, highlightNodes } =
+    useCanvasHandlers();
 
   // Track the number of visible nodes to detect changes
   const visibleNodesCountRef = useRef(0);

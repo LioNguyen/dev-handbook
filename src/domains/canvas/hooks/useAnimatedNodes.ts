@@ -1,5 +1,6 @@
+// src/domains/canvas/hooks/useAnimatedNodesStandalone.ts
 import { useEffect, useState } from "react";
-import { Node, useReactFlow } from "reactflow";
+import { Node } from "reactflow";
 import { timer } from "d3-timer";
 
 /**
@@ -14,21 +15,38 @@ export type UseAnimatedNodeOptions = {
  * Rather than immediately jumping to new positions, nodes smoothly
  * transition from their old positions to new ones.
  *
+ * This version doesn't depend on ReactFlow's context.
+ *
  * @param nodes The current nodes with their target positions
  * @param options Configuration options including animation duration
  * @returns Object containing the nodes with interpolated positions during animation
  */
-function useAnimatedNodes(nodes: Node[], { animationDuration = 300 }: UseAnimatedNodeOptions = {}) {
+function useAnimatedNodesStandalone(nodes: Node[], { animationDuration = 300 }: UseAnimatedNodeOptions = {}) {
   // State for storing nodes during animation
   const [tmpNodes, setTmpNodes] = useState(nodes);
-  // Get access to the ReactFlow instance
-  const { getNode } = useReactFlow();
+  // Track previous node positions for animation
+  const [prevNodesMap, setPrevNodesMap] = useState<Record<string, Node>>({});
+
+  // Update the previous nodes map whenever tmpNodes changes
+  useEffect(() => {
+    const newPrevNodesMap: Record<string, Node> = {};
+    tmpNodes.forEach((node) => {
+      newPrevNodesMap[node.id] = { ...node };
+    });
+    setPrevNodesMap(newPrevNodesMap);
+  }, [tmpNodes]);
 
   useEffect(() => {
+    if (nodes.length === 0) {
+      setTmpNodes([]);
+      return;
+    }
+
     // Create transition data for each node
     const transitions = nodes.map((node) => {
-      const currentNode = getNode(node.id);
-      const fromPosition = currentNode?.position ?? node.position;
+      const prevNode = prevNodesMap[node.id];
+      // Use previous position if available, otherwise use current position
+      const fromPosition = prevNode?.position || node.position;
 
       return {
         id: node.id,
@@ -41,7 +59,7 @@ function useAnimatedNodes(nodes: Node[], { animationDuration = 300 }: UseAnimate
     // Create timer for animation
     const t = timer((elapsed) => {
       // Calculate progress (0 to 1)
-      const s = elapsed / animationDuration;
+      const s = Math.min(1, elapsed / animationDuration);
 
       // Calculate interpolated positions for all nodes
       const currNodes = transitions.map(({ node, from, to }) => {
@@ -69,9 +87,9 @@ function useAnimatedNodes(nodes: Node[], { animationDuration = 300 }: UseAnimate
     return () => {
       t.stop();
     };
-  }, [nodes, getNode, animationDuration]);
+  }, [nodes, prevNodesMap, animationDuration]);
 
   return { nodes: tmpNodes };
 }
 
-export default useAnimatedNodes;
+export default useAnimatedNodesStandalone;
