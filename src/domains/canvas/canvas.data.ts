@@ -1,5 +1,5 @@
-// src/components/canvas/initialElements.ts
-import { Node, Edge } from "reactflow";
+// src/domains/canvas/canvas.data.ts
+import { Node, Edge } from "@xyflow/react";
 
 // Define root node position
 const nodeX = 0;
@@ -14,9 +14,8 @@ export const nodes: Node[] = [
     data: {
       expanded: true,
       expandable: true,
-      order: "1",
       value: "176.96.226.227",
-      subtext: "IP ADDRESS",
+      name: "IP ADDRESS",
       type: "starred",
     },
   },
@@ -27,9 +26,8 @@ export const nodes: Node[] = [
     data: {
       expanded: true,
       expandable: true,
-      order: "2",
       value: "3.90.43.148",
-      subtext: "IP ADDRESS",
+      name: "IP ADDRESS",
       type: "ip",
     },
   },
@@ -40,9 +38,8 @@ export const nodes: Node[] = [
     data: {
       expanded: true,
       expandable: false,
-      order: "2.1",
       value: "70.77.108.38",
-      subtext: "IP ADDRESS",
+      name: "IP ADDRESS",
       type: "ip",
     },
   },
@@ -53,9 +50,8 @@ export const nodes: Node[] = [
     data: {
       expanded: true,
       expandable: false,
-      order: "2.2",
       value: "d851d9ea-ce49-4bdb-a569",
-      subtext: "MICROSOFT ENTRA DEVICE ID",
+      name: "MICROSOFT ENTRA DEVICE ID",
       type: "microsoft",
     },
   },
@@ -66,9 +62,8 @@ export const nodes: Node[] = [
     data: {
       expanded: true,
       expandable: false,
-      order: "2.3",
       value: "johanna1@warnicorn.com",
-      subtext: "MICROSOFT ENTRA USER PRINCIPAL",
+      name: "MICROSOFT ENTRA USER PRINCIPAL",
       type: "microsoft",
     },
   },
@@ -79,9 +74,8 @@ export const nodes: Node[] = [
     data: {
       expanded: true,
       expandable: false,
-      order: "2.4",
       value: "stevens@warnicorn.com",
-      subtext: "MICROSOFT ENTRA USER PRINCIPAL",
+      name: "MICROSOFT ENTRA USER PRINCIPAL",
       type: "microsoft",
     },
   },

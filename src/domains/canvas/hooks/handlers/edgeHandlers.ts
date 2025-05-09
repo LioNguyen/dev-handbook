@@ -1,6 +1,6 @@
 // src/domains/canvas/hooks/handlers/edgeHandlers.ts
 import { useCallback } from "react";
-import { Edge } from "reactflow";
+import { Edge } from "@xyflow/react";
 import { useCanvas } from "../../canvas.context";
 
 export function useEdgeHandlers() {

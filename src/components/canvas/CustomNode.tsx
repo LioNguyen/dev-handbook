@@ -1,45 +1,41 @@
 // src/components/canvas/CustomNode.tsx
+import { Handle, NodeProps, Position } from "@xyflow/react";
 import { ChevronDown, ChevronUp, CircleAlert, Info, Star, Trash2 } from "lucide-react";
-import React, { MouseEventHandler, useEffect, useState } from "react";
-import { Handle, NodeProps, Position } from "reactflow";
+import React, { useEffect, useState } from "react";
 
+import { useCanvas } from "@/domains/canvas";
+import { useCanvasHandlers } from "@/domains/canvas/hooks/handlers";
 import { Button } from "@designSystem/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@designSystem/components/ui/popover";
 import "./styles.css";
-import { useCanvas } from "@/domains/canvas";
-import { useCanvasHandlers } from "@/domains/canvas/hooks/handlers";
 
 /**
  * Custom node component with enhanced functionality
  */
-export default function CustomNode({
-  data,
-  id,
-  xPos,
-  yPos,
-  sourcePosition,
-  targetPosition,
-  selected,
-  dragging,
-}: NodeProps) {
+export default function CustomNode({ data, id, sourcePosition, targetPosition, selected, dragging }: NodeProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { highlightedNodeId } = useCanvas();
 
   // Get handlers from the hook
-  const { toggleNodeExpansion, addChildNode, deleteNode, highlightNodes } = useCanvasHandlers();
+  const { toggleNodeExpansion, deleteNode, highlightNodes, toggleAddNode } = useCanvasHandlers();
 
-  // Destructure data props
+  // Destructure data props with proper type safety
   const {
-    order = "",
     type = "ip", // Default type
-    subtext = "IP ADDRESS",
-    value = order,
+    name = "",
+    value,
     isDragging = false,
     isDropTarget = false,
-  } = data;
+    expandable = false,
+    expanded = false,
+  } = data || {};
 
   // Determine if this node is highlighted
   const isHighlighted = highlightedNodeId === id;
+
+  useEffect(() => {
+    toggleAddNode(id, isHighlighted);
+  }, [isHighlighted]);
 
   // Close popover when node is selected or dragging
   useEffect(() => {
@@ -49,33 +45,13 @@ export default function CustomNode({
   }, [selected, dragging]);
 
   /**
-   * Adds a new child node
-   */
-  const handleAddChildNode: MouseEventHandler = (evt) => {
-    evt.preventDefault();
-    evt.stopPropagation();
-
-    addChildNode(
-      id,
-      { x: Number(xPos), y: Number(yPos) },
-      sourcePosition || Position.Right,
-      targetPosition || Position.Left,
-    );
-
-    // If not expanded, expand it
-    if (!data.expanded && data.expandable) {
-      handleToggleExpand(evt);
-    }
-  };
-
-  /**
    * Toggles node expansion state using the shared handler
    */
   const handleToggleExpand = (evt: React.MouseEvent) => {
     evt.stopPropagation();
     setIsOpen(false);
 
-    if (data.expandable) {
+    if (expandable) {
       toggleNodeExpansion(id);
     }
   };
@@ -103,8 +79,9 @@ export default function CustomNode({
    * Highlights this node and all its children
    */
   const handleNodeClick = () => {
-    // Don't re-highlight if already highlighted
-    if (isHighlighted) return;
+    if (!expanded) {
+      toggleNodeExpansion(id);
+    }
 
     // Call the parent-provided highlightNodes function
     if (highlightNodes) {
@@ -114,14 +91,11 @@ export default function CustomNode({
 
   // Get the icon based on the node type
   const getNodeIcon = () => {
-    // Use different icons based on the type property
-    if (type === "starred" || order === "1") {
+    if (type === "starred") {
       return <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />;
-    } else if (type === "microsoft" || order.includes(".")) {
-      return <CircleAlert className="h-4 w-4 text-violet-500" />;
-    } else {
-      return <CircleAlert className="h-4 w-4 text-blue-500" />;
     }
+
+    return <CircleAlert className="h-4 w-4 text-blue-500" />;
   };
 
   // Determine any special styling for the node
@@ -141,6 +115,8 @@ export default function CustomNode({
     <div
       className={`w-[300px] shadow-md rounded-full px-4 py-2 relative transition-all duration-150 flex items-center ${getNodeStyle()}`}
       onClick={(e) => {
+        e.stopPropagation();
+
         // Don't trigger if clicking on buttons or handles
         if ((e.target as HTMLElement).closest("button, .react-flow__handle")) {
           return;
@@ -155,15 +131,19 @@ export default function CustomNode({
 
       {/* Content */}
       <div className="flex-grow">
-        <div className="font-mono text-sm font-medium">{value}</div>
-        <div className="font-mono text-xs text-gray-500 uppercase">{subtext}</div>
+        <div className="font-mono text-sm font-medium">
+          {value !== undefined && value !== null ? String(value) : ""}
+        </div>
+        <div className="font-mono text-xs text-gray-500 uppercase">
+          {name !== undefined && name !== null ? String(name) : ""}
+        </div>
       </div>
 
       <Handle position={targetPosition || Position.Left} type="target" className="!left-0" />
       <Handle position={sourcePosition || Position.Right} type="source" className="!right-0" />
 
       {/* Action button with popover - styled for the new design */}
-      <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <Popover open={Boolean(isOpen)} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
           <div
             className="ml-2 p-1 cursor-pointer"
@@ -182,15 +162,15 @@ export default function CustomNode({
         </PopoverTrigger>
         <PopoverContent className="w-48 p-1" side="right" align="start">
           <div className="flex flex-col gap-1">
-            {data.expandable && (
+            {Boolean(expandable) && (
               <Button
                 variant="ghost"
                 size="sm"
                 className="flex justify-start text-sm"
                 onClick={handleToggleExpand}
-                disabled={!data.expandable}
+                disabled={!expandable}
               >
-                {data.expanded ? (
+                {expanded ? (
                   <>
                     <ChevronUp className="mr-2 h-4 w-4" /> Collapse
                   </>
@@ -216,22 +196,15 @@ export default function CustomNode({
         </PopoverContent>
       </Popover>
 
-      <div
-        className="font-mono text-[9px] absolute -bottom-5 left-1/2 -translate-x-1/2 w-[100px] text-center text-white hover:text-slate-100 cursor-pointer"
-        onClick={handleAddChildNode}
-      >
-        + add child node
-      </div>
-
       {/* Show drag status indicator if the node is being dragged */}
-      {(isDragging || dragging) && (
+      {(Boolean(isDragging) || Boolean(dragging)) && (
         <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-2 py-0.5 rounded text-xs whitespace-nowrap">
           Drag onto another node
         </div>
       )}
 
       {/* Show drop target indicator */}
-      {isDropTarget && (
+      {Boolean(isDropTarget) && (
         <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-green-600 text-white px-2 py-0.5 rounded text-xs whitespace-nowrap">
           Drop to make child
         </div>

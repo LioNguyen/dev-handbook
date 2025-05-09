@@ -1,6 +1,6 @@
 // src/domains/canvas/canvas.context.ts
 import { createContext } from "@core/store";
-import { Node, Edge, ReactFlowInstance } from "reactflow";
+import { Node, Edge, ReactFlowInstance } from "@xyflow/react";
 
 // Define the exact shape of your context
 interface CanvasContextValue {
@@ -35,6 +35,10 @@ interface CanvasContextValue {
       direction: "TB" | "LR" | "RL" | "BT";
     }>
   >;
+
+  // Functions
+  autoLayoutCanvas: () => void;
+  toggleNodeExpansion: (nodeId: string) => void;
 
   // Derived states
   visibleNodes: Node[];

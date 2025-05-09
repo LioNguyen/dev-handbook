@@ -1,5 +1,7 @@
+// src/domains/canvas/hooks/handlers/nodeHandlers.ts
+import { Edge, Node, Position, XYPosition } from "@xyflow/react"; // Add Edge import
 import { useCallback } from "react";
-import { Node, Position } from "reactflow";
+
 import { useCanvas } from "../../canvas.context";
 import { useHighlightHandlers } from "./highlightHandlers";
 import { useViewHandlers } from "./viewHandlers";
@@ -16,7 +18,7 @@ export function useNodeHandlers() {
     (nodeId: string) => {
       setNodes((nds) =>
         nds.map((n) => {
-          if (n.id === nodeId && n.data.expandable) {
+          if (n.id === nodeId && n.data?.expandable) {
             // Toggle the expanded state of the node
             const newExpandState = !n.data.expanded;
 
@@ -39,7 +41,7 @@ export function useNodeHandlers() {
     (nodeId: string) => {
       setNodes((nds) =>
         nds.map((n) => {
-          if (n.id === nodeId && !n.data.expandable) {
+          if (n.id === nodeId && !n.data?.expandable) {
             return {
               ...n,
               data: { ...n.data, expandable: true },
@@ -60,109 +62,6 @@ export function useNodeHandlers() {
       setNodes((nodes) => [...nodes, nodeData as Node]);
     },
     [setNodes],
-  );
-
-  /**
-   * Adds a child node connected to a parent node
-   */
-  const addChildNode = useCallback(
-    (
-      parentId: string,
-      parentPosition: { x: number; y: number },
-      sourcePosition: Position,
-      targetPosition: Position,
-      nodeData: Partial<any> = {},
-    ) => {
-      // Generate a unique ID for the new node using timestamp
-      const newNodeId = `${parentId}__${new Date().getTime()}`;
-
-      // Determine position offset based on source position
-      let posOffset = { x: 0, y: 100 }; // Default for bottom
-      if (sourcePosition === Position.Right) {
-        posOffset = { x: 100, y: 0 };
-      } else if (sourcePosition === Position.Left) {
-        posOffset = { x: -100, y: 0 };
-      } else if (sourcePosition === Position.Top) {
-        posOffset = { x: 0, y: -100 };
-      }
-
-      // Get the count of existing children for order
-      let childrenCount = 0;
-      setNodes((currentNodes) => {
-        childrenCount = currentNodes.filter((n) => n.id.startsWith(`${parentId}__`)).length;
-        return currentNodes;
-      });
-
-      // Get parent node order
-      let parentOrder = "";
-      setNodes((currentNodes) => {
-        const parentNode = currentNodes.find((n) => n.id === parentId);
-        parentOrder = parentNode?.data?.order || "";
-        return currentNodes;
-      });
-
-      const newOrder = parentOrder ? `${parentOrder}.${childrenCount + 1}` : `${childrenCount + 1}`;
-
-      // Create the new node
-      const newNode: Node = {
-        id: newNodeId,
-        type: "custom",
-        position: {
-          x: parentPosition.x + posOffset.x,
-          y: parentPosition.y + posOffset.y,
-        },
-        data: {
-          order: newOrder,
-          value: nodeData.value || `127.0.0.${Math.floor(Math.random() * 255)}`,
-          expandable: false,
-          expanded: false,
-          type: nodeData.type || "ip",
-          subtext: nodeData.subtext || "IP ADDRESS",
-          ...nodeData,
-        },
-        sourcePosition,
-        targetPosition,
-      };
-
-      // Create the edge connecting the parent to the new node
-      const newEdge = {
-        id: `${parentId}->${newNodeId}`,
-        source: parentId,
-        target: newNodeId,
-      };
-
-      // Add the node and edge
-      setNodes((nodes) => [...nodes, newNode]);
-      setEdges((edges) => [...edges, newEdge]);
-
-      // If parent is not expanded, expand it
-      setNodes((nodes) =>
-        nodes.map((node) => {
-          if (node.id === parentId) {
-            return {
-              ...node,
-              data: {
-                ...node.data,
-                expandable: true,
-                expanded: true,
-              },
-            };
-          }
-          return node;
-        }),
-      );
-
-      // Use the new fitViewForNode function for better focusing
-      setTimeout(() => {
-        // First make sure the DOM has updated and the layout is calculated
-        setTimeout(() => {
-          fitViewForNode(newNodeId);
-        }, 50);
-      }, 10);
-
-      return newNodeId;
-    },
-    [setNodes, setEdges, fitViewForNode],
   );
 
   /**
@@ -216,7 +115,7 @@ export function useNodeHandlers() {
                 data: {
                   ...node.data,
                   expandable: hasRemainingChildren,
-                  expanded: hasRemainingChildren ? node.data.expanded : false,
+                  expanded: hasRemainingChildren ? node.data?.expanded : false,
                 },
               };
             }
@@ -295,7 +194,8 @@ export function useNodeHandlers() {
       }
 
       // Create a new edge to the new parent
-      const newEdge = {
+      // Fix: Properly type the edge
+      const newEdge: Edge = {
         id: `${newParentId}->${nodeId}`,
         source: newParentId,
         target: nodeId,
@@ -310,7 +210,8 @@ export function useNodeHandlers() {
       // Get the new parent order and count existing children
       setNodes((currentNodes) => {
         const parentNode = currentNodes.find((n) => n.id === newParentId);
-        parentOrder = parentNode?.data?.order || "";
+        // Fix: Ensure parentOrder is always a string
+        parentOrder = parentNode?.data?.order ? String(parentNode.data.order) : "";
 
         // Count children of the new parent
         childrenCount = currentNodes.filter((n) => {
@@ -395,7 +296,7 @@ export function useNodeHandlers() {
    * Creates a new standalone node at the specified position
    */
   const createStandaloneNode = useCallback(
-    (position: { x: number; y: number }) => {
+    (position: XYPosition) => {
       // Generate a unique ID for the new node
       const newNodeId = `${new Date().getTime()}`;
 
@@ -426,14 +327,243 @@ export function useNodeHandlers() {
     [setNodes, highlightNodes],
   );
 
+  /**
+   * Creates a child node connected to a parent node with improved parameter structure
+   */
+  const createChildNode = useCallback(
+    (options: {
+      data?: {
+        name?: string;
+        value?: string;
+        type?: string;
+        subtext?: string;
+        [key: string]: any;
+        _overrideId?: string;
+      };
+      parent: {
+        id: string | number;
+        position?: XYPosition;
+        sourcePosition?: Position;
+        targetPosition?: Position;
+      };
+      nodeType?: string;
+    }) => {
+      const { data = {}, parent, nodeType = "custom" } = options;
+      const { name, value, type = "ip", subtext, _overrideId } = data;
+
+      // Find parent node if position wasn't provided
+      const parentNode = nodes.find((node) => node.id === parent.id);
+      if (!parentNode && !parent.position) {
+        console.error("Parent node not found and no position provided");
+        return null;
+      }
+
+      // Get parent position either from provided value or from node
+      const parentPosition = parent.position || parentNode?.position || { x: 0, y: 0 };
+
+      // Get source and target positions
+      const sourcePosition = parent.sourcePosition || parentNode?.sourcePosition || Position.Right;
+      const targetPosition = parent.targetPosition || parentNode?.targetPosition || Position.Left;
+
+      // Generate a unique ID for the new node using timestamp
+      const newNodeId = _overrideId || `${parent.id}__${new Date().getTime()}`;
+
+      // Determine position offset based on source position
+      let posOffset = { x: 0, y: 100 }; // Default for bottom
+      if (sourcePosition === Position.Right) {
+        posOffset = { x: 100, y: 0 };
+      } else if (sourcePosition === Position.Left) {
+        posOffset = { x: -100, y: 0 };
+      } else if (sourcePosition === Position.Top) {
+        posOffset = { x: 0, y: -100 };
+      }
+
+      // Count existing children for the order property
+      const childrenCount = nodes.filter((n) => n.id.startsWith(`${parent.id}__`)).length;
+
+      // Get parent node order
+      const parentNode2 = nodes.find((n) => n.id === parent.id);
+      const parentOrder = parentNode2?.data?.order ? String(parentNode2.data.order) : "";
+
+      // Calculate the new order
+      const newOrder = parentOrder ? `${parentOrder}.${childrenCount + 1}` : `${childrenCount + 1}`;
+
+      // Create the new node with appropriate data
+      const newNode: Node = {
+        id: newNodeId,
+        type: nodeType,
+        position: {
+          x: parentPosition.x + posOffset.x,
+          y: parentPosition.y + posOffset.y,
+        },
+        data: {
+          ...data, // Preserve all original data properties
+          order: newOrder,
+          value: value || name || `127.0.0.${Math.floor(Math.random() * 255)}`,
+          name: name || value || `Node ${childrenCount + 1}`,
+          expandable: false,
+          expanded: false,
+          type: type,
+          subtext: subtext || type?.toUpperCase() || "IP ADDRESS",
+        },
+        sourcePosition,
+        targetPosition,
+      };
+
+      // Create the edge connecting the parent to the new node
+      const newEdge: Edge = {
+        id: `${parent.id}->${newNodeId}`,
+        source: String(parent.id), // Ensure source is a string
+        target: newNodeId,
+      };
+
+      // Add the node and edge
+      setNodes((nodes) => [...nodes, newNode]);
+      setEdges((edges) => [...edges, newEdge]);
+
+      // If parent is not expanded, expand it
+      setNodes((nodes) =>
+        nodes.map((node) => {
+          if (node.id === parent.id) {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                expandable: true,
+                expanded: true,
+              },
+            };
+          }
+          return node;
+        }),
+      );
+
+      // Focus the view on the new node
+      setTimeout(() => {
+        setTimeout(() => {
+          fitViewForNode(newNodeId);
+        }, 50);
+      }, 10);
+
+      return newNodeId;
+    },
+    [nodes, setNodes, setEdges, fitViewForNode],
+  );
+
+  /**
+   * Toggles an 'add' node when a custom node is selected/deselected
+   * Refactored to use createChildNode and deleteNode
+   */
+  const toggleAddNode = useCallback(
+    (parentId: string, isSelected: boolean) => {
+      const addNodeId = `add-${parentId}`;
+
+      // If already toggled and we're toggling again, remove existing add node
+      const existingAddNode = nodes.find((node) => node.id === addNodeId);
+
+      if (existingAddNode) {
+        deleteNode(addNodeId);
+
+        // If we want to select it again, we need to wait for delete to complete
+        if (isSelected) {
+          setTimeout(() => createAddNode(), 50);
+        }
+        return;
+      }
+
+      // If no existing node and we want to select, create new add node
+      if (isSelected) {
+        createAddNode();
+      }
+
+      // Function to create the add node using createChildNode
+      function createAddNode() {
+        const parentNode = nodes.find((node) => node.id === parentId);
+        if (!parentNode) return;
+
+        const parentPosition = { x: parentNode.position.x, y: parentNode.position.y };
+
+        // Call createChildNode with appropriate options
+        createChildNode({
+          parent: {
+            id: parentId,
+            sourcePosition: parentNode.sourcePosition,
+            targetPosition: parentNode.targetPosition,
+          },
+          data: {
+            parentId,
+            parentPosition,
+            label: "+ Add Child",
+            value: "+ Add",
+            subtext: "NEW NODE",
+            type: "add",
+            // Override the automatic ID generation to use our specific format
+            _overrideId: addNodeId,
+          },
+          nodeType: "add", // Use the add node type
+        });
+
+        // Transform the created node to customize any properties
+        setNodes((nodes) =>
+          nodes.map((node) => {
+            if (node.id === addNodeId) {
+              // Make the node position closer to the parent
+              // Determine position offset based on source position
+              const sourcePosition = parentNode.sourcePosition || Position.Right;
+              let posOffset = { x: 0, y: 50 }; // Default below the node
+
+              if (sourcePosition === Position.Right) {
+                posOffset = { x: 80, y: 0 };
+              } else if (sourcePosition === Position.Left) {
+                posOffset = { x: -80, y: 0 };
+              } else if (sourcePosition === Position.Top) {
+                posOffset = { x: 0, y: -50 };
+              }
+
+              return {
+                ...node,
+                id: addNodeId, // Ensure correct ID is set
+                position: {
+                  x: parentNode.position.x + posOffset.x,
+                  y: parentNode.position.y + posOffset.y,
+                },
+              };
+            }
+            return node;
+          }),
+        );
+
+        // Update edge ID to follow the specific format
+        setEdges((edges) =>
+          edges.map((edge) => {
+            if (edge.target === addNodeId) {
+              return {
+                ...edge,
+                id: `${parentId}->${addNodeId}`,
+              };
+            }
+            return edge;
+          }),
+        );
+
+        // Focus view on the add node
+        setTimeout(() => {
+          fitViewForNode(addNodeId);
+        }, 60);
+      }
+    },
+    [nodes, createChildNode, deleteNode, setNodes, setEdges, fitViewForNode],
+  );
+
   return {
     toggleNodeExpansion,
     markNodeAsExpandable,
     addNode,
-    addChildNode,
     deleteNode,
     getNodes,
     changeNodeParent,
     createStandaloneNode,
+    toggleAddNode,
+    createChildNode,
   };
 }

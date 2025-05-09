@@ -1,6 +1,6 @@
 // src/domains/canvas/hooks/handlers/changeHandlers.ts
 import { useCallback } from "react";
-import { OnEdgesChange, OnNodesChange, applyEdgeChanges, applyNodeChanges, useReactFlow } from "reactflow";
+import { OnEdgesChange, OnNodesChange, applyEdgeChanges, applyNodeChanges, useReactFlow } from "@xyflow/react";
 import { useCanvas } from "../../canvas.context";
 
 export function useChangeHandlers() {

@@ -1,11 +1,12 @@
 // src/components/canvas/MainCanvas.tsx
 import { RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import ReactFlow, { Background, Panel, ReactFlowInstance, useReactFlow } from "reactflow";
+import { ReactFlow, Background, Panel, OnInit, useReactFlow } from "@xyflow/react";
 
 import { useCanvas } from "@/domains/canvas";
 import { useCanvasHandlers } from "@/domains/canvas/hooks/handlers";
-import "reactflow/dist/style.css";
+import "@xyflow/react/dist/style.css";
+import AddNode from "./AddNode";
 import CustomNode from "./CustomNode";
 import RootNode from "./RootNode";
 import "./styles.css";
@@ -14,6 +15,7 @@ import "./styles.css";
 const nodeTypes = {
   custom: CustomNode,
   root: RootNode,
+  add: AddNode,
 };
 
 /**
@@ -35,7 +37,6 @@ function Canvas() {
     zoomIn,
     zoomOut,
     fitView,
-    highlightNodes,
     handleNodeDragStart,
     handleNodeDrag,
     handleNodeDragStop,
@@ -63,11 +64,13 @@ function Canvas() {
   // Add handler functions and highlighting to node data
   const nodesWithHandlers = animatedNodes.map((node) => ({
     ...node,
-    draggable: true, // Enable dragging for all nodes
+    // Disable dragging for "add" type nodes, enable for all others
+    draggable: node.type !== "add",
     data: {
       ...node.data,
+      expandable: true,
+      expanded: true,
       toggleNodeExpansion,
-      highlightNodes,
       highlightedNodeId,
     },
     // Add a class for highlighting or drop targets
@@ -89,9 +92,9 @@ function Canvas() {
     style: highlightedEdges.has(edge.id) ? { stroke: "#ec4899", strokeWidth: 2 } : undefined,
   }));
 
-  // Handle init to save the ReactFlow instance
-  const onInit = useCallback(
-    (instance: ReactFlowInstance) => {
+  // Handle init to save the ReactFlow instance - fixed type error
+  const onInit: OnInit = useCallback(
+    (instance) => {
       setReactFlowInstance(instance);
     },
     [setReactFlowInstance],
@@ -124,13 +127,24 @@ function Canvas() {
         onPaneClick={onPaneClick}
         onInit={onInit}
         onNodeDragStart={(e, node) => {
-          setIsDraggingNode(true);
-          handleNodeDragStart(e, node);
+          // Only set dragging for non-add nodes
+          if (node.type !== "add") {
+            setIsDraggingNode(true);
+            handleNodeDragStart(e, node);
+          }
         }}
-        onNodeDrag={handleNodeDrag}
+        onNodeDrag={(e, node) => {
+          // Only handle drag for non-add nodes
+          if (node.type !== "add") {
+            handleNodeDrag(e, node);
+          }
+        }}
         onNodeDragStop={(e, node) => {
-          setIsDraggingNode(false);
-          handleNodeDragStop(e, node);
+          // Only handle drag stop for non-add nodes
+          if (node.type !== "add") {
+            setIsDraggingNode(false);
+            handleNodeDragStop(e, node);
+          }
         }}
         onNodeDoubleClick={(e) => {
           e.stopPropagation();
@@ -164,6 +178,7 @@ function Canvas() {
             <p>Total nodes: {animatedNodes.length}</p>
             <p>Draggable nodes: {animatedNodes.filter((n) => n.draggable).length}</p>
             <p>Dragging nodes: {animatedNodes.filter((n) => n.dragging).length}</p>
+            <p>Add nodes: {animatedNodes.filter((n) => n.type === "add").length}</p>
             <p>Double-click on empty space to create a node</p>
           </div>
         </Panel>

@@ -1,7 +1,7 @@
-// src/domains/canvas/hooks/useExpandCollapseStandalone.ts
+// src/domains/canvas/hooks/useExpandCollapse.ts
 import { HierarchyNode, HierarchyPointNode, stratify, tree } from "d3-hierarchy";
 import { useMemo } from "react";
-import { Edge, Node, Position } from "reactflow";
+import { Edge, Node, Position, XYPosition } from "@xyflow/react";
 
 // Define the ExpandCollapseNode type
 export interface ExpandCollapseNode extends Node {
@@ -12,6 +12,7 @@ export interface ExpandCollapseNode extends Node {
     value?: string;
     subtext?: string;
     type?: string;
+    visible?: boolean;
     [key: string]: any;
   };
 }
@@ -52,7 +53,7 @@ function isHierarchyPointNode(
 /**
  * Transforms coordinates based on the specified direction
  */
-const getPosition = (x: number, y: number, direction: "TB" | "LR" | "RL" | "BT") => {
+const getPosition = (x: number, y: number, direction: "TB" | "LR" | "RL" | "BT"): XYPosition => {
   switch (direction) {
     case "LR":
       return { x: y, y: x };
@@ -87,14 +88,19 @@ function useExpandCollapseStandalone(
 
     try {
       // Convert ReactFlow nodes to a format compatible with d3-hierarchy
-      const hierarchyNodes: ExpandCollapseNode[] = nodes.map((node) => ({
-        ...node,
-        data: {
-          ...(node.data || {}),
-          expandable: node.data?.expandable ?? false,
-          expanded: node.data?.expanded ?? false,
-        },
-      }));
+      // FIX: Properly convert node data with explicit typing
+      const hierarchyNodes: ExpandCollapseNode[] = nodes.map(
+        (node) =>
+          ({
+            ...node,
+            data: {
+              ...(node.data || {}),
+              // Convert to boolean to avoid type issues
+              expandable: Boolean(node.data?.expandable),
+              expanded: Boolean(node.data?.expanded),
+            },
+          } as ExpandCollapseNode),
+      );
 
       // Group nodes by their tree structure
       const nodeGroups = groupNodesByConnectivity(hierarchyNodes, edges);
@@ -319,7 +325,7 @@ function processNodeGroup(
 
     // Extract visible nodes and edges from the hierarchy
     const visibleNodes = root.descendants().map((d) => {
-      let position;
+      let position: XYPosition;
 
       if (isHierarchyPointNode(d)) {
         // Transform position based on direction

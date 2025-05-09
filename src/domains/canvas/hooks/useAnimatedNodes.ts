@@ -1,6 +1,6 @@
-// src/domains/canvas/hooks/useAnimatedNodes.ts
-import { useEffect, useState, useRef } from "react";
-import { Node } from "reactflow";
+// src/domains/canvas/hooks/useAnimatedNodes.tsx
+import { useEffect, useState } from "react";
+import { Node, useReactFlow } from "@xyflow/react";
 import { timer } from "d3-timer";
 
 /**
@@ -12,129 +12,88 @@ export type UseAnimatedNodeOptions = {
 
 /**
  * Custom hook that animates node position changes
- * Now with proper drag support
+ * Rather than immediately jumping to new positions, nodes smoothly
+ * transition from their old positions to new ones.
+ *
+ * @param nodes The current nodes with their target positions
+ * @param options Configuration options including animation duration
+ * @returns Object containing the nodes with interpolated positions during animation
  */
 function useAnimatedNodes(nodes: Node[], { animationDuration = 300 }: UseAnimatedNodeOptions = {}) {
-  // Use the direct nodes when dragging, otherwise use animated nodes
-  const [animatedNodes, setAnimatedNodes] = useState<Node[]>(nodes);
-  const draggingNodeIdsRef = useRef(new Set<string>());
-  const prevPositionsRef = useRef<Record<string, { x: number; y: number }>>({});
-  const animationTimerRef = useRef<any>(null);
+  console.log("🚀 @LIO ~ useAnimatedNodes.ts ~ 23 ~ animationDuration ~ ", animationDuration);
 
-  // First, check if any nodes are being dragged
-  const isDragging = nodes.some((node) => node.dragging);
+  // State for storing nodes during animation
+  const [tmpNodes, setTmpNodes] = useState<Node[]>(nodes);
+  // Get access to the ReactFlow instance
+  const { getNode } = useReactFlow();
 
-  // Update the nodes immediately when dragging
   useEffect(() => {
-    // Update dragging node IDs
-    const draggingNodeIds = new Set<string>();
-    nodes.forEach((node) => {
-      if (node.dragging) {
-        draggingNodeIds.add(node.id);
-      }
-    });
-    draggingNodeIdsRef.current = draggingNodeIds;
-
-    // If any node is being dragged, update all nodes immediately
-    if (isDragging) {
-      setAnimatedNodes(nodes);
-
-      // Cancel any ongoing animations
-      if (animationTimerRef.current) {
-        animationTimerRef.current.stop();
-        animationTimerRef.current = null;
-      }
-    }
-  }, [nodes, isDragging]);
-
-  // Handle node animations when not dragging
-  useEffect(() => {
-    // Skip animation if dragging
-    if (isDragging) return;
-
-    // Store previous positions when there's a change and we're not dragging
-    const newPositions: Record<string, { x: number; y: number }> = {};
-    const needsAnimation = nodes.some((node) => {
-      const prevPos = prevPositionsRef.current[node.id];
-      if (!prevPos) {
-        newPositions[node.id] = { ...node.position };
-        return false;
-      }
-
-      const dx = Math.abs(prevPos.x - node.position.x);
-      const dy = Math.abs(prevPos.y - node.position.y);
-
-      if (dx > 1 || dy > 1) {
-        newPositions[node.id] = { ...node.position };
-        return true;
-      }
-
-      newPositions[node.id] = { ...node.position };
-      return false;
-    });
-
-    // Update previous positions
-    prevPositionsRef.current = newPositions;
-
-    // Skip animation if no significant position changes
-    if (!needsAnimation) {
-      setAnimatedNodes(nodes);
+    // If there are no nodes, just set empty array
+    if (nodes.length === 0) {
+      setTmpNodes([]);
       return;
     }
 
-    // Stop any existing animation
-    if (animationTimerRef.current) {
-      animationTimerRef.current.stop();
-    }
+    console.log("Starting node animation with duration:", animationDuration);
 
-    // Start animation from current positions to new positions
-    let startNodes = [...animatedNodes];
+    // Create transition data for each node
+    const transitions = nodes.map((node) => {
+      const currentNode = getNode(node.id);
+      // Use current node position or fallback to target position if node is new
+      const fromPosition = currentNode?.position ?? node.position;
 
-    // Create the animation timer
-    animationTimerRef.current = timer((elapsed) => {
+      console.log(
+        `Node ${node.id} transition: (${fromPosition.x}, ${fromPosition.y}) → (${node.position.x}, ${node.position.y})`,
+      );
+
+      return {
+        id: node.id,
+        from: fromPosition,
+        to: node.position,
+        node,
+      };
+    });
+
+    // Create timer for animation
+    const t = timer((elapsed) => {
       // Calculate progress (0 to 1)
-      const progress = Math.min(1, elapsed / animationDuration);
+      const s = Math.min(1, elapsed / animationDuration);
 
-      // Create new nodes with interpolated positions
-      const interpolatedNodes = nodes.map((targetNode) => {
-        // Find the starting node
-        const startNode = startNodes.find((n) => n.id === targetNode.id);
-        if (!startNode) return targetNode;
+      if (elapsed % 50 === 0) {
+        console.log(`Animation progress: ${Math.min(100, Math.round(s * 100))}%`);
+      }
 
-        // Calculate interpolated position
+      // Calculate interpolated positions for all nodes
+      const currNodes = transitions.map(({ node, from, to }) => {
         return {
-          ...targetNode,
+          ...node,
           position: {
-            x: startNode.position.x + (targetNode.position.x - startNode.position.x) * progress,
-            y: startNode.position.y + (targetNode.position.y - startNode.position.y) * progress,
+            x: from.x + (to.x - from.x) * s,
+            y: from.y + (to.y - from.y) * s,
           },
         };
       });
 
-      setAnimatedNodes(interpolatedNodes);
+      // Update nodes with interpolated positions
+      setTmpNodes(currNodes);
 
       // Stop animation when complete
-      if (progress === 1) {
-        animationTimerRef.current.stop();
-        animationTimerRef.current = null;
+      if (elapsed > animationDuration) {
+        console.log("Animation complete, setting final positions");
+        // Important to set final positions to avoid rounding errors
+        setTmpNodes(nodes);
+        t.stop();
       }
     });
 
+    // Clean up timer on unmount or when nodes change
     return () => {
-      if (animationTimerRef.current) {
-        animationTimerRef.current.stop();
-      }
+      console.log("Cleaning up animation timer");
+      t.stop();
     };
-  }, [nodes, animationDuration, isDragging, animatedNodes]);
+  }, [nodes, getNode, animationDuration]);
 
-  // If there are no nodes, reset the animated nodes
-  useEffect(() => {
-    if (nodes.length === 0) {
-      setAnimatedNodes([]);
-    }
-  }, [nodes.length]);
-
-  return { nodes: animatedNodes };
+  return { nodes: tmpNodes };
 }
 
 export default useAnimatedNodes;

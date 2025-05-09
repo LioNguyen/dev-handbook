@@ -1,6 +1,6 @@
 // src/domains/canvas/hooks/handlers/interactionHandlers.ts
 import { useCallback } from "react";
-import { Node } from "reactflow";
+import { Node } from "@xyflow/react";
 import { useCanvas } from "../../canvas.context";
 import { useNodeHandlers } from "./nodeHandlers";
 
@@ -43,7 +43,7 @@ export function useInteractionHandlers() {
       const elementsAtPoint = document.elementsFromPoint(event.clientX, event.clientY);
 
       // Find potential drop targets
-      let dropTargetId = null;
+      let dropTargetId: string | null = null;
 
       for (const element of elementsAtPoint) {
         if (element.classList.contains("react-flow__node") && element instanceof HTMLElement) {
@@ -111,7 +111,8 @@ export function useInteractionHandlers() {
       // If we have a drop target, change the parent
       if (dropTargetId && dropTargetId !== node.id) {
         console.log(`Changing parent: ${node.id} -> ${dropTargetId}`);
-        changeNodeParent(node.id, dropTargetId);
+        // Fix: Ensure dropTargetId is a string
+        changeNodeParent(node.id, String(dropTargetId));
       }
 
       // Reset all drag-related states

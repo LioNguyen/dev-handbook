@@ -1,6 +1,7 @@
+// src/domains/canvas/hooks/useAutoLayout.ts
+import { Node, Position, useReactFlow, XYPosition } from "@xyflow/react";
 import { stratify, tree } from "d3-hierarchy";
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { Node, Position, useReactFlow } from "reactflow";
 
 // Direction types for layout orientation
 export type Direction = "TB" | "LR" | "RL" | "BT";
@@ -29,7 +30,7 @@ const positionMap: Record<string, Position> = {
 /**
  * Transforms coordinates based on the specified direction
  */
-const getPosition = (x: number, y: number, direction: Direction) => {
+const getPosition = (x: number, y: number, direction: Direction): XYPosition => {
   switch (direction) {
     case "LR":
       return { x: y, y: x };
@@ -126,7 +127,78 @@ function useAutoLayout({
             ? rootNodes[0]
             : connectedNodes.find((node) => edges.some((e) => e.source === node.id)) || connectedNodes[0];
 
-        // Create a hierarchical structure using d3-hierarchy
+        // Group nodes by their parents and ensure 'add' nodes come last
+        const nodesByParent = new Map<string | null, Node[]>();
+
+        connectedNodes.forEach((node) => {
+          // Find parent edge (incoming edge)
+          const parentEdge = edges.find((e) => e.target === node.id);
+          const parentId = parentEdge?.source || null;
+
+          if (!nodesByParent.has(parentId)) {
+            nodesByParent.set(parentId, []);
+          }
+
+          const siblings = nodesByParent.get(parentId)!;
+
+          // Add nodes to the parent group
+          siblings.push(node);
+        });
+
+        // Sort each group to ensure 'add' nodes come last
+        nodesByParent.forEach((nodes, parentId) => {
+          nodes.sort((a, b) => {
+            // If a is an 'add' node and b is not, a should come after b
+            if (a.type === "add" && b.type !== "add") return 1;
+            // If b is an 'add' node and a is not, b should come after a
+            if (b.type === "add" && a.type !== "add") return -1;
+            // Otherwise maintain original order
+            return 0;
+          });
+
+          nodesByParent.set(parentId, nodes);
+        });
+
+        // Flatten the sorted nodes
+        const sortedConnectedNodes: Node[] = [];
+
+        // Start with the root node
+        if (nodesByParent.has(null)) {
+          sortedConnectedNodes.push(...nodesByParent.get(null)!);
+          nodesByParent.delete(null);
+        }
+
+        // Process the rest in a breadth-first manner
+        const processedParents = new Set<string | null>([null]);
+        let currentParents = [rootNode.id];
+
+        while (currentParents.length > 0) {
+          const nextParents: string[] = [];
+
+          for (const parentId of currentParents) {
+            if (processedParents.has(parentId)) continue;
+            processedParents.add(parentId);
+
+            if (nodesByParent.has(parentId)) {
+              const children = nodesByParent.get(parentId)!;
+              sortedConnectedNodes.push(...children);
+
+              // Add these children as potential parents for next iteration
+              nextParents.push(...children.map((n) => n.id));
+
+              nodesByParent.delete(parentId);
+            }
+          }
+
+          currentParents = nextParents;
+        }
+
+        // Add any remaining nodes (should not happen in a well-formed tree)
+        for (const [_, remainingNodes] of nodesByParent.entries()) {
+          sortedConnectedNodes.push(...remainingNodes);
+        }
+
+        // Create a hierarchical structure using d3-hierarchy with our sorted nodes
         const hierarchy = stratify<Node>()
           .id((d) => d.id)
           .parentId((d) => {
@@ -135,12 +207,18 @@ function useAutoLayout({
             // Find parent edge (incoming edge)
             const parentEdge = edges.find((e) => e.target === d.id);
             return parentEdge?.source || null;
-          })(connectedNodes);
+          })(sortedConnectedNodes.length > 0 ? sortedConnectedNodes : connectedNodes);
 
         // Configure the tree layout
         const layout = tree<Node>()
           .nodeSize(nodeSize)
-          .separation(() => 1);
+          .separation((a, b) => {
+            // Add more separation for 'add' nodes
+            if (a.data.type === "add" || b.data.type === "add") {
+              return 1.5;
+            }
+            return 1;
+          });
 
         // Apply layout to the hierarchy
         const root = layout(hierarchy);
