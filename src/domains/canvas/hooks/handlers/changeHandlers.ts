@@ -21,10 +21,8 @@ export function useChangeHandlers() {
               if (node.id === change.id) {
                 return {
                   ...node,
-                  dragging: change.dragging,
                   data: {
                     ...node.data,
-                    isDragging: change.dragging,
                   },
                 };
               }
@@ -34,7 +32,6 @@ export function useChangeHandlers() {
         }
       });
 
-      // Then apply all the changes to update positions etc.
       setNodes((nds) => applyNodeChanges(changes, nds));
     },
     [setNodes],

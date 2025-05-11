@@ -25,7 +25,7 @@ function useAnimatedNodes(nodes: Node[], { animationDuration = 300 }: UseAnimate
   // State for storing nodes during animation
   const [tmpNodes, setTmpNodes] = useState<Node[]>(nodes);
   // Get access to the ReactFlow instance
-  const { getNode } = useReactFlow();
+  const { getNode, fitView } = useReactFlow();
 
   useEffect(() => {
     // If there are no nodes, just set empty array
@@ -86,9 +86,12 @@ function useAnimatedNodes(nodes: Node[], { animationDuration = 300 }: UseAnimate
       }
     });
 
+    fitView();
+
     // Clean up timer on unmount or when nodes change
     return () => {
       console.log("Cleaning up animation timer");
+
       t.stop();
     };
   }, [nodes, getNode, animationDuration]);

@@ -17,11 +17,11 @@ export default function AddNode({ data, id: _id }: NodeProps) {
   const sourcePosition: Position = (data?.sourcePosition as Position) || Position.Right;
   const targetPosition: Position = (data?.targetPosition as Position) || Position.Left;
 
-  const { createChildNode } = useCanvasHandlers();
+  const { createNode } = useCanvasHandlers();
 
   const handleClick = () => {
     if (parentId && parentPosition) {
-      createChildNode({
+      createNode({
         data: {
           type: "ip",
           name: "New Node",
@@ -39,12 +39,19 @@ export default function AddNode({ data, id: _id }: NodeProps) {
 
   return (
     <div
-      className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-500 hover:bg-blue-600 cursor-pointer shadow-md transition-colors duration-200"
+      className="relative w-12 h-12 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
       onClick={handleClick}
     >
-      <Handle position={targetPosition} type="target" className="!left-0" />
-      <Handle position={sourcePosition} type="source" className="!right-0" />
-      <Plus className="text-white h-6 w-6" />
+      <Handle position={targetPosition} type="target" className="!opacity-0" />
+      <Handle position={sourcePosition} type="source" className="!opacity-0" />
+
+      {/* Outer dashed circle */}
+      <div className="absolute inset-0 rounded-full border-2 border-white border-dashed"></div>
+
+      {/* Inner solid circle with plus icon */}
+      <div className="w-10 h-10 rounded-full border-1 border-white bg-opacity-20 flex items-center justify-center">
+        <Plus className="text-white h-5 w-5" />
+      </div>
     </div>
   );
 }

@@ -1,10 +1,10 @@
-// src/components/canvas/CustomNode.tsx
 import { Handle, NodeProps, Position } from "@xyflow/react";
-import { ChevronDown, ChevronUp, CircleAlert, Info, Star, Trash2 } from "lucide-react";
+import { CircleAlert, Info, Star, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 import { useCanvas } from "@/domains/canvas";
 import { useCanvasHandlers } from "@/domains/canvas/hooks/handlers";
+import { cn } from "@/shared/utils";
 import { Button } from "@designSystem/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@designSystem/components/ui/popover";
 import "./styles.css";
@@ -14,46 +14,58 @@ import "./styles.css";
  */
 export default function CustomNode({ data, id, sourcePosition, targetPosition, selected, dragging }: NodeProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { highlightedNodeId } = useCanvas();
 
   // Get handlers from the hook
-  const { toggleNodeExpansion, deleteNode, highlightNodes, toggleAddNode } = useCanvasHandlers();
+  const { reactFlowInstance } = useCanvas();
+  const { toggleAddNode, handleNodesDelete } = useCanvasHandlers();
 
   // Destructure data props with proper type safety
   const {
     type = "ip", // Default type
     name = "",
     value,
-    isDragging = false,
     isDropTarget = false,
-    expandable = false,
-    expanded = false,
+    state = {},
   } = data || {};
 
-  // Determine if this node is highlighted
-  const isHighlighted = highlightedNodeId === id;
+  const nodeState: any = {
+    ...(state || {}),
+  };
+  const isSelected = nodeState?.isParentSelected || selected;
+  const isChildSelected = nodeState?.isChildSelected;
 
   useEffect(() => {
-    toggleAddNode(id, isHighlighted);
-  }, [isHighlighted]);
+    if (dragging || isChildSelected || !isSelected) {
+      toggleAddNode(id, false);
+      return;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dragging, isChildSelected, isSelected]);
 
   // Close popover when node is selected or dragging
   useEffect(() => {
-    if (selected || dragging) {
+    if (dragging || isSelected) {
       setIsOpen(false);
     }
-  }, [selected, dragging]);
+  }, [dragging, isSelected]);
 
   /**
-   * Toggles node expansion state using the shared handler
+   * Handle node click
    */
-  const handleToggleExpand = (evt: React.MouseEvent) => {
-    evt.stopPropagation();
-    setIsOpen(false);
+  const handleNodeClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-    if (expandable) {
-      toggleNodeExpansion(id);
+    // Don't trigger if clicking on buttons or handles
+    if (
+      (e.target as HTMLElement).closest("button, .react-flow__handle") ||
+      (isSelected && reactFlowInstance?.getNode(`add-${id}`))
+    ) {
+      return;
     }
+
+    toggleAddNode(id, true);
+    reactFlowInstance?.selectNodes([id]);
   };
 
   /**
@@ -69,24 +81,11 @@ export default function CustomNode({ data, id, sourcePosition, targetPosition, s
   /**
    * Deletes the current node
    */
-  const handleDeleteNode = (evt: React.MouseEvent) => {
+  const onNodesDelete = (evt: React.MouseEvent) => {
     evt.stopPropagation();
     setIsOpen(false);
-    deleteNode(id);
-  };
 
-  /**
-   * Highlights this node and all its children
-   */
-  const handleNodeClick = () => {
-    if (!expanded) {
-      toggleNodeExpansion(id);
-    }
-
-    // Call the parent-provided highlightNodes function
-    if (highlightNodes) {
-      highlightNodes(id);
-    }
+    handleNodesDelete([id]);
   };
 
   // Get the icon based on the node type
@@ -98,33 +97,14 @@ export default function CustomNode({ data, id, sourcePosition, targetPosition, s
     return <CircleAlert className="h-4 w-4 text-blue-500" />;
   };
 
-  // Determine any special styling for the node
-  const getNodeStyle = () => {
-    if (dragging || isDragging) {
-      return "bg-blue-100 opacity-70 cursor-grabbing";
-    } else if (isDropTarget) {
-      return "bg-blue-100 outline-2 outline-dashed outline-blue-500";
-    } else if (isHighlighted) {
-      return "bg-blue-100 outline-2 outline-pink-500";
-    } else {
-      return "bg-blue-100";
-    }
-  };
-
   return (
     <div
-      className={`w-[300px] shadow-md rounded-full px-4 py-2 relative transition-all duration-150 flex items-center ${getNodeStyle()}`}
-      onClick={(e) => {
-        e.stopPropagation();
-
-        // Don't trigger if clicking on buttons or handles
-        if ((e.target as HTMLElement).closest("button, .react-flow__handle")) {
-          return;
-        }
-
-        // Highlight this node and its children
-        handleNodeClick();
-      }}
+      className={cn(
+        `bg-blue-100 w-[300px] shadow-md rounded-full px-4 py-2 relative transition-all duration-150 flex items-center`,
+        dragging ? "bg-blue-100 opacity-70 cursor-grabbing" : "",
+        isDropTarget ? "bg-blue-100 outline-2 outline-dashed outline-blue-500" : "",
+      )}
+      onClick={handleNodeClick}
     >
       {/* Left icon */}
       <div className="flex-shrink-0 p-1 rounded-full mr-3">{getNodeIcon()}</div>
@@ -162,25 +142,6 @@ export default function CustomNode({ data, id, sourcePosition, targetPosition, s
         </PopoverTrigger>
         <PopoverContent className="w-48 p-1" side="right" align="start">
           <div className="flex flex-col gap-1">
-            {Boolean(expandable) && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="flex justify-start text-sm"
-                onClick={handleToggleExpand}
-                disabled={!expandable}
-              >
-                {expanded ? (
-                  <>
-                    <ChevronUp className="mr-2 h-4 w-4" /> Collapse
-                  </>
-                ) : (
-                  <>
-                    <ChevronDown className="mr-2 h-4 w-4" /> Expand
-                  </>
-                )}
-              </Button>
-            )}
             <Button variant="ghost" size="sm" className="flex justify-start text-sm" onClick={showDetails}>
               <Info className="mr-2 h-4 w-4" /> Show Details
             </Button>
@@ -188,7 +149,7 @@ export default function CustomNode({ data, id, sourcePosition, targetPosition, s
               variant="ghost"
               size="sm"
               className="flex justify-start text-sm text-red-500 hover:text-red-600 hover:bg-red-50"
-              onClick={handleDeleteNode}
+              onClick={onNodesDelete}
             >
               <Trash2 className="mr-2 h-4 w-4" /> Delete Node
             </Button>
@@ -197,7 +158,7 @@ export default function CustomNode({ data, id, sourcePosition, targetPosition, s
       </Popover>
 
       {/* Show drag status indicator if the node is being dragged */}
-      {(Boolean(isDragging) || Boolean(dragging)) && (
+      {Boolean(dragging) && !isChildSelected && (
         <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-2 py-0.5 rounded text-xs whitespace-nowrap">
           Drag onto another node
         </div>

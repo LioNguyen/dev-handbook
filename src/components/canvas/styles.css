@@ -5,14 +5,46 @@
   z-index: 5;
 }
 
-.child-highlighted {
-  box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.5);
-  border-radius: 25px;
+/* Dragging and drop target styles */
+.react-flow__node.drop-target {
+  outline: 2px dashed #3b82f6 !important;
+  background-color: rgba(59, 130, 246, 0.1) !important;
 }
 
-.highlighted-edge {
-  stroke: #ec4899;
-  stroke-width: 2;
+/* Make sure nodes are draggable by setting cursor */
+.react-flow__node {
+  cursor: grab;
+}
+
+.react-flow__node:active,
+.react-flow__node.dragging {
+  cursor: grabbing;
+}
+
+/* Animation for dragging - pulse effect */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.react-flow__node.dragging {
+  animation: pulse 1.5s infinite;
+  opacity: 0.7;
+  z-index: 10;
+}
+
+/* Drop target styles */
+.react-flow__node.drop-target,
+.outline-dashed.outline-blue-500 {
+  outline: 2px dashed #3b82f6 !important;
+  background-color: rgba(59, 130, 246, 0.1) !important;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+  border-radius: 9999px;
 }
 
 /* Hexagon style */
@@ -59,16 +91,6 @@
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
 }
 
-/* Highlighted nodes */
-.child-highlighted {
-  outline: 1px solid #ec4899;
-}
-
-.highlighted-edge {
-  stroke: #ec4899;
-  stroke-width: 2px;
-}
-
 /* Animation for nodes being dragged */
 @keyframes pulse {
   0%,
@@ -82,46 +104,4 @@
 
 .opacity-70.cursor-grabbing {
   animation: pulse 1.5s infinite;
-}
-
-/* Dragging and drop target styles */
-.react-flow__node.drop-target {
-  outline: 2px dashed #3b82f6 !important;
-  background-color: rgba(59, 130, 246, 0.1) !important;
-}
-
-/* Make sure nodes are draggable by setting cursor */
-.react-flow__node {
-  cursor: grab;
-}
-
-.react-flow__node:active,
-.react-flow__node.dragging {
-  cursor: grabbing;
-}
-
-/* Animation for dragging - pulse effect */
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 0.9;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-
-.react-flow__node.dragging {
-  animation: pulse 1.5s infinite;
-  opacity: 0.7;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  z-index: 10;
-}
-
-/* Drop target styles */
-.react-flow__node.drop-target,
-.outline-dashed.outline-blue-500 {
-  outline: 2px dashed #3b82f6 !important;
-  background-color: rgba(59, 130, 246, 0.1) !important;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
 }

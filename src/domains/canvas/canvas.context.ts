@@ -1,6 +1,8 @@
 // src/domains/canvas/canvas.context.ts
 import { createContext } from "@core/store";
-import { Node, Edge, ReactFlowInstance } from "@xyflow/react";
+import { Edge, Node, OnEdgesChange, OnNodesChange, ReactFlowInstance } from "@xyflow/react";
+
+import { ExtendedReactFlowInstance } from "./utils/extendedFlowInstance";
 
 // Define the exact shape of your context
 interface CanvasContextValue {
@@ -10,17 +12,16 @@ interface CanvasContextValue {
 
   // States
   nodes: Node[];
-  setNodes: React.Dispatch<React.SetStateAction<Node[]>>;
+  setNodes: (nodes: Node[] | ((nodes: Node[]) => Node[])) => void;
   edges: Edge[];
-  setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
-  highlightedNodeId: string | null;
-  setHighlightedNodeId: React.Dispatch<React.SetStateAction<string | null>>;
-  highlightedEdges: Set<string>;
-  setHighlightedEdges: React.Dispatch<React.SetStateAction<Set<string>>>;
-  highlightedNodes: Set<string>;
-  setHighlightedNodes: React.Dispatch<React.SetStateAction<Set<string>>>;
-  reactFlowInstance: ReactFlowInstance | null;
-  setReactFlowInstance: React.Dispatch<React.SetStateAction<ReactFlowInstance | null>>;
+  setEdges: (edges: Edge[] | ((edges: Edge[]) => Edge[])) => void;
+
+  // Change handlers
+  onNodesChange: OnNodesChange;
+  onEdgesChange: OnEdgesChange;
+
+  reactFlowInstance: ExtendedReactFlowInstance | null;
+  setReactFlowInstance: (instance: ReactFlowInstance) => void;
   canvasSettings: {
     treeWidth: number;
     treeHeight: number;
@@ -37,8 +38,7 @@ interface CanvasContextValue {
   >;
 
   // Functions
-  autoLayoutCanvas: () => void;
-  toggleNodeExpansion: (nodeId: string) => void;
+  triggerLayout: () => void;
 
   // Derived states
   visibleNodes: Node[];

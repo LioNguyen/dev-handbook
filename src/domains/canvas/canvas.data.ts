@@ -1,4 +1,3 @@
-// src/domains/canvas/canvas.data.ts
 import { Node, Edge } from "@xyflow/react";
 
 // Define root node position
@@ -10,6 +9,7 @@ export const nodes: Node[] = [
   {
     id: "1",
     type: "root",
+    draggable: false,
     position: { x: nodeX, y: nodeY },
     data: {
       expanded: true,

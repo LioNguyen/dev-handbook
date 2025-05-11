@@ -1,154 +1,11 @@
 // src/domains/canvas/hooks/handlers/nodeHandlers.ts
-import { Edge, Node, Position, XYPosition } from "@xyflow/react"; // Add Edge import
+import { Edge, Node, Position, XYPosition } from "@xyflow/react";
 import { useCallback } from "react";
 
 import { useCanvas } from "../../canvas.context";
-import { useHighlightHandlers } from "./highlightHandlers";
-import { useViewHandlers } from "./viewHandlers";
 
 export function useNodeHandlers() {
-  const { nodes, edges, setNodes, setEdges, highlightedNodeId } = useCanvas();
-  const { highlightNodes } = useHighlightHandlers();
-  const { fitView, fitViewForNode } = useViewHandlers();
-
-  /**
-   * Toggles expansion state for a specific node by ID
-   */
-  const toggleNodeExpansion = useCallback(
-    (nodeId: string) => {
-      setNodes((nds) =>
-        nds.map((n) => {
-          if (n.id === nodeId && n.data?.expandable) {
-            // Toggle the expanded state of the node
-            const newExpandState = !n.data.expanded;
-
-            return {
-              ...n,
-              data: { ...n.data, expanded: newExpandState },
-            };
-          }
-          return n;
-        }),
-      );
-    },
-    [setNodes],
-  );
-
-  /**
-   * Marks a node as expandable
-   */
-  const markNodeAsExpandable = useCallback(
-    (nodeId: string) => {
-      setNodes((nds) =>
-        nds.map((n) => {
-          if (n.id === nodeId && !n.data?.expandable) {
-            return {
-              ...n,
-              data: { ...n.data, expandable: true },
-            };
-          }
-          return n;
-        }),
-      );
-    },
-    [setNodes],
-  );
-
-  /**
-   * Adds a new node to the graph
-   */
-  const addNode = useCallback(
-    (nodeData: Partial<Node>) => {
-      setNodes((nodes) => [...nodes, nodeData as Node]);
-    },
-    [setNodes],
-  );
-
-  /**
-   * Deletes a node and its connected edges
-   */
-  const deleteNode = useCallback(
-    (nodeId: string) => {
-      // Find potential parent node ID before deletion
-      let parentNodeId: string | undefined;
-      const parentEdge = edges.find((edge) => edge.target === nodeId);
-      if (parentEdge) {
-        parentNodeId = parentEdge.source;
-      }
-
-      // Get all child nodes before deleting them
-      const childNodeIds: string[] = [];
-      edges.forEach((edge) => {
-        if (edge.source === nodeId) {
-          childNodeIds.push(edge.target);
-        }
-      });
-
-      // If node has children, recursively delete them first
-      if (childNodeIds.length > 0) {
-        // Create a new array to avoid mutation during iteration
-        const childrenToDelete = [...childNodeIds];
-        childrenToDelete.forEach((childId) => {
-          deleteNode(childId);
-        });
-      }
-
-      // Remove the node
-      setNodes((currentNodes) => currentNodes.filter((node) => node.id !== nodeId));
-
-      // Remove any edges connected to this node
-      setEdges((currentEdges) => currentEdges.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
-
-      // If we found a parent, check if it needs to update expandability
-      if (parentNodeId) {
-        // Check if the parent still has any children after this node is removed
-        const remainingEdges = edges.filter((edge) => edge.source === parentNodeId && edge.target !== nodeId);
-
-        const hasRemainingChildren = remainingEdges.length > 0;
-
-        // Update the parent's expandability state
-        setNodes((currentNodes) =>
-          currentNodes.map((node) => {
-            if (node.id === parentNodeId) {
-              return {
-                ...node,
-                data: {
-                  ...node.data,
-                  expandable: hasRemainingChildren,
-                  expanded: hasRemainingChildren ? node.data?.expanded : false,
-                },
-              };
-            }
-            return node;
-          }),
-        );
-      }
-
-      // Clear highlighting if the deleted node was highlighted
-      if (nodeId === highlightedNodeId) {
-        highlightNodes("");
-      }
-
-      // Fit view after node deletion
-      setTimeout(() => {
-        fitView();
-      }, 50);
-    },
-    [edges, setNodes, setEdges, fitView, highlightedNodeId, highlightNodes],
-  );
-
-  /**
-   * Get nodes from ReactFlow instance or state
-   */
-  const getNodes = useCallback(() => {
-    let resultNodes: Node[] = [];
-    setNodes((currentNodes) => {
-      resultNodes = [...currentNodes];
-      return currentNodes;
-    });
-
-    return resultNodes;
-  }, [setNodes]);
+  const { nodes, edges, setNodes, setEdges, reactFlowInstance, triggerLayout } = useCanvas();
 
   /**
    * Changes the parent of a node
@@ -194,7 +51,6 @@ export function useNodeHandlers() {
       }
 
       // Create a new edge to the new parent
-      // Fix: Properly type the edge
       const newEdge: Edge = {
         id: `${newParentId}->${nodeId}`,
         source: newParentId,
@@ -210,7 +66,6 @@ export function useNodeHandlers() {
       // Get the new parent order and count existing children
       setNodes((currentNodes) => {
         const parentNode = currentNodes.find((n) => n.id === newParentId);
-        // Fix: Ensure parentOrder is always a string
         parentOrder = parentNode?.data?.order ? String(parentNode.data.order) : "";
 
         // Count children of the new parent
@@ -241,97 +96,20 @@ export function useNodeHandlers() {
         }),
       );
 
-      // Mark the new parent as expandable and expanded
-      setNodes((nodes) =>
-        nodes.map((node) => {
-          if (node.id === newParentId) {
-            return {
-              ...node,
-              data: {
-                ...node.data,
-                expandable: true,
-                expanded: true,
-              },
-            };
-          }
-          return node;
-        }),
-      );
-
-      // Check if the old parent still has children
-      if (currentParentId) {
-        const oldParentStillHasChildren = edges.some((e) => e.source === currentParentId && e.target !== nodeId);
-
-        if (!oldParentStillHasChildren) {
-          // Update the old parent to not be expandable
-          setNodes((nodes) =>
-            nodes.map((node) => {
-              if (node.id === currentParentId) {
-                return {
-                  ...node,
-                  data: {
-                    ...node.data,
-                    expandable: false,
-                    expanded: false,
-                  },
-                };
-              }
-              return node;
-            }),
-          );
-        }
-      }
-
       // Ensure the layout updates properly
-      setTimeout(() => {
-        fitView();
-      }, 50);
+      triggerLayout();
 
       return true;
     },
-    [nodes, edges, setNodes, setEdges, fitView],
+    [edges, setNodes, setEdges, triggerLayout],
   );
 
   /**
-   * Creates a new standalone node at the specified position
+   * Unified function to create standalone or child nodes
    */
-  const createStandaloneNode = useCallback(
-    (position: XYPosition) => {
-      // Generate a unique ID for the new node
-      const newNodeId = `${new Date().getTime()}`;
-
-      // Create the new node object
-      const newNode: Node = {
-        id: newNodeId,
-        type: "custom", // Use your custom node type
-        position, // Use the position from the double-click
-        data: {
-          label: `Node ${newNodeId.substring(5)}`,
-          value: `Node ${newNodeId.substring(5)}`,
-          subtext: "STANDALONE",
-          type: "standalone",
-          expandable: false,
-          expanded: false,
-        },
-        // Set any other default properties you need
-      };
-
-      // Add the node to the canvas
-      setNodes((nds) => [...nds, newNode]);
-
-      // Optionally highlight the new node
-      if (highlightNodes) {
-        highlightNodes(newNodeId);
-      }
-    },
-    [setNodes, highlightNodes],
-  );
-
-  /**
-   * Creates a child node connected to a parent node with improved parameter structure
-   */
-  const createChildNode = useCallback(
+  const createNode = useCallback(
     (options: {
+      position?: XYPosition;
       data?: {
         name?: string;
         value?: string;
@@ -340,7 +118,7 @@ export function useNodeHandlers() {
         [key: string]: any;
         _overrideId?: string;
       };
-      parent: {
+      parent?: {
         id: string | number;
         position?: XYPosition;
         sourcePosition?: Position;
@@ -348,111 +126,105 @@ export function useNodeHandlers() {
       };
       nodeType?: string;
     }) => {
-      const { data = {}, parent, nodeType = "custom" } = options;
+      const { position, data = {}, parent, nodeType = "custom" } = options;
       const { name, value, type = "ip", subtext, _overrideId } = data;
 
-      // Find parent node if position wasn't provided
-      const parentNode = nodes.find((node) => node.id === parent.id);
-      if (!parentNode && !parent.position) {
-        console.error("Parent node not found and no position provided");
-        return null;
+      // Determine if we're creating a standalone or child node
+      const isChildNode = !!parent;
+
+      let nodeId: string;
+      let nodePosition: XYPosition;
+      let sourcePos: Position | undefined;
+      let targetPos: Position | undefined;
+
+      // CHILD NODE LOGIC
+      if (isChildNode) {
+        // Find parent node if position wasn't provided
+        const parentNode = nodes.find((node) => node.id === parent.id);
+        if (!parentNode && !parent.position) {
+          console.error("Parent node not found and no position provided");
+          return null;
+        }
+
+        // Get parent position either from provided value or from node
+        const parentPosition = parent.position || parentNode?.position || { x: 0, y: 0 };
+
+        // Get source and target positions
+        sourcePos = parent.sourcePosition || parentNode?.sourcePosition || Position.Right;
+        targetPos = parent.targetPosition || parentNode?.targetPosition || Position.Left;
+
+        // Generate ID for child node
+        nodeId = _overrideId || `${parent.id}__${new Date().getTime()}`;
+
+        // Determine position offset based on source position
+        let posOffset = { x: 0, y: 100 }; // Default for bottom
+        if (sourcePos === Position.Right) {
+          posOffset = { x: 350, y: 0 };
+        } else if (sourcePos === Position.Left) {
+          posOffset = { x: -100, y: 0 };
+        } else if (sourcePos === Position.Top) {
+          posOffset = { x: 0, y: -100 };
+        }
+
+        // Calculate child node position
+        nodePosition = {
+          x: parentPosition.x + posOffset.x,
+          y: parentPosition.y + posOffset.y,
+        };
+
+        // Create the edge connecting the parent to the new node
+        const newEdge: Edge = {
+          id: `${parent.id}->${nodeId}`,
+          source: String(parent.id), // Ensure source is a string
+          target: nodeId,
+        };
+
+        // Add the edge
+        setEdges((edges) => [...edges, newEdge]);
       }
+      // STANDALONE NODE LOGIC
+      else {
+        if (!position) {
+          console.error("Position is required for standalone nodes");
+          return null;
+        }
 
-      // Get parent position either from provided value or from node
-      const parentPosition = parent.position || parentNode?.position || { x: 0, y: 0 };
-
-      // Get source and target positions
-      const sourcePosition = parent.sourcePosition || parentNode?.sourcePosition || Position.Right;
-      const targetPosition = parent.targetPosition || parentNode?.targetPosition || Position.Left;
-
-      // Generate a unique ID for the new node using timestamp
-      const newNodeId = _overrideId || `${parent.id}__${new Date().getTime()}`;
-
-      // Determine position offset based on source position
-      let posOffset = { x: 0, y: 100 }; // Default for bottom
-      if (sourcePosition === Position.Right) {
-        posOffset = { x: 100, y: 0 };
-      } else if (sourcePosition === Position.Left) {
-        posOffset = { x: -100, y: 0 };
-      } else if (sourcePosition === Position.Top) {
-        posOffset = { x: 0, y: -100 };
+        // Generate ID for standalone node
+        nodeId = _overrideId || `standalone_${new Date().getTime()}`;
+        nodePosition = position;
       }
-
-      // Count existing children for the order property
-      const childrenCount = nodes.filter((n) => n.id.startsWith(`${parent.id}__`)).length;
-
-      // Get parent node order
-      const parentNode2 = nodes.find((n) => n.id === parent.id);
-      const parentOrder = parentNode2?.data?.order ? String(parentNode2.data.order) : "";
-
-      // Calculate the new order
-      const newOrder = parentOrder ? `${parentOrder}.${childrenCount + 1}` : `${childrenCount + 1}`;
 
       // Create the new node with appropriate data
       const newNode: Node = {
-        id: newNodeId,
+        id: nodeId,
         type: nodeType,
-        position: {
-          x: parentPosition.x + posOffset.x,
-          y: parentPosition.y + posOffset.y,
-        },
+        position: nodePosition,
         data: {
           ...data, // Preserve all original data properties
-          order: newOrder,
-          value: value || name || `127.0.0.${Math.floor(Math.random() * 255)}`,
-          name: name || value || `Node ${childrenCount + 1}`,
-          expandable: false,
-          expanded: false,
+          value:
+            value ||
+            name ||
+            (isChildNode ? `127.0.0.${Math.floor(Math.random() * 255)}` : `Node ${nodeId.substring(5)}`),
+          name: name || value || (isChildNode ? "Child Node" : `Node ${nodeId.substring(5)}`),
           type: type,
-          subtext: subtext || type?.toUpperCase() || "IP ADDRESS",
+          subtext: subtext || type?.toUpperCase() || (isChildNode ? "IP ADDRESS" : "STANDALONE"),
         },
-        sourcePosition,
-        targetPosition,
+        sourcePosition: sourcePos,
+        targetPosition: targetPos,
       };
 
-      // Create the edge connecting the parent to the new node
-      const newEdge: Edge = {
-        id: `${parent.id}->${newNodeId}`,
-        source: String(parent.id), // Ensure source is a string
-        target: newNodeId,
-      };
-
-      // Add the node and edge
+      // Add the node
       setNodes((nodes) => [...nodes, newNode]);
-      setEdges((edges) => [...edges, newEdge]);
 
-      // If parent is not expanded, expand it
-      setNodes((nodes) =>
-        nodes.map((node) => {
-          if (node.id === parent.id) {
-            return {
-              ...node,
-              data: {
-                ...node.data,
-                expandable: true,
-                expanded: true,
-              },
-            };
-          }
-          return node;
-        }),
-      );
+      triggerLayout();
 
-      // Focus the view on the new node
-      setTimeout(() => {
-        setTimeout(() => {
-          fitViewForNode(newNodeId);
-        }, 50);
-      }, 10);
-
-      return newNodeId;
+      return nodeId;
     },
-    [nodes, setNodes, setEdges, fitViewForNode],
+    [nodes, setNodes, setEdges, triggerLayout],
   );
 
   /**
    * Toggles an 'add' node when a custom node is selected/deselected
-   * Refactored to use createChildNode and deleteNode
    */
   const toggleAddNode = useCallback(
     (parentId: string, isSelected: boolean) => {
@@ -462,12 +234,14 @@ export function useNodeHandlers() {
       const existingAddNode = nodes.find((node) => node.id === addNodeId);
 
       if (existingAddNode) {
-        deleteNode(addNodeId);
+        reactFlowInstance?.deleteNodes([addNodeId]);
 
         // If we want to select it again, we need to wait for delete to complete
         if (isSelected) {
           setTimeout(() => createAddNode(), 50);
         }
+
+        triggerLayout();
         return;
       }
 
@@ -476,19 +250,19 @@ export function useNodeHandlers() {
         createAddNode();
       }
 
-      // Function to create the add node using createChildNode
+      // Function to create the add node using the new createNode function
       function createAddNode() {
         const parentNode = nodes.find((node) => node.id === parentId);
         if (!parentNode) return;
 
         const parentPosition = { x: parentNode.position.x, y: parentNode.position.y };
 
-        // Call createChildNode with appropriate options
-        createChildNode({
+        // Call createNode with appropriate options
+        createNode({
           parent: {
             id: parentId,
-            sourcePosition: parentNode.sourcePosition,
-            targetPosition: parentNode.targetPosition,
+            sourcePosition: Position.Right,
+            targetPosition: Position.Left,
           },
           data: {
             parentId,
@@ -502,68 +276,151 @@ export function useNodeHandlers() {
           },
           nodeType: "add", // Use the add node type
         });
-
-        // Transform the created node to customize any properties
-        setNodes((nodes) =>
-          nodes.map((node) => {
-            if (node.id === addNodeId) {
-              // Make the node position closer to the parent
-              // Determine position offset based on source position
-              const sourcePosition = parentNode.sourcePosition || Position.Right;
-              let posOffset = { x: 0, y: 50 }; // Default below the node
-
-              if (sourcePosition === Position.Right) {
-                posOffset = { x: 80, y: 0 };
-              } else if (sourcePosition === Position.Left) {
-                posOffset = { x: -80, y: 0 };
-              } else if (sourcePosition === Position.Top) {
-                posOffset = { x: 0, y: -50 };
-              }
-
-              return {
-                ...node,
-                id: addNodeId, // Ensure correct ID is set
-                position: {
-                  x: parentNode.position.x + posOffset.x,
-                  y: parentNode.position.y + posOffset.y,
-                },
-              };
-            }
-            return node;
-          }),
-        );
-
-        // Update edge ID to follow the specific format
-        setEdges((edges) =>
-          edges.map((edge) => {
-            if (edge.target === addNodeId) {
-              return {
-                ...edge,
-                id: `${parentId}->${addNodeId}`,
-              };
-            }
-            return edge;
-          }),
-        );
-
-        // Focus view on the add node
-        setTimeout(() => {
-          fitViewForNode(addNodeId);
-        }, 60);
       }
     },
-    [nodes, createChildNode, deleteNode, setNodes, setEdges, fitViewForNode],
+    [nodes, createNode, reactFlowInstance, triggerLayout],
+  );
+
+  /**
+   * Handle node drag start
+   */
+  const handleNodeDragStart = useCallback((event: React.MouseEvent, node: Node) => {
+    event.stopPropagation();
+
+    if (node.type === "add" || node.type === "root") return;
+  }, []);
+
+  /**
+   * Handle node drag
+   */
+  const handleNodeDrag = useCallback(
+    (event: React.MouseEvent, node: Node) => {
+      event.stopPropagation();
+
+      if (node.type === "add" || node.type === "root") return;
+
+      // Get elements at the mouse position
+      const elementsAtPoint = document.elementsFromPoint(event.clientX, event.clientY);
+
+      // Find potential drop targets
+      let dropTargetId: string | null = null;
+
+      for (const element of elementsAtPoint) {
+        if (element.classList.contains("react-flow__node") && element instanceof HTMLElement) {
+          const targetId = element.getAttribute("data-id");
+          if (targetId && targetId !== node.id) {
+            dropTargetId = targetId;
+            break;
+          }
+        }
+      }
+
+      // Update drop target states
+      setNodes((nodes) =>
+        nodes.map((n) => {
+          if (dropTargetId && n.id === dropTargetId) {
+            return {
+              ...n,
+              data: {
+                ...n.data,
+                isDropTarget: true,
+              },
+            };
+          } else if (n.data?.isDropTarget) {
+            return {
+              ...n,
+              data: {
+                ...n.data,
+                isDropTarget: false,
+              },
+            };
+          }
+          return n;
+        }),
+      );
+
+      // Save potential drop target on the dragging node
+      setNodes((nodes) =>
+        nodes.map((n) => {
+          if (n.id === node.id) {
+            return {
+              ...n,
+              data: {
+                ...n.data,
+                dropTargetId,
+              },
+            };
+          }
+          return n;
+        }),
+      );
+    },
+    [setNodes],
+  );
+
+  /**
+   * Handle node drag stop
+   */
+  const handleNodeDragStop = useCallback(
+    (event: React.MouseEvent, node: Node) => {
+      event.stopPropagation();
+
+      if (node.type === "add" || node.type === "root") return;
+
+      // Get the potential drop target
+      const dropTargetId = node.data?.dropTargetId;
+
+      // If we have a drop target, change the parent
+      if (dropTargetId && dropTargetId !== node.id) {
+        console.log(`Changing parent: ${node.id} -> ${dropTargetId}`);
+        // Fix: Ensure dropTargetId is a string
+        changeNodeParent(node.id, String(dropTargetId));
+      }
+
+      // Reset all drag-related states
+      setNodes((nodes) =>
+        nodes.map((n) => ({
+          ...n,
+          data: {
+            ...n.data,
+            isDropTarget: false,
+            dropTargetId: null,
+          },
+        })),
+      );
+    },
+    [changeNodeParent, setNodes],
+  );
+
+  /**
+   * Deletes selected nodes using ReactFlow's selection mechanism
+   * Uses reactFlowInstance to get selection info and perform deletion
+   */
+  const handleNodesDelete = useCallback(
+    (ids?: string[], options?: { deleteChildren?: boolean }) => {
+      if (!reactFlowInstance) return;
+
+      const selectionInfo = reactFlowInstance.getSelectionInfo();
+      const nodesToDelete = ids || [...(selectionInfo?.selectedNodeIds || [])];
+
+      if (nodesToDelete.length > 0) {
+        reactFlowInstance.deleteNodes(nodesToDelete, {
+          deleteChildren: options?.deleteChildren ?? true,
+        });
+
+        triggerLayout();
+      }
+    },
+    [reactFlowInstance, triggerLayout],
   );
 
   return {
-    toggleNodeExpansion,
-    markNodeAsExpandable,
-    addNode,
-    deleteNode,
-    getNodes,
     changeNodeParent,
-    createStandaloneNode,
+    createNode,
     toggleAddNode,
-    createChildNode,
+    handleNodesDelete,
+    handleNodeDragStart,
+    handleNodeDrag,
+    handleNodeDragStop,
   };
 }

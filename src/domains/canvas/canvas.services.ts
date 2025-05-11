@@ -33,8 +33,6 @@ export function useCanvasService() {
       // Make sure data is correctly typed
       data: {
         ...node.data,
-        // Add any required fields
-        visible: true,
       },
     }));
   }, []);
