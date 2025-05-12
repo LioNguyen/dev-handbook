@@ -1,57 +1,46 @@
 // src/components/canvas/AddNode.tsx
-import { Handle, NodeProps, Position, XYPosition } from "@xyflow/react";
+import { Handle, NodeProps, Position } from "@xyflow/react";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 
-import { useCanvasHandlers } from "@/domains/canvas/hooks/handlers";
+import NodeDetailSheet from "../sheet/NodeDetailSheet";
 
-/**
- * Add Node component that appears when a node is selected
- * and allows adding a child node with one click
- */
-export default function AddNode({ data, id: _id }: NodeProps) {
+export default function AddNode({ id, data }: NodeProps) {
+  const [sheetOpen, setSheetOpen] = useState(false);
+
+  // Extract parent ID from the add node ID (format: add-{parentId})
+  const parentId = id.startsWith("add-") ? id.substring(4) : (data?.parentId as string);
   // Safely access data properties with proper type handling
-  const parentId = data?.parentId as string; // Cast to string
-  const parentPosition = data?.parentPosition as XYPosition;
 
   // Define source and target positions with correct type handling
   const sourcePosition: Position = (data?.sourcePosition as Position) || Position.Right;
   const targetPosition: Position = (data?.targetPosition as Position) || Position.Left;
 
-  const { createNode } = useCanvasHandlers();
-
-  const handleClick = () => {
-    if (parentId && parentPosition) {
-      createNode({
-        data: {
-          type: "ip",
-          name: "New Node",
-          value: "New Value",
-        },
-        parent: {
-          id: parentId,
-          position: parentPosition,
-          sourcePosition,
-          targetPosition,
-        },
-      });
-    }
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSheetOpen(true);
   };
 
   return (
-    <div
-      className="relative w-12 h-12 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
-      onClick={handleClick}
-    >
-      <Handle position={targetPosition} type="target" className="!opacity-0" />
-      <Handle position={sourcePosition} type="source" className="!opacity-0" />
+    <>
+      <div
+        className="relative w-12 h-12 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
+        onClick={handleClick}
+      >
+        <Handle position={targetPosition} type="target" className="!opacity-0" />
+        <Handle position={sourcePosition} type="source" className="!opacity-0" />
 
-      {/* Outer dashed circle */}
-      <div className="absolute inset-0 rounded-full border-2 border-white border-dashed"></div>
+        {/* Outer dashed circle */}
+        <div className="absolute inset-0 rounded-full border-2 border-white border-dashed"></div>
 
-      {/* Inner solid circle with plus icon */}
-      <div className="w-10 h-10 rounded-full border-1 border-white bg-opacity-20 flex items-center justify-center">
-        <Plus className="text-white h-5 w-5" />
+        {/* Inner solid circle with plus icon */}
+        <div className="w-10 h-10 rounded-full border-1 border-white bg-opacity-20 flex items-center justify-center">
+          <Plus className="text-white h-5 w-5" />
+        </div>
       </div>
-    </div>
+
+      {/* Node detail sheet for creating child nodes */}
+      <NodeDetailSheet open={sheetOpen} onOpenChange={setSheetOpen} parentId={parentId} />
+    </>
   );
 }

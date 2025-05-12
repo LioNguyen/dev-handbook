@@ -1,21 +1,16 @@
-import { Background, Panel, ReactFlow, Node } from "@xyflow/react";
+// src/components/canvas/MainCanvas.tsx
+import { Background, Node, Panel, ReactFlow } from "@xyflow/react";
 import { RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
-import { useCallback } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { useCanvas } from "@/domains/canvas";
 import { useCanvasHandlers } from "@/domains/canvas/hooks/handlers";
 import "@xyflow/react/dist/style.css";
+import NodeDetailSheet from "../sheet/NodeDetailSheet";
 import AddNode from "./AddNode";
 import CustomNode from "./CustomNode";
 import RootNode from "./RootNode";
 import "./styles.css";
-
-// Custom node types mapping
-const nodeTypes = {
-  custom: CustomNode,
-  root: RootNode,
-  add: AddNode,
-};
 
 /**
  * Main Canvas component for the tree
@@ -24,18 +19,23 @@ function Canvas() {
   // Get state and functions from context
   const { nodes, edges, triggerLayout, setReactFlowInstance, reactFlowInstance } = useCanvas();
 
+  // State for node detail sheet
+  const [nodeDetailSheetOpen, setNodeDetailSheetOpen] = useState(false);
+  const [nodeDetailPosition, setNodeDetailPosition] = useState<{ x: number; y: number } | undefined>();
+  const [selectedNodeId, setSelectedNodeId] = useState<string | undefined>();
+
   const isNodeDragging = reactFlowInstance?.isNodeDragging();
 
   // Get handlers
-  const {
-    onNodesChange,
-    onEdgesChange,
-    handleNodeDragStart,
-    handleNodeDrag,
-    handleNodeDragStop,
-    createNode,
-    handleNodesDelete,
-  } = useCanvasHandlers();
+  const { onNodesChange, onEdgesChange, handleNodeDragStart, handleNodeDrag, handleNodeDragStop, handleNodesDelete } =
+    useCanvasHandlers();
+
+  // Handle opening the edit sheet for a node
+  const handleOpenNodeEditSheet = useCallback((nodeId: string) => {
+    setSelectedNodeId(nodeId);
+    setNodeDetailPosition(undefined);
+    setNodeDetailSheetOpen(true);
+  }, []);
 
   // Handle double click on canvas to create a new node
   const handlePaneDoubleClick = useCallback(
@@ -43,15 +43,26 @@ function Canvas() {
       if (!reactFlowInstance) return;
 
       // Convert screen coordinates to flow coordinates
-      const position = reactFlowInstance?.screenToFlowPosition({
+      const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
       });
 
-      // Create a standalone node at that position
-      createNode({ position });
+      // Open the detail sheet with the clicked position
+      setNodeDetailPosition(position);
+      setSelectedNodeId(undefined);
+      setNodeDetailSheetOpen(true);
     },
-    [createNode, reactFlowInstance],
+    [reactFlowInstance],
+  );
+
+  // Handle node double click to edit
+  const handleNodeDoubleClick = useCallback(
+    (event: React.MouseEvent, node: Node) => {
+      event.stopPropagation();
+      handleOpenNodeEditSheet(node.id);
+    },
+    [handleOpenNodeEditSheet],
   );
 
   // Handle keyboard deletion
@@ -62,12 +73,38 @@ function Canvas() {
     [handleNodesDelete],
   );
 
+  // Add the action handler to each node's data
+  const nodesWithActions = useMemo(() => {
+    return nodes.map((node) => {
+      if (node.type === "custom") {
+        return {
+          ...node,
+          data: {
+            ...node.data,
+            onEditNode: handleOpenNodeEditSheet,
+          },
+        };
+      }
+      return node;
+    });
+  }, [nodes, handleOpenNodeEditSheet]);
+
+  // Custom node types mapping
+  const nodeTypes = useMemo(
+    () => ({
+      custom: CustomNode,
+      root: RootNode,
+      add: AddNode,
+    }),
+    [],
+  );
+
   return (
     <div className="h-full w-full relative">
       <ReactFlow
         className="bg-slate-800!"
         fitView
-        nodes={nodes}
+        nodes={nodesWithActions}
         edges={edges}
         elementsSelectable={true}
         nodeTypes={nodeTypes}
@@ -83,9 +120,7 @@ function Canvas() {
         onNodeDragStart={handleNodeDragStart}
         onNodeDrag={handleNodeDrag}
         onNodeDragStop={handleNodeDragStop}
-        onNodeDoubleClick={(e) => {
-          e.stopPropagation();
-        }}
+        onNodeDoubleClick={handleNodeDoubleClick}
         onDoubleClick={handlePaneDoubleClick}
         onNodesDelete={onNodesDelete}
         onPaneClick={() => {
@@ -125,11 +160,20 @@ function Canvas() {
           <div>
             <p>Total nodes: {nodes.length}</p>
             <p>Double-click on empty space to create a node</p>
+            <p>Double-click on a node to edit it</p>
           </div>
         </Panel>
 
         <Background color="#ccc" gap={16} />
       </ReactFlow>
+
+      {/* Node detail sheet for creating/editing standalone nodes */}
+      <NodeDetailSheet
+        open={nodeDetailSheetOpen}
+        onOpenChange={setNodeDetailSheetOpen}
+        position={nodeDetailPosition}
+        nodeId={selectedNodeId}
+      />
     </div>
   );
 }
