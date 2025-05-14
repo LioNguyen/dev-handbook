@@ -9,7 +9,7 @@ import { applyEdgesStyles, applyNodesStyles } from "./utils";
 import { ExtendedReactFlowInstance, extendReactFlowInstance } from "./utils/extendedFlowInstance";
 
 // Canvas provider component that uses ReactFlow hooks
-const MainCanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
+const CanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
   // Initialize state for nodes and edges
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
   const [extendedInstance, setExtendedInstance] = useState<ExtendedReactFlowInstance | null>(null);
@@ -166,12 +166,12 @@ const MainCanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
 };
 
 // Export the wrapped provider with ReactFlow
-const CanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
+const PreviewCanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <ReactFlowProvider>
-      <MainCanvasProvider>{children}</MainCanvasProvider>
+      <CanvasProvider>{children}</CanvasProvider>
     </ReactFlowProvider>
   );
 };
 
-export { CanvasProvider };
+export { PreviewCanvasProvider };

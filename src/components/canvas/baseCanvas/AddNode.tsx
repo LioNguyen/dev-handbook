@@ -3,7 +3,7 @@ import { Handle, NodeProps, Position } from "@xyflow/react";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
-import NodeDetailSheet from "../sheet/NodeDetailSheet";
+import NodeDetailSheet from "./NodeDetailSheet";
 
 export default function AddNode({ id, data }: NodeProps) {
   const [sheetOpen, setSheetOpen] = useState(false);

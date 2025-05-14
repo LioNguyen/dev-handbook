@@ -1,12 +1,12 @@
 import React from "react";
 
-import MainCanvas from "@/components/canvas/MainCanvas";
+import CanvasWrapper from "@/components/canvas/CanvasWrapper";
 
 const HomePage: React.FC = () => {
   return (
     <div className="home-page">
       <div className="h-screen w-screen">
-        <MainCanvas />
+        <CanvasWrapper />
       </div>
     </div>
   );

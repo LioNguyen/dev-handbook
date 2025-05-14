@@ -9,7 +9,7 @@ import { cn } from "@/shared/utils";
 import { Button } from "@designSystem/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@designSystem/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@designSystem/components/ui/tooltip";
-import "./styles.css";
+import "../styles.css";
 
 /**
  * Custom node component with enhanced functionality

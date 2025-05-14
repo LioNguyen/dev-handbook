@@ -1,0 +1,417 @@
+[
+  {
+    "domainId": "q-301",
+    "parentLead": "lead-301",
+    "parentLeadValue": "alice@contoso.com",
+    "parentLeadType": "AWS IAM USER",
+    "value": "AWS-based login",
+    "result": [
+      {
+        "sessionId": null,
+        "time": "2024-06-03T08:10:00Z",
+        "operation": null,
+        "client": {
+          "ip": "18.232.45.12",
+          "port": null,
+          "userAgent": null
+        },
+        "result": [
+          {
+            "additionalDetails": null,
+            "conditionalAccessStatus": "notApplied",
+            "errorCode": "0",
+            "failureReason": "None",
+            "status": "Succeeded",
+            "result": [
+              {
+                "additionalDetails": null,
+                "conditionalAccessStatus": "notApplied",
+                "errorCode": "0",
+                "failureReason": "None",
+                "status": "Succeeded",
+                "result": {
+                  "additionalDetails": null,
+                  "conditionalAccessStatus": "notApplied",
+                  "errorCode": "0",
+                  "failureReason": "None",
+                  "status": "Succeeded",
+                  "result": [
+                    {
+                      "additionalDetails": null,
+                      "conditionalAccessStatus": "notApplied",
+                      "errorCode": "0",
+                      "failureReason": "None",
+                      "status": "Succeeded"
+                    },
+                    {
+                      "additionalDetails": null,
+                      "conditionalAccessStatus": "notApplied",
+                      "errorCode": "0",
+                      "failureReason": "None",
+                      "status": "Succeeded"
+                    }
+                  ]
+                }
+              },
+              {
+                "additionalDetails": null,
+                "conditionalAccessStatus": "notApplied",
+                "errorCode": "0",
+                "failureReason": "None",
+                "status": "Succeeded"
+              },
+              {
+                "additionalDetails": null,
+                "conditionalAccessStatus": "notApplied",
+                "errorCode": "0",
+                "failureReason": "None",
+                "status": "Succeeded"
+              }
+            ]
+          },
+          {
+            "additionalDetails": null,
+            "conditionalAccessStatus": "notApplied",
+            "errorCode": "0",
+            "failureReason": "None",
+            "status": "Succeeded",
+            "result": [
+              {
+                "additionalDetails": null,
+                "conditionalAccessStatus": "notApplied",
+                "errorCode": "0",
+                "failureReason": "None",
+                "status": "Succeeded",
+                "result": {
+                  "additionalDetails": null,
+                  "conditionalAccessStatus": "notApplied",
+                  "errorCode": "0",
+                  "failureReason": "None",
+                  "status": "Succeeded"
+                }
+              },
+              {
+                "additionalDetails": null,
+                "conditionalAccessStatus": "notApplied",
+                "errorCode": "0",
+                "failureReason": "None",
+                "status": "Succeeded"
+              },
+              {
+                "additionalDetails": null,
+                "conditionalAccessStatus": "notApplied",
+                "errorCode": "0",
+                "failureReason": "None",
+                "status": "Succeeded"
+              }
+            ]
+          }
+        ],
+        "device": {
+          "browser": "Chrome 124.0.0.0",
+          "deviceId": "",
+          "isCompliant": true,
+          "isManaged": false,
+          "joinType": "Unknown"
+        }
+      }
+    ]
+  },
+  {
+    "domainId": "q-302",
+    "parentLead": "lead-302",
+    "parentLeadValue": "45.83.136.55",
+    "parentLeadType": "IP ADDRESS",
+    "value": "Login by IP detection",
+    "result": [
+      {
+        "sessionId": null,
+        "time": "2024-06-03T09:30:00Z",
+        "operation": null,
+        "client": {
+          "ip": "45.83.136.55",
+          "port": null,
+          "userAgent": null
+        },
+        "result": {
+          "additionalDetails": "IP not trusted",
+          "conditionalAccessStatus": "failure",
+          "errorCode": "401",
+          "failureReason": "Unauthorized",
+          "status": "Failed"
+        },
+        "device": {
+          "browser": "Firefox 112.0",
+          "deviceId": "",
+          "isCompliant": false,
+          "isManaged": false,
+          "joinType": ""
+        }
+      }
+    ]
+  },
+  {
+    "domainId": "q-303",
+    "parentLead": "lead-303",
+    "parentLeadValue": "svc@gcpservice.com",
+    "parentLeadType": "GCP SERVICE ACCOUNT",
+    "value": "Scheduled GCP function call",
+    "result": [
+      {
+        "sessionId": null,
+        "time": "2024-06-03T10:15:00Z",
+        "operation": null,
+        "client": {
+          "ip": "34.120.0.1",
+          "port": null,
+          "userAgent": null
+        },
+        "result": {
+          "additionalDetails": "Service auth",
+          "conditionalAccessStatus": "successGrant",
+          "errorCode": "0",
+          "failureReason": "None",
+          "status": "Succeeded"
+        },
+        "device": {
+          "browser": "gcloud/438.0",
+          "deviceId": "svc-gcp-007",
+          "isCompliant": true,
+          "isManaged": true,
+          "joinType": "Service"
+        }
+      }
+    ]
+  },
+  {
+    "domainId": "q-304",
+    "parentLead": "lead-304",
+    "parentLeadValue": "device101@azure.com",
+    "parentLeadType": "AZURE DEVICE",
+    "value": "Azure device sync",
+    "result": [
+      {
+        "sessionId": null,
+        "time": "2024-06-03T11:00:00Z",
+        "operation": null,
+        "client": {
+          "ip": "13.107.246.1",
+          "port": null,
+          "userAgent": null
+        },
+        "result": {
+          "additionalDetails": "Sync initiated",
+          "conditionalAccessStatus": "successGrant",
+          "errorCode": "0",
+          "failureReason": "None",
+          "status": "Succeeded"
+        },
+        "device": {
+          "browser": "Edge 124.0",
+          "deviceId": "az-device-101",
+          "isCompliant": true,
+          "isManaged": true,
+          "joinType": "AzureADJoined"
+        }
+      }
+    ]
+  },
+  {
+    "domainId": "q-305",
+    "parentLead": "lead-305",
+    "parentLeadValue": "custom@system.local",
+    "parentLeadType": "CUSTOM CONNECTOR",
+    "value": "Login from custom app",
+    "result": [
+      {
+        "sessionId": null,
+        "time": "2024-06-03T11:45:00Z",
+        "operation": null,
+        "client": {
+          "ip": "192.168.100.100",
+          "port": null,
+          "userAgent": null
+        },
+        "result": {
+          "additionalDetails": "Connector failed handshake",
+          "conditionalAccessStatus": "failure",
+          "errorCode": "403",
+          "failureReason": "Forbidden",
+          "status": "Failed"
+        },
+        "device": {
+          "browser": "Unknown",
+          "deviceId": "custom-conn-01",
+          "isCompliant": false,
+          "isManaged": false,
+          "joinType": "Custom"
+        }
+      }
+    ]
+  },
+  {
+    "domainId": "q-306",
+    "parentLead": "lead-306",
+    "parentLeadValue": "app@thirdparty.com",
+    "parentLeadType": "THIRD-PARTY APP",
+    "value": "Token exchange",
+    "result": [
+      {
+        "sessionId": null,
+        "time": "2024-06-03T12:20:00Z",
+        "operation": null,
+        "client": {
+          "ip": "52.15.34.78",
+          "port": null,
+          "userAgent": null
+        },
+        "result": {
+          "additionalDetails": "OAuth grant",
+          "conditionalAccessStatus": "notApplied",
+          "errorCode": "0",
+          "failureReason": "None",
+          "status": "Succeeded"
+        },
+        "device": {
+          "browser": "axios/1.6",
+          "deviceId": "",
+          "isCompliant": false,
+          "isManaged": false,
+          "joinType": ""
+        }
+      }
+    ]
+  },
+  {
+    "domainId": "q-307",
+    "parentLead": "lead-307",
+    "parentLeadValue": "root@localhost",
+    "parentLeadType": "LOCAL SYSTEM ACCOUNT",
+    "value": "System-level job ran",
+    "result": [
+      {
+        "sessionId": null,
+        "time": "2024-06-03T13:00:00Z",
+        "operation": null,
+        "client": {
+          "ip": "127.0.0.1",
+          "port": null,
+          "userAgent": null
+        },
+        "result": {
+          "additionalDetails": "Scheduled task",
+          "conditionalAccessStatus": "notApplied",
+          "errorCode": "0",
+          "failureReason": "None",
+          "status": "Succeeded"
+        },
+        "device": {
+          "browser": "System",
+          "deviceId": "sys-root",
+          "isCompliant": true,
+          "isManaged": true,
+          "joinType": "Local"
+        }
+      }
+    ]
+  },
+  {
+    "domainId": "q-308",
+    "parentLead": "lead-308",
+    "parentLeadValue": "ssh-key-0x8aef",
+    "parentLeadType": "SSH KEY",
+    "value": "SSH key login attempt",
+    "result": [
+      {
+        "sessionId": null,
+        "time": "2024-06-03T13:30:00Z",
+        "operation": null,
+        "client": {
+          "ip": "10.0.0.5",
+          "port": null,
+          "userAgent": null
+        },
+        "result": {
+          "additionalDetails": "Key accepted",
+          "conditionalAccessStatus": "notApplied",
+          "errorCode": "0",
+          "failureReason": "None",
+          "status": "Succeeded"
+        },
+        "device": {
+          "browser": "ssh/8.2",
+          "deviceId": "ssh-device",
+          "isCompliant": false,
+          "isManaged": false,
+          "joinType": "SSH"
+        }
+      }
+    ]
+  },
+  {
+    "domainId": "q-309",
+    "parentLead": "lead-309",
+    "parentLeadValue": "user1@ldap.internal",
+    "parentLeadType": "LDAP USER",
+    "value": "Directory login",
+    "result": [
+      {
+        "sessionId": null,
+        "time": "2024-06-03T14:10:00Z",
+        "operation": null,
+        "client": {
+          "ip": "192.168.1.44",
+          "port": null,
+          "userAgent": null
+        },
+        "result": {
+          "additionalDetails": "LDAP bind success",
+          "conditionalAccessStatus": "notApplied",
+          "errorCode": "0",
+          "failureReason": "None",
+          "status": "Succeeded"
+        },
+        "device": {
+          "browser": "ldapsearch",
+          "deviceId": "ldap-usr-1",
+          "isCompliant": false,
+          "isManaged": false,
+          "joinType": "Directory"
+        }
+      }
+    ]
+  },
+  {
+    "domainId": "q-310",
+    "parentLead": "lead-310",
+    "parentLeadValue": "api-token-xyz",
+    "parentLeadType": "API TOKEN",
+    "value": "Token-based API call",
+    "result": [
+      {
+        "sessionId": null,
+        "time": "2024-06-03T15:00:00Z",
+        "operation": null,
+        "client": {
+          "ip": "100.64.12.33",
+          "port": null,
+          "userAgent": null
+        },
+        "result": {
+          "additionalDetails": "Token verified",
+          "conditionalAccessStatus": "successGrant",
+          "errorCode": "0",
+          "failureReason": "None",
+          "status": "Succeeded"
+        },
+        "device": {
+          "browser": "fetch/3.0",
+          "deviceId": "api-agent-10",
+          "isCompliant": false,
+          "isManaged": false,
+          "joinType": "Token"
+        }
+      }
+    ]
+  }
+]

@@ -2,8 +2,6 @@
 import { Node } from "@xyflow/react";
 
 export type NodeData = {
-  expanded: boolean;
-  expandable: boolean;
   value?: string;
   subtext?: string;
   type?: string;
@@ -17,8 +15,6 @@ export type NodeData = {
 
 export interface ExpandCollapseNode extends Node {
   data: {
-    expandable?: boolean;
-    expanded?: boolean;
     order?: string;
     value?: string;
     subtext?: string;

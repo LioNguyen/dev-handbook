@@ -1,4 +1,3 @@
-// src/components/canvas/MainCanvas.tsx
 import { Background, Node, Panel, ReactFlow } from "@xyflow/react";
 import { RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
@@ -6,16 +5,14 @@ import { useCallback, useMemo, useState } from "react";
 import { useCanvas } from "@/domains/canvas";
 import { useCanvasHandlers } from "@/domains/canvas/hooks/handlers";
 import "@xyflow/react/dist/style.css";
-import NodeDetailSheet from "../sheet/NodeDetailSheet";
+import NodeDetailSheet from "./NodeDetailSheet";
 import AddNode from "./AddNode";
 import CustomNode from "./CustomNode";
 import RootNode from "./RootNode";
-import "./styles.css";
+import "../styles.css";
+import { ConfigCanvasProvider } from "@/domains/canvas/ConfigCanvas.provider";
 
-/**
- * Main Canvas component for the tree
- */
-function Canvas() {
+function ConfigCanvas() {
   // Get state and functions from context
   const { nodes, edges, triggerLayout, setReactFlowInstance, reactFlowInstance } = useCanvas();
 
@@ -126,6 +123,8 @@ function Canvas() {
         onPaneClick={() => {
           reactFlowInstance?.selectNodes([""]);
         }}
+        minZoom={0}
+        maxZoom={Infinity}
       >
         <Panel position="top-left" className="bg-white rounded-lg shadow-md p-2 m-4">
           <div className="flex space-x-2">
@@ -178,4 +177,12 @@ function Canvas() {
   );
 }
 
-export default Canvas;
+const ConfigCanvasWrapper = () => {
+  return (
+    <ConfigCanvasProvider>
+      <ConfigCanvas />
+    </ConfigCanvasProvider>
+  );
+};
+
+export default ConfigCanvasWrapper;

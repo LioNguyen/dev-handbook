@@ -9,68 +9,15 @@ import { applyEdgesStyles, applyNodesStyles } from "./utils";
 import { ExtendedReactFlowInstance, extendReactFlowInstance } from "./utils/extendedFlowInstance";
 
 // Canvas provider component that uses ReactFlow hooks
-const MainCanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
+const CanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
   // Initialize state for nodes and edges
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
   const [extendedInstance, setExtendedInstance] = useState<ExtendedReactFlowInstance | null>(null);
-  const [keyToRender, setkeyToRender] = useState({
-    domainId: false,
-    parentLead: true,
-    parentLeadValue: true,
-    parentLeadType: true,
-    value: true,
-    result: {
-      sessionId: false,
-      time: true,
-      operation: false,
-      result: {
-        additionalDetails: false,
-        conditionalAccessStatus: true,
-        errorCode: true,
-        failureReason: true,
-        status: true,
-        result: {
-          additionalDetails: true,
-          conditionalAccessStatus: true,
-          errorCode: true,
-          failureReason: true,
-          status: true,
-          result: {
-            additionalDetails: true,
-            conditionalAccessStatus: true,
-            errorCode: true,
-            failureReason: true,
-            status: true,
-            result: {
-              additionalDetails: true,
-              conditionalAccessStatus: true,
-              errorCode: true,
-              failureReason: true,
-              status: true,
-              result: {
-                additionalDetails: true,
-                conditionalAccessStatus: true,
-                errorCode: true,
-                failureReason: true,
-                status: true,
-              },
-            },
-          },
-        },
-      },
-    },
-  });
 
   // Get initial data
   const canvasService = useCanvasService();
-  const initialNodes = useMemo(
-    () => canvasService.getNodesAndEdgesFromData(keyToRender)?.nodes,
-    [canvasService, keyToRender],
-  );
-  const initialEdges = useMemo(
-    () => canvasService.getNodesAndEdgesFromData(keyToRender)?.edges,
-    [canvasService, keyToRender],
-  );
+  const initialNodes = useMemo(() => [], [canvasService]);
+  const initialEdges = useMemo(() => [], [canvasService]);
 
   // Use React Flow's node and edge state hooks
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -166,12 +113,12 @@ const MainCanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
 };
 
 // Export the wrapped provider with ReactFlow
-const CanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
+const ConfigCanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <ReactFlowProvider>
-      <MainCanvasProvider>{children}</MainCanvasProvider>
+      <CanvasProvider>{children}</CanvasProvider>
     </ReactFlowProvider>
   );
 };
 
-export { CanvasProvider };
+export { ConfigCanvasProvider };

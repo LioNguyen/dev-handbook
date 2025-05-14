@@ -6,8 +6,6 @@ import { Edge, Node, Position, XYPosition } from "@xyflow/react";
 // Define the ExpandCollapseNode type
 export interface ExpandCollapseNode extends Node {
   data: {
-    expandable?: boolean;
-    expanded?: boolean;
     order?: string;
     value?: string;
     subtext?: string;

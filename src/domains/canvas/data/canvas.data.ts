@@ -12,8 +12,6 @@ export const nodes: Node[] = [
     draggable: false,
     position: { x: nodeX, y: nodeY },
     data: {
-      expanded: true,
-      expandable: true,
       value: "176.96.226.227",
       name: "IP ADDRESS",
       type: "starred",
@@ -24,8 +22,6 @@ export const nodes: Node[] = [
     type: "custom",
     position: { x: nodeX + 200, y: nodeY },
     data: {
-      expanded: true,
-      expandable: true,
       value: "3.90.43.148",
       name: "IP ADDRESS",
       type: "ip",
@@ -36,8 +32,6 @@ export const nodes: Node[] = [
     type: "custom",
     position: { x: nodeX + 400, y: nodeY - 100 },
     data: {
-      expanded: true,
-      expandable: false,
       value: "70.77.108.38",
       name: "IP ADDRESS",
       type: "ip",
@@ -48,8 +42,6 @@ export const nodes: Node[] = [
     type: "custom",
     position: { x: nodeX + 400, y: nodeY + 100 },
     data: {
-      expanded: true,
-      expandable: false,
       value: "d851d9ea-ce49-4bdb-a569",
       name: "MICROSOFT ENTRA DEVICE ID",
       type: "microsoft",
@@ -60,8 +52,6 @@ export const nodes: Node[] = [
     type: "custom",
     position: { x: nodeX + 400, y: nodeY + 200 },
     data: {
-      expanded: true,
-      expandable: false,
       value: "johanna1@warnicorn.com",
       name: "MICROSOFT ENTRA USER PRINCIPAL",
       type: "microsoft",
@@ -72,8 +62,6 @@ export const nodes: Node[] = [
     type: "custom",
     position: { x: nodeX + 400, y: nodeY + 300 },
     data: {
-      expanded: true,
-      expandable: false,
       value: "stevens@warnicorn.com",
       name: "MICROSOFT ENTRA USER PRINCIPAL",
       type: "microsoft",

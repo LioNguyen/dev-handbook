@@ -37,6 +37,10 @@ interface CanvasContextValue {
     }>
   >;
 
+  // Add these to your context type definition
+  activeCanvas: "config" | "preview";
+  setActiveCanvas: (canvas: "config" | "preview") => void;
+
   // Functions
   triggerLayout: () => void;
 
