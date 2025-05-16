@@ -92,7 +92,6 @@ const MainCanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
     nodeWidth: canvasSettings.treeWidth,
     nodeHeight: canvasSettings.treeHeight,
     animationDuration: canvasSettings.animationDuration,
-    reactFlowInstance,
   });
 
   // const { nodes: animatedNodes } = useAnimatedNodes(nodes);

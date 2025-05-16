@@ -1,42 +1,41 @@
 // src/components/canvas/CustomNode.tsx
-import { Handle, NodeProps, Position } from "@xyflow/react";
-import { CircleAlert, InfoIcon, Edit, Star, Trash2 } from "lucide-react";
+import { Handle, NodeProps, Position, useReactFlow } from "@xyflow/react";
+import { CircleAlert, Edit, InfoIcon, Star, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
-import { useCanvas } from "@/domains/canvas";
-import { useCanvasHandlers } from "@/domains/canvas/hooks/handlers";
 import { cn } from "@/shared/utils";
 import { Button } from "@designSystem/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@designSystem/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@designSystem/components/ui/tooltip";
 import "../styles.css";
+import { useSelectNodes } from "@/domains/canvas/previewCanvas/hooks/canvasHandlers";
+import { useToggleAddNode } from "@/domains/canvas/previewCanvas/hooks/nodeHandlers/useToggleAddNode";
+import { useNodesDelete } from "@/domains/canvas/previewCanvas/hooks/nodeHandlers/useNodesDelete";
 
 /**
- * Custom node component with enhanced functionality
+ * Custom node component with enhanced functionality and modern attractive UI
  */
 export default function CustomNode({ data, id, sourcePosition, targetPosition, selected, dragging }: NodeProps) {
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
   const [isInfoPopoverOpen, setIsInfoPopoverOpen] = useState(false);
 
-  // Get handlers from the hook
-  const { reactFlowInstance } = useCanvas();
-  const { toggleAddNode, handleNodesDelete } = useCanvasHandlers();
+  const { getNode } = useReactFlow();
+  const selectNodes = useSelectNodes();
+  const toggleAddNode = useToggleAddNode();
+  const deleteNodes = useNodesDelete();
 
   // Get node style for styling (renamed from 'type' to avoid conflicts)
   const nodeStyle = data?.nodeStyle || "ip";
   const isDropTarget = data?.isDropTarget || false;
-  const state = data?.state || {};
+  const state: any = data?.state || {};
   const onEditNode = data?.onEditNode;
 
-  const nodeState: any = {
-    ...(state || {}),
-  };
-  const isSelected = nodeState?.isParentSelected || selected;
-  const isChildSelected = nodeState?.isChildSelected;
+  const isSelected = state?.isParentSelected || selected;
+  const isChildSelected = state?.isChildSelected;
 
   useEffect(() => {
     if (dragging || isChildSelected || !isSelected) {
-      toggleAddNode(id, false);
+      toggleAddNode?.(id, false);
       return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -58,15 +57,12 @@ export default function CustomNode({ data, id, sourcePosition, targetPosition, s
     e.stopPropagation();
 
     // Don't trigger if clicking on buttons or handles
-    if (
-      (e.target as HTMLElement).closest("button, .react-flow__handle") ||
-      (isSelected && reactFlowInstance?.getNode(`add-${id}`))
-    ) {
+    if ((e.target as HTMLElement).closest("button, .react-flow__handle") || (isSelected && getNode(`add-${id}`))) {
       return;
     }
 
-    toggleAddNode(id, true);
-    reactFlowInstance?.selectNodes([id]);
+    toggleAddNode?.(id, true);
+    selectNodes([id]);
   };
 
   /**
@@ -88,7 +84,7 @@ export default function CustomNode({ data, id, sourcePosition, targetPosition, s
   const onNodesDelete = (evt: React.MouseEvent) => {
     evt.stopPropagation();
     setIsActionMenuOpen(false);
-    handleNodesDelete([id]);
+    deleteNodes([id]);
   };
 
   /**
@@ -107,7 +103,7 @@ export default function CustomNode({ data, id, sourcePosition, targetPosition, s
       case "microsoft":
         return <CircleAlert className="h-4 w-4 text-blue-600 fill-blue-100" />;
       case "starred":
-        return <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />;
+        return <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />;
       case "aws":
         return <CircleAlert className="h-4 w-4 text-orange-500" />;
       case "gcp":
@@ -127,30 +123,62 @@ export default function CustomNode({ data, id, sourcePosition, targetPosition, s
     }
   };
 
-  // Get node background color based on style
-  const getNodeBackgroundClass = () => {
+  // Get node styling based on type
+  const getNodeStyling = () => {
+    let bgClass = "";
+    let borderClass = "";
+    let iconBgClass = "";
+
     switch (nodeStyle) {
       case "microsoft":
-        return "bg-blue-100";
+        bgClass = "bg-blue-50";
+        iconBgClass = "bg-blue-100 text-blue-600";
+        break;
       case "starred":
-        return "bg-yellow-50";
+        bgClass = "bg-yellow-50";
+        iconBgClass = "bg-yellow-100 text-yellow-600";
+        break;
       case "aws":
-        return "bg-orange-50";
+        bgClass = "bg-orange-50";
+        iconBgClass = "bg-orange-100 text-orange-600";
+        break;
       case "gcp":
-        return "bg-red-50";
+        bgClass = "bg-red-50";
+        iconBgClass = "bg-red-100 text-red-600";
+        break;
       case "key":
-        return "bg-purple-50";
+        bgClass = "bg-purple-50";
+        iconBgClass = "bg-purple-100 text-purple-600";
+        break;
       case "success":
-        return "bg-green-50";
+        bgClass = "bg-green-50";
+        iconBgClass = "bg-green-100 text-green-600";
+        break;
       case "error":
-        return "bg-red-50";
+        bgClass = "bg-red-50";
+        iconBgClass = "bg-red-100 text-red-600";
+        break;
       case "warning":
-        return "bg-yellow-50";
+        bgClass = "bg-yellow-50";
+        iconBgClass = "bg-yellow-100 text-yellow-600";
+        break;
       case "info":
-        return "bg-blue-50";
+        bgClass = "bg-blue-50";
+        iconBgClass = "bg-blue-100 text-blue-600";
+        break;
       default:
-        return "bg-blue-100";
+        bgClass = "bg-slate-50";
+        iconBgClass = "bg-slate-100 text-slate-600";
     }
+
+    // Add selection state
+    if (isSelected) {
+      borderClass = "ring-2 ring-blue-500";
+    } else if (isDropTarget) {
+      borderClass = "outline-2 outline-dashed outline-blue-500";
+    }
+
+    return { bgClass, borderClass, iconBgClass };
   };
 
   // Get all data keys excluding UI metadata
@@ -177,149 +205,107 @@ export default function CustomNode({ data, id, sourcePosition, targetPosition, s
     return String(value);
   };
 
-  // Dynamically determine primary display value
-  const getPrimaryDisplayValue = () => {
+  // Format key name for display
+  const formatKeyForDisplay = (key: string) => {
+    // Convert camelCase to Title Case with spaces
+    return (
+      key.charAt(0).toUpperCase() +
+      key
+        .slice(1)
+        .replace(/([A-Z])/g, " $1")
+        .trim()
+    );
+  };
+
+  // Get visible data entries, sorted by relevance
+  const getNodeDataEntries = () => {
     const dataKeys = getDataKeys();
+    if (dataKeys.length === 0) return [];
 
-    // No data case
-    if (dataKeys.length === 0) return "Unknown";
-
-    // Common special cases
-    if (data.ip) return formatValueForDisplay(data.ip);
-    if (data.deviceId) return formatValueForDisplay(data.deviceId);
-    if (data.status) {
-      const status = formatValueForDisplay(data.status);
-      const errorCode = data.errorCode ? ` (${formatValueForDisplay(data.errorCode)})` : "";
-      return status + errorCode;
-    }
-    if (data.value) return formatValueForDisplay(data.value);
-    if (data.parentLeadValue) return formatValueForDisplay(data.parentLeadValue);
-    if (data.name) return formatValueForDisplay(data.name);
-
-    // Default to first available data
-    return formatValueForDisplay(data[dataKeys[0]]);
+    // Create array of [key, value] entries
+    return dataKeys.map((key) => ({
+      key,
+      formattedKey: formatKeyForDisplay(key),
+      value: data[key],
+      formattedValue: formatValueForDisplay(data[key]),
+      // If the key is uppercase, it's likely a type/category indicator
+      isLabel: /^[A-Z_]+$/.test(key),
+    }));
   };
 
-  // Dynamically determine secondary type label
-  const getTypeLabel = () => {
-    // First priority: dedicated type field
-    if (data.parentLeadType) return data.parentLeadType;
+  // Get visible data entries for node display
+  const dataEntries = getNodeDataEntries();
 
-    // If we have parent details, format them
-    if (data.parentLead) {
-      return typeof data.parentLead === "string" ? data.parentLead.toUpperCase() : "PARENT";
-    }
+  // Primary value is the first non-label entry value
+  const primaryEntry: any =
+    dataEntries.find((entry) => !entry.isLabel && entry.formattedValue !== "-") ||
+    (dataEntries.length > 0 ? dataEntries[0] : { formattedKey: "Unknown", formattedValue: "Unknown" });
 
-    // Look for other type indicators based on data content
-    if (data.ip) return "IP ADDRESS";
-    if (data.deviceId) return "DEVICE";
-    if (data.status) return "STATUS";
+  // Secondary value is the first label entry, if any
+  const secondaryEntry = dataEntries.find(
+    (entry) => entry.key !== primaryEntry.key && (entry.isLabel || entry.key.toLowerCase().includes("type")),
+  );
 
-    // If no good type label found
-    return "";
+  // All entries that aren't the primary or secondary
+  const additionalEntries = dataEntries.filter(
+    (entry) => entry.key !== primaryEntry.key && (!secondaryEntry || entry.key !== secondaryEntry.key),
+  );
+
+  const hasMore = additionalEntries.length > 0;
+  const { bgClass, borderClass, iconBgClass } = getNodeStyling();
+
+  // Fix for the TypeScript error
+  const renderTooltipContent = (content: React.ReactNode) => {
+    return <div>{content}</div>;
   };
-
-  // Get key-value pairs for additional data display
-  const getKeyValuePairs = () => {
-    const pairs: { key: string; value: string }[] = [];
-    const dataKeys = getDataKeys();
-
-    // Skip primary and secondary values from additional data display
-    const primaryValue = getPrimaryDisplayValue();
-    const typeLabel = getTypeLabel();
-
-    // Metadata to exclude
-    const metaKeys = ["state", "isDropTarget", "onEditNode", "nodeStyle"];
-    const skippedKeys = new Set([...metaKeys]);
-
-    // Skip primary display fields - but be careful about falsy values
-    dataKeys.forEach((key) => {
-      const formattedValue = formatValueForDisplay(data[key]);
-      if (formattedValue === primaryValue && data[key] !== null && data[key] !== undefined) {
-        skippedKeys.add(key);
-      }
-
-      // Skip type label fields
-      if (key === "parentLeadType" || (key === "parentLead" && data.parentLead === typeLabel)) {
-        skippedKeys.add(key);
-      }
-    });
-
-    // Add all remaining data
-    dataKeys.forEach((key) => {
-      if (skippedKeys.has(key)) return;
-
-      // Don't skip falsy values, show them with "-"
-      // Format time fields
-      if (key === "time" && typeof data[key] === "string") {
-        pairs.push({
-          key: "Time",
-          value: data[key] ? new Date(data[key]).toLocaleString() : "-",
-        });
-        return;
-      }
-
-      // Format key name for display
-      const formattedKey =
-        key.charAt(0).toUpperCase() +
-        key
-          .slice(1)
-          .replace(/([A-Z])/g, " $1")
-          .trim();
-
-      pairs.push({
-        key: formattedKey,
-        value: formatValueForDisplay(data[key]),
-      });
-    });
-
-    return pairs;
-  };
-
-  // Check if there's additional data to show
-  const hasAdditionalData = () => {
-    return getKeyValuePairs().length > 0;
-  };
-
-  // Get display values
-  const primaryValue = getPrimaryDisplayValue();
-  const typeLabel = getTypeLabel();
-  const keyValuePairs = getKeyValuePairs();
-  const hasMore = hasAdditionalData();
 
   return (
     <TooltipProvider>
       <div
         className={cn(
-          `${getNodeBackgroundClass()} shadow-md rounded-full px-4 py-2 w-[300px] transition-all duration-150 flex items-center`,
-          dragging ? "opacity-70 cursor-grabbing" : "",
-          isDropTarget ? "outline-2 outline-dashed outline-blue-500" : "",
+          "rounded-full px-4 py-2.5 w-[320px] transition-all duration-150 flex items-center",
+          bgClass,
+          "shadow-md border border-white/60",
+          dragging ? "opacity-70 cursor-grabbing" : "hover:shadow-lg",
+          borderClass,
         )}
         onClick={handleNodeClick}
       >
-        {/* Left icon */}
-        <div className="flex-shrink-0 p-1 rounded-full mr-3">{getNodeIcon()}</div>
+        {/* Left icon with modern styling */}
+        <div
+          className={cn(
+            "flex-shrink-0 p-2 rounded-full mr-3.5 flex items-center justify-center",
+            iconBgClass,
+            "shadow-sm border border-white/80",
+          )}
+        >
+          {getNodeIcon()}
+        </div>
 
         {/* Content - Two lines with tooltips */}
         <div className="flex-grow flex flex-col justify-center overflow-hidden">
           {/* Primary value with tooltip */}
           <Tooltip delayDuration={300}>
             <TooltipTrigger asChild>
-              <div className="font-mono text-sm font-medium truncate">{primaryValue}</div>
+              <div className="font-sans text-sm font-semibold truncate text-gray-800">
+                {primaryEntry.formattedValue}
+              </div>
             </TooltipTrigger>
-            <TooltipContent side="top" className="max-w-xs">
-              <div className="font-mono">{primaryValue}</div>
+            <TooltipContent side="top" className="max-w-xs bg-slate-900 text-white border-0 shadow-xl rounded-md">
+              {renderTooltipContent(primaryEntry.formattedValue)}
             </TooltipContent>
           </Tooltip>
 
-          {/* Type label with tooltip */}
-          {typeLabel && (
+          {/* Secondary value with tooltip if available */}
+          {secondaryEntry && (
             <Tooltip delayDuration={300}>
               <TooltipTrigger asChild>
-                <div className="font-mono text-xs text-gray-500 uppercase truncate">{typeLabel}</div>
+                <div className="font-sans text-xs text-gray-500 uppercase truncate mt-0.5 tracking-wider">
+                  {secondaryEntry.formattedValue}
+                </div>
               </TooltipTrigger>
-              <TooltipContent side="bottom" className="max-w-xs">
-                <div className="font-mono uppercase">{typeLabel}</div>
+              <TooltipContent side="bottom" className="max-w-xs bg-slate-900 text-white border-0 shadow-xl rounded-md">
+                {renderTooltipContent(secondaryEntry.formattedValue)}
               </TooltipContent>
             </Tooltip>
           )}
@@ -332,38 +318,64 @@ export default function CustomNode({ data, id, sourcePosition, targetPosition, s
               <Button
                 variant="ghost"
                 size="sm"
-                className="p-1 h-6 w-6 mr-1"
+                className={cn(
+                  "p-1 h-7 w-7 mr-1.5 rounded-full",
+                  isInfoPopoverOpen
+                    ? "bg-slate-200 text-slate-800"
+                    : "hover:bg-slate-100 text-slate-500 hover:text-slate-700",
+                )}
                 onClick={toggleInfoPopover}
                 aria-label="View all data"
               >
                 <InfoIcon className="h-4 w-4" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-64 p-2" side="right" align="start">
-              <div className="text-sm font-medium mb-2">{primaryValue} - Additional Data</div>
-              <div className="max-h-[300px] overflow-y-auto">
-                <table className="w-full table-auto text-xs">
-                  <tbody>
-                    {keyValuePairs.map((pair, index) => (
-                      <tr key={index} className={index % 2 === 0 ? "bg-secondary/20" : "bg-background"}>
-                        <td className="py-1 px-2 font-medium text-foreground">{pair.key}:</td>
-                        <td className="py-1 px-2 font-mono break-all">
-                          {pair.value === "-" ? <span className="text-gray-400">-</span> : pair.value}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            <PopoverContent
+              className="w-80 p-0 overflow-hidden shadow-lg rounded-lg border border-slate-200"
+              side="right"
+              align="start"
+              sideOffset={10}
+            >
+              <div className="bg-white divide-y divide-slate-100">
+                <div className="px-4 py-3 bg-slate-50">
+                  <div className="text-sm font-semibold text-slate-800">{primaryEntry.formattedValue}</div>
+                  {secondaryEntry && (
+                    <div className="text-xs text-slate-500 uppercase tracking-wide mt-0.5">
+                      {secondaryEntry.formattedValue}
+                    </div>
+                  )}
+                </div>
+                <div className="max-h-[300px] overflow-y-auto">
+                  <table className="w-full table-auto text-sm">
+                    <tbody>
+                      {dataEntries.map((entry, index) => (
+                        <tr key={index} className={index % 2 === 0 ? "bg-slate-50" : "bg-white"}>
+                          <td className="py-2 px-4 font-medium text-slate-700">{entry.formattedKey}:</td>
+                          <td className="py-2 px-4 font-mono break-all">
+                            {entry.formattedValue === "-" ? (
+                              <span className="text-slate-400">-</span>
+                            ) : (
+                              <span className="text-slate-800">{entry.formattedValue}</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </PopoverContent>
           </Popover>
         )}
 
-        {/* Action menu trigger */}
+        {/* Action menu trigger with clean styling */}
         <Popover open={Boolean(isActionMenuOpen)} onOpenChange={setIsActionMenuOpen}>
           <PopoverTrigger asChild>
             <div
-              className="p-1 cursor-pointer"
+              className={cn(
+                "p-1.5 cursor-pointer rounded-full",
+                isActionMenuOpen ? "bg-slate-200" : "hover:bg-slate-100",
+              )}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -371,26 +383,31 @@ export default function CustomNode({ data, id, sourcePosition, targetPosition, s
               }}
             >
               <div className="flex items-center space-x-[2px]">
-                <div className="w-[3px] h-[3px] rounded-full bg-gray-500"></div>
-                <div className="w-[3px] h-[3px] rounded-full bg-gray-500"></div>
-                <div className="w-[3px] h-[3px] rounded-full bg-gray-500"></div>
+                <div className="w-[3px] h-[3px] rounded-full bg-slate-500"></div>
+                <div className="w-[3px] h-[3px] rounded-full bg-slate-500"></div>
+                <div className="w-[3px] h-[3px] rounded-full bg-slate-500"></div>
               </div>
             </div>
           </PopoverTrigger>
-          <PopoverContent className="w-48 p-1" side="right" align="start">
-            <div className="flex flex-col gap-1">
-              {hasMore && (
-                <Button variant="ghost" size="sm" className="flex justify-start text-sm" onClick={toggleInfoPopover}>
-                  <InfoIcon className="mr-2 h-4 w-4" /> View Additional Data
-                </Button>
-              )}
-              <Button variant="ghost" size="sm" className="flex justify-start text-sm" onClick={handleEditNode}>
+          <PopoverContent
+            className="w-48 p-1 shadow-lg border border-slate-200 rounded-lg bg-white"
+            side="right"
+            align="start"
+            sideOffset={5}
+          >
+            <div className="flex flex-col gap-0.5">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex justify-start text-sm h-9 rounded-md hover:bg-slate-50 text-slate-700"
+                onClick={handleEditNode}
+              >
                 <Edit className="mr-2 h-4 w-4" /> Edit Node
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
-                className="flex justify-start text-sm text-destructive hover:text-destructive hover:bg-destructive/10"
+                className="flex justify-start text-sm text-red-600 h-9 rounded-md hover:bg-red-50"
                 onClick={onNodesDelete}
               >
                 <Trash2 className="mr-2 h-4 w-4" /> Delete Node
@@ -399,29 +416,37 @@ export default function CustomNode({ data, id, sourcePosition, targetPosition, s
           </PopoverContent>
         </Popover>
 
-        {/* Flow handles */}
-        <Handle position={targetPosition || Position.Left} type="target" className="!left-0" />
-        <Handle position={sourcePosition || Position.Right} type="source" className="!right-0" />
+        {/* Flow handles with improved styling - positioned for rounded-full node */}
+        <Handle
+          position={targetPosition || Position.Left}
+          type="target"
+          className="!bg-slate-400 !w-3 !h-3 !border-2 !border-white !left-0 !rounded-full !shadow-sm !transition-colors !duration-150 hover:!bg-blue-400"
+        />
+        <Handle
+          position={sourcePosition || Position.Right}
+          type="source"
+          className="!bg-slate-400 !w-3 !h-3 !border-2 !border-white !right-0 !rounded-full !shadow-sm !transition-colors !duration-150 hover:!bg-blue-400"
+        />
 
         {/* Show drag status indicator if the node is being dragged */}
         {Boolean(dragging) && !isChildSelected && (
-          <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-2 py-0.5 rounded text-xs whitespace-nowrap">
+          <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-3 py-1 rounded-full text-xs whitespace-nowrap shadow-md">
             Drag onto another node
           </div>
         )}
 
         {/* Show drop target indicator */}
         {Boolean(isDropTarget) && (
-          <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-green-600 text-white px-2 py-0.5 rounded text-xs whitespace-nowrap">
+          <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-green-600 text-white px-3 py-1 rounded-full text-xs whitespace-nowrap shadow-md">
             Drop to make child
           </div>
         )}
 
-        {/* Small indicator that shows there is more data without tooltip */}
+        {/* Small indicator that shows there is more data */}
         {hasMore && !isInfoPopoverOpen && (
-          <div className="absolute -bottom-2 right-1/3 -translate-x-1/2">
-            <div className="text-[8px] text-gray-500 whitespace-nowrap bg-white/70 rounded-full px-1">
-              +{keyValuePairs.length} more
+          <div className="absolute -bottom-3 right-1/3 -translate-x-1/2">
+            <div className="text-[11px] text-slate-600 whitespace-nowrap bg-white rounded-full px-3 py-0.5 shadow-sm border border-slate-100 font-medium">
+              +{additionalEntries.length} more
             </div>
           </div>
         )}

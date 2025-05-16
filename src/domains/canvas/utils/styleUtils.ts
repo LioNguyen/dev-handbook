@@ -1,15 +1,12 @@
 import { Edge, Node } from "@xyflow/react";
 
 import { cn } from "@/shared/utils";
-import { ExtendedReactFlowInstance } from "./extendedFlowInstance";
 
 /**
  * Applies styling to nodes based on their selection state and relationships
  * Returns styled nodes ready to be rendered
  */
-export function applyNodesStyles(nodes: Node[], _edges: Edge[], instance: ExtendedReactFlowInstance | null): Node[] {
-  if (!instance) return nodes;
-
+export function applyNodesStyles(nodes: Node[], _edges: Edge[]): Node[] {
   // Return nodes with applied styles
   return nodes.map((node) => {
     const nodeState: any = node.data?.state || {};
@@ -41,9 +38,7 @@ export function applyNodesStyles(nodes: Node[], _edges: Edge[], instance: Extend
  * Applies styling to edges based on their relationship to selected nodes
  * Returns styled edges ready to be rendered
  */
-export function applyEdgesStyles(_nodes: Node[], edges: Edge[], instance: ExtendedReactFlowInstance | null): Edge[] {
-  if (!instance) return edges;
-
+export function applyEdgesStyles(_nodes: Node[], edges: Edge[]): Edge[] {
   // Return edges with applied styles
   return edges.map((edge) => {
     const edgeState: any = { ...(edge.data?.state || {}) };

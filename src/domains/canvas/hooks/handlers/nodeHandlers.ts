@@ -1,10 +1,12 @@
 // src/domains/canvas/hooks/handlers/nodeHandlers.ts
-import { Edge, Node, Position, XYPosition } from "@xyflow/react";
+import { Edge, Node, Position, useReactFlow, XYPosition } from "@xyflow/react";
 import { useCallback } from "react";
 
 import { useCanvas } from "../../canvas.context";
+import { getNodeTree } from "../../utils";
 
 export function useNodeHandlers() {
+  const { getEdges } = useReactFlow();
   const { nodes, edges, setNodes, setEdges, reactFlowInstance, triggerLayout } = useCanvas();
 
   /**
@@ -398,20 +400,43 @@ export function useNodeHandlers() {
    */
   const handleNodesDelete = useCallback(
     (ids?: string[], options?: { deleteChildren?: boolean }) => {
-      if (!reactFlowInstance) return;
+      const nodesToDelete = new Set<string>(ids || []);
+      const edgesToDelete = new Set<string>();
 
-      const selectionInfo = reactFlowInstance.getSelectionInfo();
-      const nodesToDelete = ids || [...(selectionInfo?.selectedNodeIds || [])];
+      // If deleteChildren option is true, include all descendants
+      if (options?.deleteChildren !== false) {
+        ids?.forEach((nodeId) => {
+          const nodeTree = getNodeTree(nodeId, getEdges());
 
-      if (nodesToDelete.length > 0) {
-        reactFlowInstance.deleteNodes(nodesToDelete, {
-          deleteChildren: options?.deleteChildren ?? true,
+          // Add all descendant nodes to the deletion set
+          nodeTree.treeNodeIds.forEach((id) => {
+            if (id !== nodeId) {
+              // The node itself is already included
+              nodesToDelete.add(id);
+            }
+          });
+
+          // Add all edges in the tree to the deletion set
+          nodeTree.treeEdgeIds.forEach((id) => {
+            edgesToDelete.add(id);
+          });
         });
-
-        triggerLayout();
       }
+
+      // Remove nodes that are in the deletion set
+      setNodes((nodes) => nodes.filter((node) => !nodesToDelete.has(node.id)));
+
+      // Remove edges connected to deleted nodes and edges in the deletion set
+      setEdges((edges) =>
+        edges.filter((edge) => {
+          // Keep edges if neither source nor target is being deleted and the edge itself is not in the deletion set
+          return !nodesToDelete.has(edge.source) && !nodesToDelete.has(edge.target) && !edgesToDelete.has(edge.id);
+        }),
+      );
+
+      triggerLayout();
     },
-    [reactFlowInstance, triggerLayout],
+    [getEdges, setNodes, setEdges, triggerLayout],
   );
 
   return {

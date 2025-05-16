@@ -1,12 +1,11 @@
 // src/domains/canvas/hooks/useAutoLayout.ts
-import { Edge, Node, ReactFlowInstance } from "@xyflow/react";
+import { Edge, Node, useReactFlow } from "@xyflow/react";
 import { stratify, tree } from "d3-hierarchy";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
-import { Direction, findRootNode, getPosition, positionMap, separateNodes } from "../utils";
+import { Direction, findRootNode, getPosition, positionMap, separateNodes } from "@domains/canvas/utils";
 
 export type AutoLayoutOptions = {
-  reactFlowInstance: ReactFlowInstance | null; // Pass the instance instead of using hook
   direction?: Direction;
   nodeWidth?: number;
   nodeHeight?: number;
@@ -100,17 +99,19 @@ const createSortedNodeList = (rootNode: Node, nodesByParent: Map<string | null, 
 };
 
 /**
- * Custom hook that provides auto layout functionality using a provided ReactFlow instance
+ * Custom hook that provides auto layout functionality using the ReactFlow context
  */
 function useAutoLayout({
   direction = "LR",
-  nodeWidth = 220,
+  nodeWidth = 400,
   nodeHeight = 100,
-  fitView = true,
   fitViewPadding = 0.2,
   animationDuration = 300,
-  reactFlowInstance,
-}: AutoLayoutOptions) {
+  fitView = true,
+}: AutoLayoutOptions = {}) {
+  // Use the ReactFlow hook to access the instance
+  const reactFlowInstance = useReactFlow();
+
   const layoutInProgressRef = useRef(false);
   const layoutTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastLayoutTimeRef = useRef(0);
@@ -281,7 +282,7 @@ function useAutoLayout({
       }
 
       // If fitView is enabled, fit the view to show all nodes
-      if (fitView && reactFlowInstance) {
+      if (fitView) {
         const fitViewTimeout = setTimeout(() => {
           reactFlowInstance.fitView({
             padding: fitViewPadding,
