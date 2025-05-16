@@ -1,31 +1,44 @@
+// src/components/canvas/MainCanvas.tsx
 import { Background, Node, Panel, ReactFlow } from "@xyflow/react";
 import { RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 
-import { useCanvas } from "@/domains/canvas";
-import { useCanvasHandlers } from "@/domains/canvas/hooks/handlers";
+import { useConfigCanvas } from "@/domains/canvas/configCanvas/ConfigCanvas.context";
+import { ConfigCanvasProvider } from "@/domains/canvas/configCanvas/ConfigCanvas.provider";
+import { useIsNodeDragging, useSelectNodes } from "@/domains/canvas/configCanvas/hooks/canvasHandlers";
+import { useChangeHandlers } from "@/domains/canvas/configCanvas/hooks/changeHandlers";
+import { useNodeDragHandlers } from "@/domains/canvas/configCanvas/hooks/nodeHandlers/useNodeDragHandlers";
+import { useNodesDelete } from "@/domains/canvas/configCanvas/hooks/nodeHandlers/useNodesDelete";
 import "@xyflow/react/dist/style.css";
-import NodeDetailSheet from "./NodeDetailSheet";
+import "../styles.css";
 import AddNode from "./AddNode";
 import CustomNode from "./CustomNode";
+import NodeDetailSheet from "./NodeDetailSheet";
 import RootNode from "./RootNode";
-import "../styles.css";
-import { ConfigCanvasProvider } from "@/domains/canvas/ConfigCanvas.provider";
+
+// Custom node types mapping
+const nodeTypes = {
+  custom: CustomNode,
+  root: RootNode,
+  add: AddNode,
+};
 
 function ConfigCanvas() {
   // Get state and functions from context
-  const { nodes, edges, triggerLayout, setReactFlowInstance, reactFlowInstance } = useCanvas();
+  const { nodes, edges, reactFlowInstance, triggerLayout } = useConfigCanvas();
 
   // State for node detail sheet
   const [nodeDetailSheetOpen, setNodeDetailSheetOpen] = useState(false);
   const [nodeDetailPosition, setNodeDetailPosition] = useState<{ x: number; y: number } | undefined>();
   const [selectedNodeId, setSelectedNodeId] = useState<string | undefined>();
 
-  const isNodeDragging = reactFlowInstance?.isNodeDragging();
+  const isNodeDragging = useIsNodeDragging();
 
   // Get handlers
-  const { onNodesChange, onEdgesChange, handleNodeDragStart, handleNodeDrag, handleNodeDragStop, handleNodesDelete } =
-    useCanvasHandlers();
+  const { handleNodeDragStart, handleNodeDrag, handleNodeDragStop } = useNodeDragHandlers();
+  const { onNodesChange, onEdgesChange } = useChangeHandlers();
+  const deleteNodes = useNodesDelete();
+  const selectNodes = useSelectNodes();
 
   // Handle opening the edit sheet for a node
   const handleOpenNodeEditSheet = useCallback((nodeId: string) => {
@@ -65,35 +78,9 @@ function ConfigCanvas() {
   // Handle keyboard deletion
   const onNodesDelete = useCallback(
     (nodes: Node[]) => {
-      handleNodesDelete(nodes.map((node) => node.id));
+      deleteNodes(nodes.map((node) => node.id));
     },
-    [handleNodesDelete],
-  );
-
-  // Add the action handler to each node's data
-  const nodesWithActions = useMemo(() => {
-    return nodes.map((node) => {
-      if (node.type === "custom") {
-        return {
-          ...node,
-          data: {
-            ...node.data,
-            onEditNode: handleOpenNodeEditSheet,
-          },
-        };
-      }
-      return node;
-    });
-  }, [nodes, handleOpenNodeEditSheet]);
-
-  // Custom node types mapping
-  const nodeTypes = useMemo(
-    () => ({
-      custom: CustomNode,
-      root: RootNode,
-      add: AddNode,
-    }),
-    [],
+    [deleteNodes],
   );
 
   return (
@@ -101,7 +88,7 @@ function ConfigCanvas() {
       <ReactFlow
         className="bg-slate-800!"
         fitView
-        nodes={nodesWithActions}
+        nodes={nodes}
         edges={edges}
         elementsSelectable={true}
         nodeTypes={nodeTypes}
@@ -109,11 +96,9 @@ function ConfigCanvas() {
         nodesConnectable={false}
         panOnDrag={!isNodeDragging}
         proOptions={{ hideAttribution: true }}
-        selectNodesOnDrag={false}
         zoomOnDoubleClick={false}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onInit={setReactFlowInstance}
         onNodeDragStart={handleNodeDragStart}
         onNodeDrag={handleNodeDrag}
         onNodeDragStop={handleNodeDragStop}
@@ -121,7 +106,7 @@ function ConfigCanvas() {
         onDoubleClick={handlePaneDoubleClick}
         onNodesDelete={onNodesDelete}
         onPaneClick={() => {
-          reactFlowInstance?.selectNodes([""]);
+          selectNodes([""]);
         }}
         minZoom={0}
         maxZoom={Infinity}

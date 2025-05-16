@@ -1,8 +1,9 @@
-// src/components/sheet/NodeDetailSheet.tsx
 import { XYPosition } from "@xyflow/react";
 import { useEffect, useState } from "react";
 
 import { useCanvas } from "@/domains/canvas";
+import { useNodeCreate } from "@/domains/canvas/previewCanvas/hooks/nodeHandlers/useNodeCreate";
+import { useNodeUpdate } from "@/domains/canvas/previewCanvas/hooks/nodeHandlers/useNodeUpdate";
 import { Button } from "@designSystem/components/ui/button";
 import { Input } from "@designSystem/components/ui/input";
 import { Label } from "@designSystem/components/ui/label";
@@ -28,11 +29,21 @@ const NODE_TYPES = [
   { value: "ip", label: "IP Address" },
   { value: "starred", label: "Starred" },
   { value: "microsoft", label: "Microsoft" },
+  { value: "aws", label: "AWS" },
+  { value: "gcp", label: "Google Cloud" },
+  { value: "key", label: "Key Node" },
+  { value: "success", label: "Success Status" },
+  { value: "error", label: "Error Status" },
+  { value: "warning", label: "Warning Status" },
+  { value: "info", label: "Info Node" },
 ];
 
 export function NodeDetailSheet({ open, onOpenChange, position, nodeId, parentId }: NodeDetailSheetProps) {
-  const { nodes, reactFlowInstance } = useCanvas();
-  // Using setState instead of direct variable assignment to avoid type errors
+  const { nodes } = useCanvas();
+  const createNode = useNodeCreate();
+  const { updateNode } = useNodeUpdate();
+
+  // Form state
   const [nodeName, setNodeName] = useState("");
   const [nodeValue, setNodeValue] = useState("");
   const [nodeType, setNodeType] = useState("ip");
@@ -54,7 +65,7 @@ export function NodeDetailSheet({ open, onOpenChange, position, nodeId, parentId
         // Safe access with fallbacks to avoid type errors
         setNodeName(node.data?.name ? String(node.data.name) : "");
         setNodeValue(node.data?.value ? String(node.data.value) : "");
-        setNodeType(node.data?.type ? String(node.data.type) : "ip");
+        setNodeType((node.data?.nodeStyle || node.data?.type || "ip") as string);
       }
     } else if (open && !isEditMode) {
       // Reset form for new nodes
@@ -65,74 +76,46 @@ export function NodeDetailSheet({ open, onOpenChange, position, nodeId, parentId
   }, [nodeId, nodes, open, isEditMode]);
 
   const handleSubmit = () => {
-    if (!reactFlowInstance) return;
-
     setIsSubmitting(true);
 
     try {
       if (isEditMode && nodeId) {
-        // Update existing node using updateNode method
-        reactFlowInstance.updateNode(nodeId, {
+        // Use our custom updateNode hook instead of reactFlowInstance.updateNode
+        updateNode({
+          nodeId: nodeId,
           data: {
-            // Preserve existing data that we're not updating
-            ...nodes.find((n) => n.id === nodeId)?.data,
             name: nodeName,
             value: nodeValue,
-            type: nodeType,
-            subtext: nodeType.toUpperCase(),
+            nodeStyle: nodeType,
           },
+          // Optionally trigger a layout refresh after update
+          triggerLayoutAfterUpdate: true,
         });
       } else {
-        // Create new node
-        const newNodeId = `${parentId ? `${parentId}__` : "standalone_"}${new Date().getTime()}`;
-
-        // Calculate node position
-        let nodePosition = position;
-        if (parentId) {
-          // Find parent node to get its position
-          const parentNode = nodes.find((node) => node.id === parentId);
-          if (parentNode) {
-            // Position offset for child nodes
-            nodePosition = {
-              x: parentNode.position.x + 350, // Default offset for right direction
-              y: parentNode.position.y,
-            };
-          }
-        }
-
-        if (!nodePosition) {
-          console.error("Position is required for node creation");
-          return;
-        }
-
-        // Create new node
-        const newNode = {
-          id: newNodeId,
-          type: "custom",
-          position: nodePosition,
-          data: {
-            name: nodeName,
-            value: nodeValue,
-            type: nodeType,
-            subtext: nodeType.toUpperCase(),
-          },
+        // Create new node using the useNodeCreate hook
+        const nodeData = {
+          name: nodeName,
+          value: nodeValue,
+          nodeStyle: nodeType,
         };
 
-        reactFlowInstance.addNodes(newNode);
-
-        // If this is a child node, create an edge to the parent
         if (parentId) {
-          reactFlowInstance.addEdges({
-            id: `${parentId}->${newNodeId}`,
-            source: parentId,
-            target: newNodeId,
+          // Create child node
+          createNode({
+            data: nodeData,
+            parent: {
+              id: parentId,
+            },
+            nodeType: "custom",
+          });
+        } else if (position) {
+          // Create standalone node
+          createNode({
+            position,
+            data: nodeData,
+            nodeType: "custom",
           });
         }
-
-        // Auto-layout after adding a node
-        setTimeout(() => {
-          reactFlowInstance.fitView();
-        }, 100);
       }
 
       // Close the sheet after submission
@@ -144,13 +127,16 @@ export function NodeDetailSheet({ open, onOpenChange, position, nodeId, parentId
     }
   };
 
+  // Validation for form submission
+  const isValid = nodeName.trim() !== "" && nodeValue.trim() !== "";
+
   const preventPropagation = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-md p-6">
+      <SheetContent className="sm:max-w-md p-6" onClick={preventPropagation}>
         <SheetHeader className="mb-6 p-0">
           <SheetTitle>{title}</SheetTitle>
           <SheetDescription>{description}</SheetDescription>
@@ -167,8 +153,6 @@ export function NodeDetailSheet({ open, onOpenChange, position, nodeId, parentId
               onChange={(e) => setNodeName(e.target.value)}
               className="col-span-3"
               placeholder="Node Name"
-              onClick={preventPropagation}
-              onDoubleClick={preventPropagation}
             />
           </div>
 
@@ -182,19 +166,17 @@ export function NodeDetailSheet({ open, onOpenChange, position, nodeId, parentId
               onChange={(e) => setNodeValue(e.target.value)}
               className="col-span-3"
               placeholder="Node Value"
-              onClick={preventPropagation}
-              onDoubleClick={preventPropagation}
             />
           </div>
 
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="type" className="text-right font-medium">
-              Type
+              Style
             </Label>
-            <div className="col-span-3" onClick={preventPropagation} onDoubleClick={preventPropagation}>
+            <div className="col-span-3">
               <Select value={nodeType} onValueChange={setNodeType}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select node type" />
+                  <SelectValue placeholder="Select node style" />
                 </SelectTrigger>
                 <SelectContent>
                   {NODE_TYPES.map((type) => (
@@ -210,19 +192,12 @@ export function NodeDetailSheet({ open, onOpenChange, position, nodeId, parentId
 
         <div className="flex justify-end space-x-4 mt-8 pt-4 border-t">
           <SheetClose asChild>
-            <Button variant="outline" onClick={preventPropagation} className="min-w-[80px]">
+            <Button variant="outline" className="min-w-[80px]">
               Cancel
             </Button>
           </SheetClose>
-          <Button
-            variant="outline"
-            onClick={(e) => {
-              preventPropagation(e);
-              handleSubmit();
-            }}
-            disabled={isSubmitting || !nodeName || !nodeValue}
-          >
-            {isEditMode ? "Update" : "Create"}
+          <Button variant="default" onClick={handleSubmit} disabled={isSubmitting || !isValid} className="min-w-[80px]">
+            {isSubmitting ? "Saving..." : isEditMode ? "Update" : "Create"}
           </Button>
         </div>
       </SheetContent>

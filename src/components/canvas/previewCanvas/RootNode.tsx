@@ -1,43 +1,55 @@
-// src/components/canvas/RootNode.tsx
-import React from "react";
-import { Handle, Position } from "@xyflow/react";
+import React, { useEffect } from "react";
+import { Handle, Position, useReactFlow } from "@xyflow/react";
+import { cn } from "@/shared/utils";
+import { useSelectNodes } from "@/domains/canvas/configCanvas/hooks/canvasHandlers";
+import { useToggleAddNode } from "@/domains/canvas/configCanvas/hooks/nodeHandlers/useToggleAddNode";
 
 type RootNodeProps = {
   data: {
-    value: string;
-    subtext?: string;
-    highlightedNodeId?: string | null;
-    highlightNodes?: (nodeId: string) => void;
-    toggleNodeExpansion?: (nodeId: string) => void;
+    state?: {
+      isParentSelected?: boolean;
+      isChildSelected?: boolean;
+    };
   };
   id: string;
+  selected: boolean;
 };
 
-const RootNode: React.FC<RootNodeProps> = ({ data, id }) => {
-  const isHighlighted = data.highlightedNodeId === id;
+const RootNode: React.FC<RootNodeProps> = ({ data, id, selected }) => {
+  const { getNode } = useReactFlow();
+  const selectNodes = useSelectNodes();
+  const toggleAddNode = useToggleAddNode();
 
-  // Handle mouse interactions
-  const handleMouseEnter = () => {
-    if (data.highlightNodes) {
-      data.highlightNodes(id);
-    }
-  };
+  // Get state info
+  const state = data?.state || {};
+  const isSelected = state?.isParentSelected || selected;
+  const isChildSelected = state?.isChildSelected;
 
-  const handleMouseLeave = () => {
-    // Only clear if this node is highlighted
-    if (data.highlightedNodeId === id && data.highlightNodes) {
-      data.highlightNodes("");
+  // Toggle add node based on selection state
+  useEffect(() => {
+    if (isChildSelected || !isSelected) {
+      toggleAddNode?.(id, false);
+      return;
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isChildSelected, isSelected]);
 
-  const handleClick = () => {
-    if (data.toggleNodeExpansion) {
-      data.toggleNodeExpansion(id);
+  // Handle node click - similar to CustomNode
+  const handleNodeClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Don't trigger if clicking on handles
+    if ((e.target as HTMLElement).closest(".react-flow__handle") || (isSelected && getNode(`add-${id}`))) {
+      return;
     }
+
+    toggleAddNode?.(id, true);
+    selectNodes([id]);
   };
 
   return (
-    <div className="relative" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleClick}>
+    <div className="relative" onClick={handleNodeClick}>
       {/* Radiating lines effect */}
       <div className="absolute -z-10 w-48 h-48 -left-12 -top-12 pointer-events-none">
         <div className="w-full h-full flex items-center justify-center">
@@ -45,11 +57,16 @@ const RootNode: React.FC<RootNodeProps> = ({ data, id }) => {
         </div>
       </div>
 
-      {/* Hexagonal node */}
-      <div className={`hexagon ${isHighlighted ? "highlighted" : ""}`}>
-        <div className="hexagon-content">
-          <div className="text-xs">{data.value}</div>
-        </div>
+      {/* Hexagonal node with selection state */}
+      <div
+        className={cn(
+          "hexagon",
+          isSelected && "ring-2 ring-blue-500",
+          "transition-all duration-150",
+          "hover:shadow-lg",
+        )}
+      >
+        <div className="hexagon-content font-semibold text-slate-800">Root</div>
       </div>
 
       {/* Connection handle (only on the right for LR layout) */}
@@ -57,7 +74,7 @@ const RootNode: React.FC<RootNodeProps> = ({ data, id }) => {
         type="source"
         position={Position.Right}
         id="right"
-        style={{ background: "#555", width: "8px", height: "8px" }}
+        className="!bg-slate-400 !w-3 !h-3 !border-2 !border-white !right-0 !rounded-full !shadow-sm !transition-colors !duration-150 hover:!bg-blue-400"
       />
     </div>
   );
