@@ -1,12 +1,13 @@
 import { Edge, Node } from "@xyflow/react";
 
 import { cn } from "@/shared/utils";
+import { CSSProperties } from "react";
 
 /**
  * Applies styling to nodes based on their selection state and relationships
  * Returns styled nodes ready to be rendered
  */
-export function applyNodesStyles(nodes: Node[], _edges: Edge[]): Node[] {
+export function applyNodesStyles(nodes: Node[], _edges: Edge[], style?: CSSProperties): Node[] {
   // Return nodes with applied styles
   return nodes.map((node) => {
     const nodeState: any = node.data?.state || {};
@@ -20,7 +21,7 @@ export function applyNodesStyles(nodes: Node[], _edges: Edge[]): Node[] {
     return {
       ...node,
       className: cn(node.className, node.data?.isDropTarget ? "drop-target" : "", node.dragging ? "dragging" : ""),
-      style: {
+      style: style || {
         ...node.style,
         borderRadius: "9999px",
         outlineOffset: 1,

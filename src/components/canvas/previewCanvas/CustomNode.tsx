@@ -1,4 +1,3 @@
-// src/components/canvas/configCanvas/CustomNode.tsx
 import { Handle, NodeProps, Position, useReactFlow } from "@xyflow/react";
 import { CircleAlert, Edit, InfoIcon, Star, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -8,9 +7,9 @@ import { Button } from "@designSystem/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@designSystem/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@designSystem/components/ui/tooltip";
 import "../styles.css";
-import { useSelectNodes } from "@/domains/canvas/configCanvas/hooks/canvasHandlers";
-import { useToggleAddNode } from "@/domains/canvas/configCanvas/hooks/nodeHandlers/useToggleAddNode";
-import { useNodesDelete } from "@/domains/canvas/configCanvas/hooks/nodeHandlers/useNodesDelete";
+import { useSelectNodes } from "@/domains/canvas/previewCanvas/hooks/canvasHandlers";
+import { useToggleAddNode } from "@/domains/canvas/previewCanvas/hooks/nodeHandlers/useToggleAddNode";
+import { useNodesDelete } from "@/domains/canvas/previewCanvas/hooks/nodeHandlers/useNodesDelete";
 import NodeDetailSheet from "./NodeDetailSheet";
 
 /**

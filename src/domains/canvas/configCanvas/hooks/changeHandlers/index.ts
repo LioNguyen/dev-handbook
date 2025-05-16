@@ -41,7 +41,12 @@ export function useChangeHandlers() {
    */
   const onEdgesChange: OnEdgesChange = useCallback(
     (changes) => {
-      setEdges((eds) => applyEdgeChanges(changes, eds));
+      const safeChanges = changes.filter((change) => !!change.type);
+
+      // Only proceed with changes if there are any left
+      if (safeChanges.length > 0) {
+        setEdges((eds) => applyEdgeChanges(safeChanges, eds));
+      }
     },
     [setEdges],
   );

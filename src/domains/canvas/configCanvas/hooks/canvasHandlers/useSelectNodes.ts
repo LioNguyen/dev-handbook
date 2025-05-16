@@ -83,7 +83,7 @@ export function useSelectNodes() {
           });
 
           // Sau đó áp dụng các styles cho nodes
-          return applyNodesStyles(updatedNodes, getEdges());
+          return applyNodesStyles(updatedNodes, getEdges(), {});
         });
 
         // Cập nhật các edge - chọn tất cả các edge trong cây
@@ -131,7 +131,7 @@ export function useSelectNodes() {
           });
 
           // Sau đó áp dụng các styles cho nodes
-          return applyNodesStyles(updatedNodes, getEdges());
+          return applyNodesStyles(updatedNodes, getEdges(), {});
         });
 
         // Đảm bảo chúng ta cũng cập nhật style cho edges mặc dù không có edge nào được chọn

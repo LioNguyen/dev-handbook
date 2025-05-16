@@ -8,7 +8,7 @@ import { useNodesDelete } from "./useNodesDelete";
 export function useToggleAddNode() {
   const { getNodes } = useReactFlow();
   const { triggerLayout } = useAutoLayout();
-  const createNode = useNodeCreate();
+  const { createNode } = useNodeCreate();
   const deleteNodes = useNodesDelete();
 
   /**

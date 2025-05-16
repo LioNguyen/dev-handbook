@@ -1,45 +1,29 @@
-import { ReactFlowProvider, useEdgesState, useNodesState, useReactFlow } from "@xyflow/react";
+import { Edge, Node, ReactFlowProvider, useEdgesState, useNodesState, useReactFlow } from "@xyflow/react";
+import { isEqual } from "lodash";
 import { FC, ReactNode, useEffect, useMemo, useState } from "react";
 
+import { useCanvas } from "../canvas.context";
 import useAutoLayout from "../hooks/useAutoLayout";
+import { createKeyToRender } from "../utils/dataUtils";
 import { Provider } from "./ConfigCanvas.context";
-import { useConfigCanvasService } from "./ConfigCanvas.services";
-
-const keyToRender = {
-  node: ["parentLead", "parentLeadValue", "parentLeadType", "value"],
-  leaf: {
-    node: ["sessionId", "time", "operation"],
-    leaf: {
-      node: ["additionalDetails", "conditionalAccessStatus", "", "failureReason", "status"],
-      leaf: {
-        node: ["additionalDetails"],
-        leaf: {
-          node: ["additionalDetails", "conditionalAccessStatus"],
-          leaf: {
-            node: ["additionalDetails", "conditionalAccessStatus", "errorCode", "failureReason", "status"],
-          },
-        },
-      },
-    },
-  },
-};
 
 // Canvas provider component that uses ReactFlow hooks
 const CanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  // Get initial data
-  const canvasService = useConfigCanvasService();
-  const initialNodes = useMemo(
-    () => canvasService.getNodesAndEdgesFromData(keyToRender as any)?.nodes,
-    [canvasService],
-  );
-  const initialEdges = useMemo(
-    () => canvasService.getNodesAndEdgesFromData(keyToRender as any)?.edges,
-    [canvasService],
-  );
+  const { previewCanvasKey, setPreviewCanvasKey } = useCanvas();
 
   // Use React Flow's node and edge state hooks
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const initialNode = [
+    {
+      id: "1",
+      type: "root", // Keep node type for React Flow
+      draggable: false,
+      position: { x: 0, y: 0 },
+      data: {},
+    },
+  ] as Node[];
+  const initialEdge = [] as Edge[];
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNode);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdge);
   const reactFlowInstance = useReactFlow();
 
   // Canvas settings
@@ -50,12 +34,23 @@ const CanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
     direction: "LR" as "TB" | "LR" | "RL" | "BT",
   });
 
-  const { triggerLayout } = useAutoLayout();
+  const { triggerLayout } = useAutoLayout({
+    nodeWidth: 400,
+    nodeHeight: 100,
+  });
 
   useEffect(() => {
     triggerLayout();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const keyToRender = createKeyToRender(nodes, edges);
+    if (!isEqual(previewCanvasKey, keyToRender)) {
+      setPreviewCanvasKey(keyToRender);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nodes]);
 
   // Memoize the context value to prevent unnecessary re-renders
   const value = useMemo(() => {

@@ -1,14 +1,15 @@
 // src/components/canvas/configCanvas/NodeDetailSheet.tsx
 import { XYPosition } from "@xyflow/react";
-import { useEffect, useState } from "react";
+import { Info } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
-import { useCanvas } from "@/domains/canvas";
+import { useConfigCanvas } from "@/domains/canvas/configCanvas/ConfigCanvas.context";
 import { useNodeCreate } from "@/domains/canvas/configCanvas/hooks/nodeHandlers/useNodeCreate";
 import { useNodeUpdate } from "@/domains/canvas/configCanvas/hooks/nodeHandlers/useNodeUpdate";
+import { Badge } from "@designSystem/components/ui/badge";
 import { Button } from "@designSystem/components/ui/button";
-import { Input } from "@designSystem/components/ui/input";
 import { Label } from "@designSystem/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@designSystem/components/ui/select";
+import { ScrollArea } from "@designSystem/components/ui/scroll-area";
 import {
   Sheet,
   SheetClose,
@@ -17,62 +18,85 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@designSystem/components/ui/sheet";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@designSystem/components/ui/tooltip";
+
+// Import the sample data schema
+import { useGetNodeTree } from "@/domains/canvas/configCanvas/hooks/canvasHandlers";
+import { useNodesDelete } from "@/domains/canvas/configCanvas/hooks/nodeHandlers/useNodesDelete";
+import canvasData from "@/domains/canvas/data/canvas.json";
+import useAutoLayout from "@/domains/canvas/hooks/useAutoLayout";
+import { getKeysAtEachLevel } from "@/domains/canvas/utils/dataUtils";
 
 interface NodeDetailSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   position?: XYPosition;
+  addNodeId?: string;
   nodeId?: string;
   parentId?: string;
 }
 
-const NODE_TYPES = [
-  { value: "ip", label: "IP Address" },
-  { value: "starred", label: "Starred" },
-  { value: "microsoft", label: "Microsoft" },
-  { value: "aws", label: "AWS" },
-  { value: "gcp", label: "Google Cloud" },
-  { value: "key", label: "Key Node" },
-  { value: "success", label: "Success Status" },
-  { value: "error", label: "Error Status" },
-  { value: "warning", label: "Warning Status" },
-  { value: "info", label: "Info Node" },
-];
-
-export function NodeDetailSheet({ open, onOpenChange, position, nodeId, parentId }: NodeDetailSheetProps) {
-  const { nodes } = useCanvas();
-  const createNode = useNodeCreate();
+export function NodeDetailSheet({ open, onOpenChange, position, addNodeId, nodeId, parentId }: NodeDetailSheetProps) {
+  const { nodes } = useConfigCanvas();
+  const { createNode } = useNodeCreate();
   const { updateNode } = useNodeUpdate();
+  const deleteNodes = useNodesDelete();
+  const getNodeTree = useGetNodeTree();
+  const { triggerLayout } = useAutoLayout();
+
+  // Find the parent node and get its level
+  const nodeTree = getNodeTree("1");
+  const nodeLevel = nodeId ? nodeTree.getDepth(nodeId) - 1 : parentId ? nodeTree.getDepth(parentId) : 0;
 
   // Form state
-  const [nodeName, setNodeName] = useState("");
-  const [nodeValue, setNodeValue] = useState("");
-  const [nodeType, setNodeType] = useState("ip");
+  const [selectedFields, setSelectedFields] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isEditMode = !!nodeId;
   const title = isEditMode ? "Edit Node" : parentId ? "Add Child Node" : "Create Node";
-  const description = isEditMode
-    ? "Update the details of this node"
-    : parentId
-    ? "Add a new child node"
-    : "Add a new node to the canvas";
+  const description = isEditMode ? "Modify selected fields" : "Select fields from the schema to create a node";
+
+  // Extract schema fields based on the current node level using getKeysAtEachLevel
+  const schemaFields = useMemo(() => {
+    try {
+      // Use getKeysAtEachLevel to get fields at the current nodeLevel
+      const levelKeys = getKeysAtEachLevel(canvasData);
+
+      // Get fields at the current level, or empty array if level doesn't exist
+      const fieldsAtLevel = levelKeys[nodeLevel] || [];
+
+      // Sort fields alphabetically for better UI
+      return [...fieldsAtLevel].sort();
+    } catch (error) {
+      console.error("Error extracting schema fields:", error);
+      return [];
+    }
+  }, [nodeLevel]);
 
   // Load existing node data if in edit mode
   useEffect(() => {
     if (nodeId && open) {
       const node = nodes.find((n) => n.id === nodeId);
       if (node) {
-        // Safe access with fallbacks to avoid type errors
-        setNodeName(node.data?.name ? String(node.data.name) : "");
-        setNodeValue(node.data?.value ? String(node.data.value) : "");
-        setNodeType((node.data?.nodeStyle || node.data?.type || "ip") as string);
+        // Check for value as array first
+        if (Array.isArray(node.data?.value)) {
+          setSelectedFields(node.data.value);
+        }
+        // If fields exists, use that
+        else if (Array.isArray(node.data?.fields)) {
+          setSelectedFields(node.data.fields);
+        }
+        // Otherwise try to parse fields from the value string
+        else if (typeof node.data?.value === "string") {
+          const valueFields = node.data.value.split(",").map((f) => f.trim());
+          setSelectedFields(valueFields.filter((f) => f.length > 0));
+        } else {
+          setSelectedFields([]);
+        }
       }
     } else if (open && !isEditMode) {
       // Reset form for new nodes
-      setNodeName("");
-      setNodeValue("");
-      setNodeType("ip");
+      setSelectedFields([]);
     }
   }, [nodeId, nodes, open, isEditMode]);
 
@@ -81,124 +105,169 @@ export function NodeDetailSheet({ open, onOpenChange, position, nodeId, parentId
 
     try {
       if (isEditMode && nodeId) {
-        // Use our custom updateNode hook instead of reactFlowInstance.updateNode
+        // Update existing node with only value as an array of selected fields
         updateNode({
           nodeId: nodeId,
           data: {
-            name: nodeName,
-            value: nodeValue,
-            nodeStyle: nodeType,
+            value: selectedFields,
           },
-          // Optionally trigger a layout refresh after update
           triggerLayoutAfterUpdate: true,
         });
       } else {
-        // Create new node using the useNodeCreate hook
-        const nodeData = {
-          name: nodeName,
-          value: nodeValue,
-          nodeStyle: nodeType,
-        };
-
-        if (parentId) {
-          // Create child node
+        // Create a node with only value as an array of selected fields
+        if (selectedFields.length > 0) {
           createNode({
-            data: nodeData,
-            parent: {
-              id: parentId,
+            position: position,
+            data: {
+              value: selectedFields,
             },
+            parent: parentId ? { id: parentId } : undefined,
             nodeType: "custom",
           });
-        } else if (position) {
-          // Create standalone node
-          createNode({
-            position,
-            data: nodeData,
-            nodeType: "custom",
-          });
+
+          // Delete the add node if it exists
+          if (addNodeId) {
+            setTimeout(() => {
+              deleteNodes([addNodeId]);
+            }, 500);
+          }
+
+          triggerLayout();
         }
       }
 
       // Close the sheet after submission
       onOpenChange(false);
     } catch (error) {
-      console.error("Error saving node:", error);
+      console.error("Error creating/updating node:", error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Validation for form submission
-  const isValid = nodeName.trim() !== "" && nodeValue.trim() !== "";
+  // Toggle a field selection
+  const toggleFieldSelection = (field: string) => {
+    setSelectedFields((prev) => (prev.includes(field) ? prev.filter((f) => f !== field) : [...prev, field]));
+  };
 
+  // Select all fields
+  const selectAllFields = () => {
+    setSelectedFields(schemaFields);
+  };
+
+  // Clear all selections
+  const clearSelections = () => {
+    setSelectedFields([]);
+  };
+
+  // Validation for form submission
+  const isValid = selectedFields.length > 0;
+
+  // Prevent event propagation to parent elements
   const preventPropagation = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-md p-6" onClick={preventPropagation}>
-        <SheetHeader className="mb-6 p-0">
+      <SheetContent className="sm:max-w-md px-6" onClick={preventPropagation}>
+        <SheetHeader className="pb-4">
           <SheetTitle>{title}</SheetTitle>
           <SheetDescription>{description}</SheetDescription>
         </SheetHeader>
 
-        <div className="grid gap-6 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right font-medium">
-              Name
+        {/* Field Selection UI (same for both create and edit mode) */}
+        <div
+          className="flex flex-col space-y-4"
+          onDoubleClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
+          <div className="flex items-center justify-between">
+            <Label className="text-sm font-medium flex items-center gap-2">
+              Available Fields
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top">
+                    <p className="w-[200px] text-xs">
+                      These fields are extracted from the data schema. Select fields to include in your node.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </Label>
-            <Input
-              id="name"
-              value={nodeName}
-              onChange={(e) => setNodeName(e.target.value)}
-              className="col-span-3"
-              placeholder="Node Name"
-            />
+            <Badge className="h-6 px-2 rounded-full" variant="outline">
+              {selectedFields.length} selected
+            </Badge>
           </div>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="value" className="text-right font-medium">
-              Value
-            </Label>
-            <Input
-              id="value"
-              value={nodeValue}
-              onChange={(e) => setNodeValue(e.target.value)}
-              className="col-span-3"
-              placeholder="Node Value"
-            />
-          </div>
-
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="type" className="text-right font-medium">
-              Style
-            </Label>
-            <div className="col-span-3">
-              <Select value={nodeType} onValueChange={setNodeType}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select node style" />
-                </SelectTrigger>
-                <SelectContent>
-                  {NODE_TYPES.map((type) => (
-                    <SelectItem key={type.value} value={type.value}>
-                      {type.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          {/* Move Select All and Clear buttons above the field list */}
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 px-3 text-xs"
+                onClick={selectAllFields}
+                disabled={schemaFields.length === 0}
+              >
+                Select All
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 px-3 text-xs"
+                onClick={clearSelections}
+                disabled={selectedFields.length === 0}
+              >
+                Clear
+              </Button>
             </div>
           </div>
+
+          {schemaFields.length === 0 ? (
+            <div className="py-4 text-center text-muted-foreground border rounded-md">
+              No fields available at this level
+            </div>
+          ) : (
+            <ScrollArea className="h-[340px] rounded-md border">
+              <div className="flex flex-col gap-3 p-2">
+                {schemaFields.map((field) => {
+                  const isSelected = selectedFields.includes(field);
+                  return (
+                    <Button
+                      key={field}
+                      className={`flex items-center px-3 py-2 text-left rounded-md w-full transition-all hover:border-2 hover:border-dashed! hover:border-gray-800! focus:outline-none! ${
+                        isSelected
+                          ? "  border-2 border-dashed! border-gray-800! shadow-md text-slate-800!"
+                          : "hover:bg-gray-100!  text-slate-500! border border-transparent"
+                      }`}
+                      onClick={() => toggleFieldSelection(field)}
+                    >
+                      <span className="truncate">{field}</span>
+                    </Button>
+                  );
+                })}
+              </div>
+            </ScrollArea>
+          )}
         </div>
 
-        <div className="flex justify-end space-x-4 mt-8 pt-4 border-t">
+        <div className="flex justify-between mt-6 pt-4 border-t">
           <SheetClose asChild>
-            <Button variant="outline" className="min-w-[80px]">
-              Cancel
-            </Button>
+            <Button variant="ghost">Cancel</Button>
           </SheetClose>
-          <Button variant="default" onClick={handleSubmit} disabled={isSubmitting || !isValid} className="min-w-[80px]">
-            {isSubmitting ? "Saving..." : isEditMode ? "Update" : "Create"}
+          <Button
+            variant="outline"
+            onClick={handleSubmit}
+            disabled={isSubmitting || !isValid}
+            className="min-w-[100px]"
+          >
+            {isSubmitting ? "Processing..." : isEditMode ? "Update Node" : "Create Node"}
           </Button>
         </div>
       </SheetContent>

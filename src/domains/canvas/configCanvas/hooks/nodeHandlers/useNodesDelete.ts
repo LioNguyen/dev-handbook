@@ -2,8 +2,8 @@
 import { useReactFlow } from "@xyflow/react";
 import { useCallback } from "react";
 
-import { useGetNodeTree } from "@/domains/canvas/hooks/handlers/useCanvasHandlers";
 import useAutoLayout from "@/domains/canvas/hooks/useAutoLayout";
+import { useGetNodeTree } from "../canvasHandlers/useGetNodeTree";
 
 export function useNodesDelete() {
   const { setNodes, setEdges } = useReactFlow();

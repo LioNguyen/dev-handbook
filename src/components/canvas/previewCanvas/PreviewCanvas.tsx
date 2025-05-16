@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 
 import { usePreviewCanvas } from "@/domains/canvas/previewCanvas/PreviewCanvas.context";
 import { PreviewCanvasProvider } from "@/domains/canvas/previewCanvas/PreviewCanvas.provider";
-import { useIsNodeDragging, useSelectNodes } from "@/domains/canvas/previewCanvas/hooks/canvasHandlers";
+import { useSelectNodes } from "@/domains/canvas/previewCanvas/hooks/canvasHandlers";
 import { useChangeHandlers } from "@/domains/canvas/previewCanvas/hooks/changeHandlers";
 import { useNodeDragHandlers } from "@/domains/canvas/previewCanvas/hooks/nodeHandlers/useNodeDragHandlers";
 import { useNodesDelete } from "@/domains/canvas/previewCanvas/hooks/nodeHandlers/useNodesDelete";
@@ -31,8 +31,6 @@ function PreviewCanvas() {
   const [nodeDetailSheetOpen, setNodeDetailSheetOpen] = useState(false);
   const [nodeDetailPosition, setNodeDetailPosition] = useState<{ x: number; y: number } | undefined>();
   const [selectedNodeId, setSelectedNodeId] = useState<string | undefined>();
-
-  const isNodeDragging = useIsNodeDragging();
 
   // Get handlers
   const { handleNodeDragStart, handleNodeDrag, handleNodeDragStop } = useNodeDragHandlers();
@@ -83,6 +81,14 @@ function PreviewCanvas() {
     [deleteNodes],
   );
 
+  const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
+    if (event.key === "Backspace" || event.key === "Delete") {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+  }, []);
+
   return (
     <div className="h-full w-full relative">
       <ReactFlow
@@ -94,7 +100,6 @@ function PreviewCanvas() {
         nodeTypes={nodeTypes}
         nodesDraggable={true}
         nodesConnectable={false}
-        panOnDrag={!isNodeDragging}
         proOptions={{ hideAttribution: true }}
         zoomOnDoubleClick={false}
         onNodesChange={onNodesChange}
@@ -108,8 +113,7 @@ function PreviewCanvas() {
         onPaneClick={() => {
           selectNodes([""]);
         }}
-        minZoom={0}
-        maxZoom={Infinity}
+        onKeyDown={handleKeyDown}
       >
         <Panel position="top-left" className="bg-white rounded-lg shadow-md p-2 m-4">
           <div className="flex space-x-2">

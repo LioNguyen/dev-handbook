@@ -1,10 +1,5 @@
 import { Edge, Node, ReactFlowInstance } from "@xyflow/react";
-
-// Define a type for the node hierarchy map
-export type NodeHierarchy = {
-  parentToChildren: Map<string, string[]>;
-  childToParent: Map<string, string>;
-};
+import { NodeHierarchy } from "./nodeEdgeUtils";
 
 export type ExtendedReactFlowInstance = ReactFlowInstance & {
   // Custom methods

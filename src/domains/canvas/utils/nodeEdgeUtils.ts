@@ -1,7 +1,11 @@
 import { Edge, Node, Position, XYPosition } from "@xyflow/react";
 
 import { ExtendedReactFlowInstance } from "./extendedFlowInstance";
-import { NodeHierarchy } from "../hooks/handlers/useCanvasHandlers";
+
+export type NodeHierarchy = {
+  parentToChildren: Map<string, string[]>;
+  childToParent: Map<string, string>;
+};
 
 // Direction types for layout orientation
 export type Direction = "TB" | "LR" | "RL" | "BT";

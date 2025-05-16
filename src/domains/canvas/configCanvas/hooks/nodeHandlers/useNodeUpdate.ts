@@ -19,7 +19,7 @@ export function useNodeUpdate() {
       nodeId: string;
       data?: {
         name?: string;
-        value?: string;
+        value?: any;
         nodeStyle?: string;
         type?: string;
         [key: string]: any;

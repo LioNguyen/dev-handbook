@@ -1,10 +1,9 @@
-// src/domains/canvas/previewCanvas/hooks/canvasHandlers/useGetNodeTree.ts
 import { useReactFlow } from "@xyflow/react";
 import { useCallback } from "react";
 import { NodeTree } from "./types";
 
 /**
- * Hook để lấy cây node bắt đầu từ một node gốc
+ * Hook to get a node tree starting from a root node
  */
 export function useGetNodeTree() {
   const { getEdges } = useReactFlow();
@@ -15,41 +14,41 @@ export function useGetNodeTree() {
       const treeNodeIds = new Set<string>();
       const treeEdgeIds = new Set<string>();
 
-      // Khởi tạo bản đồ phân cấp
+      // Initialize hierarchy maps
       const hierarchy = {
         parentToChildren: new Map<string, string[]>(),
         childToParent: new Map<string, string>(),
       };
 
-      // Hàm đệ quy để tìm tất cả các con
+      // Recursive function to find all children
       const findChildren = (id: string) => {
-        // Thêm node này vào set
+        // Add this node to the set
         treeNodeIds.add(id);
 
-        // Khởi tạo mảng con cho parent này
+        // Initialize children array for this parent
         if (!hierarchy.parentToChildren.has(id)) {
           hierarchy.parentToChildren.set(id, []);
         }
 
-        // Tìm tất cả các con trực tiếp
+        // Find all direct children
         edges.forEach((edge) => {
           if (edge.source === id) {
-            // Đây là kết nối từ node của chúng ta đến một node con
+            // This is a connection from our node to a child node
             const childId = edge.target;
             treeEdgeIds.add(edge.id);
             treeNodeIds.add(childId);
 
-            // Thêm vào bản đồ quan hệ parent-child
+            // Add to parent-child relationship map
             const children = hierarchy.parentToChildren.get(id) || [];
             if (!children.includes(childId)) {
               children.push(childId);
               hierarchy.parentToChildren.set(id, children);
             }
 
-            // Thêm vào bản đồ quan hệ child-parent
+            // Add to child-parent relationship map
             hierarchy.childToParent.set(childId, id);
 
-            // Tìm con của node con này một cách đệ quy
+            // Recursively find children of this child node
             findChildren(childId);
           }
         });
@@ -57,7 +56,7 @@ export function useGetNodeTree() {
 
       findChildren(nodeId);
 
-      // Hàm để lấy tất cả tổ tiên của một node
+      // Function to get all ancestors of a node
       const getAncestors = (id: string) => {
         const ancestors: string[] = [];
         let currentId = id;
@@ -70,7 +69,7 @@ export function useGetNodeTree() {
         return ancestors;
       };
 
-      // Hàm để lấy độ sâu của một node
+      // Function to get the depth of a node
       const getDepth = (id: string) => {
         let depth = 0;
         let currentId = id;
@@ -87,7 +86,7 @@ export function useGetNodeTree() {
         treeNodeIds,
         treeEdgeIds,
         hierarchy,
-        // Các hàm tiện ích cho phân cấp
+        // Utility functions for hierarchy
         getChildren: (id: string) => hierarchy.parentToChildren.get(id) || [],
         getParent: (id: string) => hierarchy.childToParent.get(id),
         getAncestors,
@@ -105,7 +104,7 @@ export function useGetNodeTree() {
           return descendants;
         },
         getDepth,
-        // Lấy tất cả các node ở một cấp độ cụ thể từ gốc
+        // Get all nodes at a specific level from the root
         getNodesAtLevel: (level: number) => {
           const result: string[] = [];
           treeNodeIds.forEach((id) => {
@@ -116,7 +115,7 @@ export function useGetNodeTree() {
           });
           return result;
         },
-        // Kiểm tra xem một node có phải là node lá (không có con) không
+        // Check if a node is a leaf node (has no children)
         isLeaf: (id: string) => {
           const children = hierarchy.parentToChildren.get(id) || [];
           return children.length === 0;

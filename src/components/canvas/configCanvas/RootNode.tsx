@@ -16,9 +16,14 @@ type RootNodeProps = {
 };
 
 const RootNode: React.FC<RootNodeProps> = ({ data, id, selected }) => {
-  const { getNode } = useReactFlow();
+  const { getNode, getEdges } = useReactFlow();
   const selectNodes = useSelectNodes();
   const toggleAddNode = useToggleAddNode();
+
+  // Check if this node has any outgoing edges (used as source)
+  const hasOutgoingEdges = () => {
+    return getEdges().some((edge) => edge.source === id);
+  };
 
   // Get state info
   const state = data?.state || {};
@@ -44,8 +49,11 @@ const RootNode: React.FC<RootNodeProps> = ({ data, id, selected }) => {
       return;
     }
 
-    toggleAddNode?.(id, true);
     selectNodes([id]);
+
+    if (!hasOutgoingEdges()) {
+      toggleAddNode?.(id, true);
+    }
   };
 
   return (

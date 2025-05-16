@@ -1,4 +1,4 @@
-// src/domains/canvas/hooks/handlers/nodeHandlers/useCreateNode.ts
+// src/domains/canvas/configCanvas/hooks/nodeHandlers/useNodeCreate.ts
 import { Node, Position, useReactFlow, XYPosition } from "@xyflow/react";
 import { useCallback } from "react";
 
@@ -9,16 +9,13 @@ export function useNodeCreate() {
   const { triggerLayout } = useAutoLayout();
 
   /**
-   * Unified function to create standalone or child nodes
+   * Legacy single node creation function (maintained for compatibility)
    */
   const createNode = useCallback(
     (options: {
       position?: XYPosition;
       data?: {
-        name?: string;
-        value?: string;
-        type?: string;
-        subtext?: string;
+        value?: any;
         [key: string]: any;
         _overrideId?: string;
       };
@@ -31,7 +28,7 @@ export function useNodeCreate() {
       nodeType?: string;
     }) => {
       const { position, data = {}, parent, nodeType = "custom" } = options;
-      const { name, value, type = "ip", subtext, _overrideId } = data;
+      const { _overrideId } = data || {};
 
       // Determine if we're creating a standalone or child node
       const isChildNode = !!parent;
@@ -103,16 +100,7 @@ export function useNodeCreate() {
         id: nodeId,
         type: nodeType,
         position: nodePosition,
-        data: {
-          ...data, // Preserve all original data properties
-          value:
-            value ||
-            name ||
-            (isChildNode ? `127.0.0.${Math.floor(Math.random() * 255)}` : `Node ${nodeId.substring(5)}`),
-          name: name || value || (isChildNode ? "Child Node" : `Node ${nodeId.substring(5)}`),
-          type: type,
-          subtext: subtext || type?.toUpperCase() || (isChildNode ? "IP ADDRESS" : "STANDALONE"),
-        },
+        data,
         sourcePosition: sourcePos,
         targetPosition: targetPos,
       };
@@ -124,8 +112,10 @@ export function useNodeCreate() {
 
       return nodeId;
     },
-    [getNodes, setNodes, setEdges],
+    [getNodes, setNodes, setEdges, triggerLayout],
   );
 
-  return createNode;
+  return {
+    createNode,
+  };
 }

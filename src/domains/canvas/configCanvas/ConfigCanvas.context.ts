@@ -1,12 +1,12 @@
-// src/domains/canvas/canvas.context.ts
 import { createContext } from "@core/store";
 import { Edge, Node, OnEdgesChange, OnNodesChange, ReactFlowInstance } from "@xyflow/react";
+import { Dispatch, SetStateAction } from "react";
 
 // Define the exact shape of your context
 interface CanvasContextValue {
   // States
   nodes: Node[];
-  setNodes: (nodes: Node[] | ((nodes: Node[]) => Node[])) => void;
+  setNodes: Dispatch<SetStateAction<Node[]>>;
   edges: Edge[];
   setEdges: (edges: Edge[] | ((edges: Edge[]) => Edge[])) => void;
 
@@ -14,7 +14,10 @@ interface CanvasContextValue {
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
 
-  reactFlowInstance: ReactFlowInstance | null;
+  // React Flow instance
+  reactFlowInstance: ReactFlowInstance<Node, Edge>;
+
+  // Settings
   canvasSettings: {
     treeWidth: number;
     treeHeight: number;

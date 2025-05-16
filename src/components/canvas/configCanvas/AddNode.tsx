@@ -40,7 +40,7 @@ export default function AddNode({ id, data }: NodeProps) {
       </div>
 
       {/* Node detail sheet for creating child nodes */}
-      <NodeDetailSheet open={sheetOpen} onOpenChange={setSheetOpen} parentId={parentId} />
+      <NodeDetailSheet open={sheetOpen} onOpenChange={setSheetOpen} addNodeId={id} parentId={parentId} />
     </>
   );
 }
