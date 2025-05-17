@@ -2,12 +2,12 @@
 import { useReactFlow } from "@xyflow/react";
 import { useCallback } from "react";
 
-import useAutoLayout from "@/domains/canvas/hooks/useAutoLayout";
 import { useGetNodeTree } from "../canvasHandlers/useGetNodeTree";
+import useConfigCanvasAutoLayout from "../useConfigCanvasAutoLayout";
 
 export function useNodesDelete() {
   const { setNodes, setEdges } = useReactFlow();
-  const { triggerLayout } = useAutoLayout();
+  const { triggerLayout } = useConfigCanvasAutoLayout();
   const getNodeTree = useGetNodeTree();
 
   /**

@@ -1,13 +1,13 @@
-// src/domains/canvas/hooks/handlers/nodeHandlers/useToggleAddNode.ts
-import useAutoLayout from "@/domains/canvas/hooks/useAutoLayout";
 import { Position, useReactFlow } from "@xyflow/react";
 import { useCallback } from "react";
+
+import useConfigCanvasAutoLayout from "../useConfigCanvasAutoLayout";
 import { useNodeCreate } from "./useNodeCreate";
 import { useNodesDelete } from "./useNodesDelete";
 
 export function useToggleAddNode() {
   const { getNodes } = useReactFlow();
-  const { triggerLayout } = useAutoLayout();
+  const { triggerLayout } = useConfigCanvasAutoLayout();
   const { createNode } = useNodeCreate();
   const deleteNodes = useNodesDelete();
 

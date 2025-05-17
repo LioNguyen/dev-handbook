@@ -2,11 +2,11 @@
 import { Node, Position, useReactFlow, XYPosition } from "@xyflow/react";
 import { useCallback } from "react";
 
-import useAutoLayout from "@/domains/canvas/hooks/useAutoLayout";
+import useConfigCanvasAutoLayout from "../useConfigCanvasAutoLayout";
 
 export function useNodeCreate() {
   const { getNodes, setNodes, setEdges } = useReactFlow();
-  const { triggerLayout } = useAutoLayout();
+  const { triggerLayout } = useConfigCanvasAutoLayout();
 
   /**
    * Legacy single node creation function (maintained for compatibility)

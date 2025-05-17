@@ -23,8 +23,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@desig
 // Import the sample data schema
 import { useGetNodeTree } from "@/domains/canvas/configCanvas/hooks/canvasHandlers";
 import { useNodesDelete } from "@/domains/canvas/configCanvas/hooks/nodeHandlers/useNodesDelete";
+import useConfigCanvasAutoLayout from "@/domains/canvas/configCanvas/hooks/useConfigCanvasAutoLayout";
 import canvasData from "@/domains/canvas/data/canvas.json";
-import useAutoLayout from "@/domains/canvas/hooks/useAutoLayout";
 import { getKeysAtEachLevel } from "@/domains/canvas/utils/dataUtils";
 
 interface NodeDetailSheetProps {
@@ -42,7 +42,7 @@ export function NodeDetailSheet({ open, onOpenChange, position, addNodeId, nodeI
   const { updateNode } = useNodeUpdate();
   const deleteNodes = useNodesDelete();
   const getNodeTree = useGetNodeTree();
-  const { triggerLayout } = useAutoLayout();
+  const { triggerLayout } = useConfigCanvasAutoLayout();
 
   // Find the parent node and get its level
   const nodeTree = getNodeTree("1");

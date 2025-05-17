@@ -2,14 +2,14 @@
 import { Node, useReactFlow } from "@xyflow/react";
 import { useCallback } from "react";
 
-import useAutoLayout from "@/domains/canvas/hooks/useAutoLayout";
+import useConfigCanvasAutoLayout from "../useConfigCanvasAutoLayout";
 
 /**
  * Custom hook for updating node properties with proper type safety and optimizations
  */
 export function useNodeUpdate() {
   const { getNodes, setNodes } = useReactFlow();
-  const { triggerLayout } = useAutoLayout();
+  const { triggerLayout } = useConfigCanvasAutoLayout();
 
   /**
    * Updates an existing node with new data while preserving other properties

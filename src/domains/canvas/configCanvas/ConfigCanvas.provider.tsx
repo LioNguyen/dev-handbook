@@ -3,9 +3,9 @@ import { isEqual } from "lodash";
 import { FC, ReactNode, useEffect, useMemo, useState } from "react";
 
 import { useCanvas } from "../canvas.context";
-import useAutoLayout from "../hooks/useAutoLayout";
 import { createKeyToRender } from "../utils/dataUtils";
 import { Provider } from "./ConfigCanvas.context";
+import useConfigCanvasAutoLayout from "./hooks/useConfigCanvasAutoLayout";
 
 // Canvas provider component that uses ReactFlow hooks
 const CanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
@@ -34,10 +34,7 @@ const CanvasProvider: FC<{ children: ReactNode }> = ({ children }) => {
     direction: "LR" as "TB" | "LR" | "RL" | "BT",
   });
 
-  const { triggerLayout } = useAutoLayout({
-    nodeWidth: 400,
-    nodeHeight: 100,
-  });
+  const { triggerLayout } = useConfigCanvasAutoLayout();
 
   useEffect(() => {
     triggerLayout();
