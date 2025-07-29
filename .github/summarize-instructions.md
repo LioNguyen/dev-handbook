@@ -1,0 +1,1 @@
+- Summarize the Playwright code current file into syntax and example format in the markdown file with same name, in same directory
