@@ -1,4 +1,5 @@
 [Udemy Course](https://endava.udemy.com/course/automation-test-voi-playwright-typescript-khoa-6)
+[Playwright Playground](https://material.playwrightvn.com/index.html)
 
 ## How to Initialize and Set Up Playwright
 
