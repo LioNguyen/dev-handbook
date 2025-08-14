@@ -4,21 +4,27 @@
 
 To guide an AI assistant in creating a detailed Product Requirements Document (PRD) in Markdown format for React frontend features, based on an initial user prompt. The PRD should be clear, actionable, and suitable for a junior React developer to understand and implement the feature in a React boilerplate application created with Vite.
 
+## Project Setup
+
+- **Vite** for project initialization and configuration
+- #fetch https://vite.dev/guide/ to get updated guide
+
 ## Tech Stack & Standards
 
 All React frontend PRDs should assume the following standardized tech stack:
 
 ### Core Technologies
 
-- **React 18+** with TypeScript
-- **Vite** as build tool and dev server
+- **React 19+** with TypeScript
 - **React Router v6** for routing
 - **React Query (TanStack Query)** for server state management
 - **Zustand** for client state management (when Context is insufficient)
+- **Axios** for API handling
 
 ### UI & Styling
 
-- **Tailwind CSS** for styling
+- **Tailwind CSS** for styling, #fetch https://tailwindcss.com/docs/installation/using-vite to get updated guide
+- **ShadcnUI** for styling, #fetch https://ui.shadcn.com/docs/installation/vite to get updated guide
 - **Headless UI** or **Radix UI** for accessible component primitives
 - **Lucide React** for icons
 - **Framer Motion** for animations (when needed)
@@ -38,12 +44,7 @@ All React frontend PRDs should assume the following standardized tech stack:
 
 ### Package Manager
 
-- **yarn** as the preferred package manager
-
-## Project Setup
-
-- **Vite** for project initialization and configuration
-- Use `yarn create vite@latest project-name --template react-ts` for setup
+- **bun** as the preferred package manager
 
 ## Standard Folder Structure
 
@@ -72,6 +73,11 @@ src/
 │   ├── assets/          # Static assets (images, fonts, etc.)
 │   └── styles/          # Global styles and Tailwind config
 ```
+
+## Naming Conventions
+
+- **Component names** should be written in **PascalCase** (e.g., `UserProfile`, `LoginForm`).
+- **Function, hook, and folder names** should be written in **camelCase** (e.g., `useAuth`, `fetchUserData`, `userProfile`).
 
 ## Process
 
@@ -222,6 +228,6 @@ Assume the primary reader of the PRD is a **junior React developer**. Therefore,
 4. Always specify exact file paths using the domain-driven folder structure with shared utilities
 5. Include specific npm packages to install with yarn
 6. Take the user's answers to the clarifying questions and improve the PRD with tech-stack-specific details
-7. Ensure the PRD provides clear guidance using React 18, TypeScript, Tailwind, Vite, and the established toolchain
+7. Ensure the PRD provides clear guidance using React 19, TypeScript, Tailwind, Vite, and the established toolchain
 8. Include concrete code examples for TypeScript interfaces, component signatures, and API functions
 9. Specify whether components belong in domains or shared folders based on reusability
