@@ -42,6 +42,14 @@ All React frontend PRDs should assume the following standardized tech stack:
 - **React Testing Library** for component testing
 - **Playwright** for E2E testing
 
+### Code Generation
+
+    - Scaffold new components in `src/components` (Atomic Design structure, TypeScript, PascalCase)
+    - Scaffold new domain files in `src/domains/[domain-name]` (TypeScript, camelCase for files/folders)
+    - Use templates for consistent code style and folder structure
+    - Place `plopfile.mjs` in the project root folder
+    - Place the `generators` folder in the project root (e.g., `/generators`), containing actions and templates
+
 ### Package Manager
 
 - **bun** as the preferred package manager
@@ -52,32 +60,39 @@ All React boilerplate projects should follow this folder structure:
 
 ```
 src/
-├── components/           # Reusable UI components
-│   ├── ui/              # Base UI components (buttons, inputs, etc.)
-│   └── common/          # Shared business components
-├── pages/               # Page components (route components)
-├── domains/             # Domain-specific components and logic
+├── core/                 # Core application logic
+│   ├── api/              # API handling logic and Axios configuration
+│   ├── i18n/             # Internationalization logic
+│   ├── locale/           # Locale-specific resources
+│   └── config/           # Environment and settings config
+├── components/           # Reusable UI components (Atomic Design: atoms, molecules, organisms, templates, pages)
+│   ├── ui/               # ShadcnUI components
+│   ├── atoms/            # Smallest UI elements (buttons, inputs, etc.)
+│   ├── molecules/        # Combinations of atoms (form fields, cards, etc.)
+│   ├── organisms/        # Complex UI sections (navbars, modals, etc.)
+│   ├── templates/        # Page-level layouts
+│   └── pages/            # Route components
+├── domains/              # Domain-specific components and logic
 │   └── [domain-name]/
-│       ├── components/  # Domain-specific components
-│       ├── hooks/       # Domain-specific custom hooks
-│       ├── types/       # Domain-specific TypeScript types
-│       └── api/         # Domain-specific API calls
-├── shared/              # Shared utilities and configurations
-│   ├── hooks/           # Global custom hooks
-│   ├── lib/             # Utility functions and configurations
-│   │   ├── api.ts       # API client setup
-│   │   ├── utils.ts     # General utilities
+│       ├── components/   # Domain-specific components
+│       ├── hooks/        # Domain-specific custom hooks
+│       ├── types/        # Domain-specific TypeScript types
+│       └── api/          # Domain-specific API calls
+├── shared/               # Shared utilities and configurations
+│   ├── hooks/            # Global custom hooks
+│   ├── lib/              # Utility functions and configurations
+│   │   ├── utils.ts      # General utilities
 │   │   └── validations.ts # Zod schemas
-│   ├── store/           # Zustand stores
-│   ├── types/           # Global TypeScript types
-│   ├── assets/          # Static assets (images, fonts, etc.)
-│   └── styles/          # Global styles and Tailwind config
+│   ├── store/            # Zustand stores
+│   ├── types/            # Global TypeScript types
+│   ├── assets/           # Static assets (images, fonts, etc.)
+│   └── styles/           # Global styles and Tailwind config
 ```
 
 ## Naming Conventions
 
 - **Component names** should be written in **PascalCase** (e.g., `UserProfile`, `LoginForm`).
-- **Function, hook, and folder names** should be written in **camelCase** (e.g., `useAuth`, `fetchUserData`, `userProfile`).
+- **All other names** (functions, hooks, folders, files, variables) should use **camelCase** (e.g., `useAuth`, `fetchUserData`, `userProfile`).
 
 ## Process
 
