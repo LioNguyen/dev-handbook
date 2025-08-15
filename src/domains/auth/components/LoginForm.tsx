@@ -2,8 +2,10 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Eye, EyeOff, Loader2 } from 'lucide-react'
-import { Button, Input, Card } from '@/components/ui'
+import { Button, Card } from '@/components/ui'
 import { useAuth } from '@/shared/hooks'
+import { useFormValidation } from '@/shared/hooks/useValidatedForm'
+import { ValidatedInput } from '@/shared/components/ValidatedInput'
 import {
   authSchemas,
   type LoginForm as LoginFormData,
@@ -22,13 +24,12 @@ export const LoginForm = ({
   className,
 }: LoginFormProps) => {
   const [showPassword, setShowPassword] = useState(false)
-  const { login, isLoading, error, clearError } = useAuth()
+  const { login, clearError } = useAuth()
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-    setError,
+    formState: { errors, touchedFields },
   } = useForm<LoginFormData>({
     resolver: zodResolver(authSchemas.login),
     defaultValues: {
@@ -36,19 +37,31 @@ export const LoginForm = ({
       password: '',
       rememberMe: false,
     },
+    mode: 'onTouched',
   })
 
-  const onSubmit = async (data: LoginFormData) => {
-    try {
+  const validation = useFormValidation<LoginFormData>({
+    onSubmit: async (data) => {
       clearError()
       await login(data.email, data.password)
-      onSuccess?.()
-    } catch (error) {
-      if (error instanceof Error) {
-        setError('root', { message: error.message })
-      }
-    }
+      validation.setSuccessMessage('Successfully logged in!')
+      setTimeout(() => {
+        onSuccess?.()
+      }, 1000)
+    },
+    onError: (errors) => {
+      console.error('Login errors:', errors)
+    },
+  })
+
+  const { formState, handleFormSubmit, getFieldError } = validation
+
+  const onFormSubmit = async (data: LoginFormData) => {
+    await handleFormSubmit(data)
   }
+
+  const emailError = getFieldError('email', errors, touchedFields)
+  const passwordError = getFieldError('password', errors, touchedFields)
 
   return (
     <Card className={cn('w-full max-w-md p-6', className)}>
@@ -62,7 +75,7 @@ export const LoginForm = ({
           </p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
           <div className="space-y-2">
             <label
               htmlFor="email"
@@ -70,18 +83,14 @@ export const LoginForm = ({
             >
               Email address
             </label>
-            <Input
+            <ValidatedInput
               id="email"
               type="email"
               placeholder="Enter your email"
               {...register('email')}
-              className={cn(errors.email && 'border-red-500')}
+              error={errors.email?.message}
+              touched={emailError.touched}
             />
-            {errors.email && (
-              <p className="text-sm text-red-600 dark:text-red-400">
-                {errors.email.message}
-              </p>
-            )}
           </div>
 
           <div className="space-y-2">
@@ -92,12 +101,14 @@ export const LoginForm = ({
               Password
             </label>
             <div className="relative">
-              <Input
+              <ValidatedInput
                 id="password"
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Enter your password"
                 {...register('password')}
-                className={cn('pr-10', errors.password && 'border-red-500')}
+                className="pr-10"
+                error={errors.password?.message}
+                touched={passwordError.touched}
               />
               <button
                 type="button"
@@ -111,11 +122,6 @@ export const LoginForm = ({
                 )}
               </button>
             </div>
-            {errors.password && (
-              <p className="text-sm text-red-600 dark:text-red-400">
-                {errors.password.message}
-              </p>
-            )}
           </div>
 
           <div className="flex items-center justify-between">
@@ -142,10 +148,10 @@ export const LoginForm = ({
             </button>
           </div>
 
-          {(error || errors.root) && (
+          {Object.keys(formState.serverErrors).length > 0 && (
             <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
               <p className="text-sm text-red-600 dark:text-red-400">
-                {error || errors.root?.message}
+                {Object.values(formState.serverErrors)[0]}
               </p>
             </div>
           )}
@@ -153,12 +159,12 @@ export const LoginForm = ({
           <Button
             type="submit"
             className="w-full"
-            disabled={isLoading || isSubmitting}
+            disabled={formState.isSubmitting}
           >
-            {(isLoading || isSubmitting) && (
+            {formState.isSubmitting && (
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
             )}
-            {isLoading || isSubmitting ? 'Signing in...' : 'Sign in'}
+            {formState.isSubmitting ? 'Signing in...' : 'Sign in'}
           </Button>
         </form>
 

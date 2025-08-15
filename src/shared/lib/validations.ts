@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import type { FieldError, FieldErrors } from 'react-hook-form'
 
 // Common validation patterns
 export const ValidationMessages = {
@@ -251,6 +252,215 @@ export const isValidField = <T>(
   } catch {
     return false
   }
+}
+
+// Enhanced validation utilities
+export const validationUtils = {
+  // Check if a field has errors
+  hasError: (fieldName: string, errors: FieldErrors): boolean => {
+    return !!errors[fieldName]
+  },
+
+  // Get error message for a field
+  getErrorMessage: (
+    fieldName: string,
+    errors: FieldErrors
+  ): string | undefined => {
+    const error = errors[fieldName] as FieldError | undefined
+    return error?.message
+  },
+
+  // Get all error messages as array
+  getAllErrors: (errors: FieldErrors): string[] => {
+    const messages: string[] = []
+
+    const extractErrors = (obj: Record<string, unknown>, path = ''): void => {
+      Object.keys(obj).forEach((key) => {
+        const fullPath = path ? `${path}.${key}` : key
+        const value = obj[key]
+
+        if (
+          value &&
+          typeof value === 'object' &&
+          'message' in value &&
+          typeof value.message === 'string'
+        ) {
+          messages.push(value.message)
+        } else if (
+          value &&
+          typeof value === 'object' &&
+          !Array.isArray(value)
+        ) {
+          extractErrors(value as Record<string, unknown>, fullPath)
+        }
+      })
+    }
+
+    extractErrors(errors)
+    return messages
+  },
+
+  // Format server errors for display
+  formatServerErrors: (
+    serverErrors: Record<string, string | string[]>
+  ): Record<string, { message: string }> => {
+    const formatted: Record<string, { message: string }> = {}
+
+    Object.entries(serverErrors).forEach(([field, error]) => {
+      if (Array.isArray(error)) {
+        formatted[field] = { message: error.join(', ') }
+      } else if (typeof error === 'string') {
+        formatted[field] = { message: error }
+      }
+    })
+
+    return formatted
+  },
+
+  // Validate specific field value
+  validateField: <T>(
+    schema: z.ZodSchema<T>,
+    value: unknown
+  ): { success: boolean; error?: string } => {
+    try {
+      schema.parse(value)
+      return { success: true }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return { success: false, error: error.issues[0]?.message }
+      }
+      return { success: false, error: 'Invalid value' }
+    }
+  },
+
+  // Debounced field validation
+  createDebouncedValidator: <T>(schema: z.ZodSchema<T>, delay = 300) => {
+    let timeoutId: NodeJS.Timeout | null = null
+
+    return (
+      value: unknown,
+      callback: (result: { success: boolean; error?: string }) => void
+    ) => {
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
+
+      timeoutId = setTimeout(() => {
+        const result = validationUtils.validateField(schema, value)
+        callback(result)
+      }, delay)
+    }
+  },
+}
+
+// Enhanced common validations with better error messages
+export const enhancedValidations = {
+  // Email with additional validation
+  strictEmail: z
+    .string()
+    .min(1, ValidationMessages.required)
+    .email(ValidationMessages.email)
+    .refine(
+      (email) => {
+        // Check for common email format issues
+        const hasValidDomain = email.includes('.') && !email.endsWith('.')
+        const hasValidLocal = !email.startsWith('.') && !email.includes('..')
+        return hasValidDomain && hasValidLocal
+      },
+      { message: 'Please enter a valid email format' }
+    ),
+
+  // Strong password validation
+  strongPassword: z
+    .string()
+    .min(1, ValidationMessages.required)
+    .min(8, ValidationMessages.minLength(8))
+    .max(128, ValidationMessages.maxLength(128))
+    .regex(
+      /^(?=.*[a-z])/,
+      'Password must contain at least one lowercase letter'
+    )
+    .regex(
+      /^(?=.*[A-Z])/,
+      'Password must contain at least one uppercase letter'
+    )
+    .regex(/^(?=.*\d)/, 'Password must contain at least one number')
+    .regex(
+      /^(?=.*[@$!%*?&])/,
+      'Password must contain at least one special character'
+    ),
+
+  // Username validation
+  username: z
+    .string()
+    .min(1, ValidationMessages.required)
+    .min(3, ValidationMessages.minLength(3))
+    .max(30, ValidationMessages.maxLength(30))
+    .regex(
+      /^[a-zA-Z0-9_]+$/,
+      'Username can only contain letters, numbers, and underscores'
+    )
+    .regex(/^[a-zA-Z]/, 'Username must start with a letter'),
+
+  // File validation
+  file: z
+    .custom<File>()
+    .refine((file) => file instanceof File, 'Please select a file')
+    .refine(
+      (file) => file.size <= 5 * 1024 * 1024,
+      'File size must be less than 5MB'
+    ),
+
+  // Image file validation
+  imageFile: z
+    .custom<File>()
+    .refine((file) => file instanceof File, 'Please select a file')
+    .refine(
+      (file) => file.size <= 2 * 1024 * 1024,
+      'Image size must be less than 2MB'
+    )
+    .refine(
+      (file) =>
+        ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(
+          file.type
+        ),
+      'Only JPEG, PNG, GIF, and WebP images are allowed'
+    ),
+
+  // Date validations
+  pastDate: z
+    .date()
+    .refine((date) => date < new Date(), 'Date must be in the past'),
+
+  futureDate: z
+    .date()
+    .refine((date) => date > new Date(), 'Date must be in the future'),
+
+  dateRange: (minDate?: Date, maxDate?: Date) =>
+    z.date().refine((date) => {
+      if (minDate && date < minDate) return false
+      if (maxDate && date > maxDate) return false
+      return true
+    }, `Date must be between ${minDate?.toLocaleDateString()} and ${maxDate?.toLocaleDateString()}`),
+
+  // Number validations
+  currency: z
+    .number()
+    .positive('Amount must be positive')
+    .multipleOf(0.01, 'Amount can only have up to 2 decimal places')
+    .max(999999.99, 'Amount cannot exceed $999,999.99'),
+
+  percentage: z
+    .number()
+    .min(0, 'Percentage cannot be negative')
+    .max(100, 'Percentage cannot exceed 100%'),
+
+  // Array validations
+  nonEmptyArray: <T>(itemSchema: z.ZodSchema<T>) =>
+    z.array(itemSchema).min(1, 'At least one item is required'),
+
+  maxItems: <T>(itemSchema: z.ZodSchema<T>, max: number) =>
+    z.array(itemSchema).max(max, `Cannot have more than ${max} items`),
 }
 
 // Schema composition helpers
