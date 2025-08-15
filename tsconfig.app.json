@@ -23,7 +23,21 @@
       "@/domains/*": ["./src/domains/*"],
       "@/shared/*": ["./src/shared/*"],
       "@/pages/*": ["./src/pages/*"],
-      "@/assets/*": ["./src/assets/*"]
+      "@/assets/*": ["./src/assets/*"],
+      "@/core/*": ["./src/core/*"],
+      "@/ui/*": ["./src/components/ui/*"],
+      "@/molecules/*": ["./src/components/molecules/*"],
+      "@/organisms/*": ["./src/components/organisms/*"],
+      "@/templates/*": ["./src/components/templates/*"],
+      "@/api": ["./src/core/api"],
+      "@/config": ["./src/core/config"],
+      "@/i18n": ["./src/core/i18n"],
+      "@/locale": ["./src/core/locale"],
+      "@/hooks": ["./src/shared/hooks"],
+      "@/lib": ["./src/shared/lib"],
+      "@/store": ["./src/shared/store"],
+      "@/types": ["./src/shared/types"],
+      "@/styles": ["./src/shared/styles"]
     },
 
     /* Linting */
