@@ -21,20 +21,34 @@ This guide covers the development workflow for the React Boilerplate project.
 \`\`\`
 src/
 ├── components/ # UI components (Atomic Design)
-│ ├── ui/ # Atoms (Button, Input, etc.)
+│ ├── atoms/ # Atoms (Button, Input, etc.)
 │ ├── molecules/ # Molecules (SearchInput, UserAvatar)
-│ ├── organisms/ # Organisms (NavigationBar)
+│ ├── organisms/ # Organisms (NavigationBar, ErrorBoundary)
 │ └── templates/ # Templates (Layout components)
+├── core/ # Core application infrastructure
+│ ├── api/ # API client and configuration
+│ ├── config/ # Application configuration
+│ ├── hooks/ # Core React hooks
+│ ├── i18n/ # Internationalization
+│ │ └── locale/ # Locale-specific translations
+│ │ ├── en/ # English translations
+│ │ │ └── default.ts # Default namespace
+│ │ └── vi/ # Vietnamese translations
+│ │ └── default.ts # Default namespace
+│ └── routing/ # Enhanced routing and lazy loading
+│ ├── AppRoutes.tsx # Main route configuration
+│ ├── lazyLoader.ts # Enhanced lazy loading utilities
+│ └── routes.tsx # Pre-configured lazy components
 ├── domains/ # Domain-driven features
 │ ├── auth/ # Authentication domain
 │ ├── users/ # User management domain
 │ └── dashboard/ # Dashboard domain
 ├── shared/ # Shared utilities
 │ ├── hooks/ # Custom React hooks
-│ ├── lib/ # Utility functions
+│ ├── utils/ # Utility functions and HOCs
 │ ├── store/ # Zustand stores
 │ ├── types/ # TypeScript types
-│ └── api/ # API client setup
+│ └── assets/ # Static assets
 ├── pages/ # Route components
 └── assets/ # Static assets
 \`\`\`
@@ -126,7 +140,7 @@ The project follows Atomic Design principles:
 
 Basic building blocks (Button, Input, Typography)
 \`\`\`tsx
-// src/components/ui/Button.tsx
+// src/components/atoms/Button.tsx
 export function Button({ children, ...props }) {
 return <button {...props}>{children}</button>
 }
@@ -137,7 +151,7 @@ return <button {...props}>{children}</button>
 Simple combinations of atoms (SearchInput, UserAvatar)
 \`\`\`tsx
 // src/components/molecules/SearchInput.tsx
-import { Input } from '@/components/ui/Input'
+import { Input } from '@/components/atoms'
 import { Search } from 'lucide-react'
 
 export function SearchInput({ onSearch }) {
@@ -279,3 +293,69 @@ VITE_APP_NAME=React Boilerplate
 - Review existing components for patterns
 - Run tests to understand expected behavior
 - Check the GitHub Issues for similar problems
+
+## Lazy Loading & Code Splitting
+
+The project includes an enhanced lazy loading system for optimal performance:
+
+### Basic Lazy Loading
+
+```tsx
+// Use pre-configured lazy components from core routing
+import { HomePage, DashboardPage } from '@/core/routing'
+```
+
+### Enhanced Error Handling
+
+```tsx
+// Use enhanced versions with error boundaries
+import { lazyLoaders } from '@/core/routing'
+import { withLazyWrapper } from '@/shared/utils'
+
+// Create custom enhanced components
+const EnhancedComponent = withLazyWrapper(MyLazyComponent, {
+  componentName: 'MyComponent',
+  loadingFallback: <CustomLoader />,
+})
+
+// Or use pre-configured loaders
+const DashboardWidget = lazyLoaders.dashboard(
+  () => import('./DashboardWidget'),
+  'DashboardWidget'
+)
+```
+
+### Performance Optimization
+
+```tsx
+import { advancedLazyLoading } from '@/shared/lib/performance'
+
+// Preload on hover
+const preloadProps = advancedLazyLoading.preloadOnHover(
+  () => import('./HeavyComponent')
+)
+
+// Preload during idle time
+advancedLazyLoading.preloadOnIdle([
+  () => import('./CriticalComponent1'),
+  () => import('./CriticalComponent2'),
+])
+```
+
+See the [Lazy Loading Guide](./lazy-loading-guide.md) for detailed documentation.
+
+## CSS & Styling
+
+The project uses Tailwind CSS v4 with the Vite plugin for styling:
+
+### Tailwind CSS Setup
+
+- Main styles in `src/index.css` (CSS format for v4 compatibility)
+- Component styles in SCSS files (`src/App.scss`, `src/shared/styles/globals.scss`)
+- Uses `@tailwindcss/vite` plugin for optimal integration
+
+### Important Notes
+
+- Use `src/index.css` for Tailwind imports to avoid Sass deprecation warnings
+- SCSS files are used for component-specific styles and variables
+- The project uses CSS custom properties for theming

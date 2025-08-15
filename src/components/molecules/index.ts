@@ -6,6 +6,19 @@
 export { SearchInput } from './SearchInput'
 export { UserAvatar } from './UserAvatar'
 
+// Form-related molecules
+export { ValidatedInput } from './ValidatedInput'
+export {
+  FormErrors,
+  FieldError,
+  ServerErrors,
+  SuccessMessage,
+  FormMessage,
+} from './FormErrors'
+
+// Error fallback components
+export { LazyErrorFallback } from './LazyErrorFallback'
+
 // Example exports (to be uncommented when components are added):
 // export { FormField } from './FormField'
 // export { ActionCard } from './ActionCard'

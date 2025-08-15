@@ -5,6 +5,15 @@
 // Export all organism components here as they are created
 export { NavigationBar } from './NavigationBar'
 
+// Error handling and providers
+export {
+  ErrorBoundary,
+  withErrorBoundary,
+  useErrorBoundary,
+} from './ErrorBoundary'
+export { ThemeProvider, ThemeToggle } from './ThemeProvider'
+export { LazyComponentWrapper } from './LazyComponentWrapper'
+
 // Example exports (to be uncommented when components are added):
 // export { Sidebar } from './Sidebar'
 // export { Header } from './Header'

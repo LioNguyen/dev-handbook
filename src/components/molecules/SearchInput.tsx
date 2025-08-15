@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { Search, X } from 'lucide-react'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
-import { cn } from '@/shared/lib/utils'
+import { Button } from '@/components/atoms/Button'
+import { Input } from '@/components/atoms/Input'
+import { cn } from '@/shared/utils/utils'
 
 export interface SearchInputProps {
   placeholder?: string

@@ -1,14 +1,12 @@
 // Shared utilities and constants
-export * from './lib'
+export * from './utils'
 export * from './types'
 export * from './hooks'
-export * from './components'
 
 // Store exports (avoiding conflicts)
-export { useThemeStore, useUIStore, useAuthStore } from './store'
-export type { Theme, User } from './store'
+export { useThemeStore, useUIStore } from './store'
+export type { Theme } from './store'
 
 // Re-export commonly used items
-export { cn } from './lib/utils'
+export { cn } from './utils/utils'
 export { useLocalStorage, useTheme } from './hooks'
-export { ThemeProvider, ThemeToggle } from './components'

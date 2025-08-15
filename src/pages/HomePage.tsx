@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, Shield, Zap, Users, Code } from 'lucide-react'
-import { Button, Card } from '@/components/ui'
-import { useAuth } from '@/shared/hooks'
+import { Button, Card } from '@/components/atoms'
 
 import { type LucideIcon } from 'lucide-react'
 
@@ -28,8 +27,6 @@ const FeatureCard = ({
 )
 
 export const HomePage = () => {
-  const { isAuthenticated } = useAuth()
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Navigation */}
@@ -46,20 +43,9 @@ export const HomePage = () => {
             </div>
 
             <div className="flex items-center gap-4">
-              {isAuthenticated ? (
-                <Link to="/dashboard">
-                  <Button>Go to Dashboard</Button>
-                </Link>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <Link to="/login">
-                    <Button variant="ghost">Sign In</Button>
-                  </Link>
-                  <Link to="/login">
-                    <Button>Get Started</Button>
-                  </Link>
-                </div>
-              )}
+              <Link to="/dashboard">
+                <Button>Go to Dashboard</Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -81,19 +67,17 @@ export const HomePage = () => {
             principles and best practices.
           </p>
 
-          {!isAuthenticated && (
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/login">
-                <Button size="lg" className="w-full sm:w-auto">
-                  Get Started
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                View Documentation
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/dashboard">
+              <Button size="lg" className="w-full sm:w-auto">
+                Get Started
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-            </div>
-          )}
+            </Link>
+            <Button variant="outline" size="lg" className="w-full sm:w-auto">
+              View Documentation
+            </Button>
+          </div>
         </div>
       </section>
 
@@ -146,14 +130,12 @@ export const HomePage = () => {
               Start with a solid foundation and focus on building your features.
             </p>
 
-            {!isAuthenticated && (
-              <Link to="/login">
-                <Button size="lg">
-                  Get Started Now
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-            )}
+            <Link to="/dashboard">
+              <Button size="lg">
+                Get Started Now
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
           </Card>
         </div>
       </section>

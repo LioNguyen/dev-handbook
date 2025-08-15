@@ -14,6 +14,18 @@ export {
   CardContent,
 } from './Card'
 
+// Loading components
+export {
+  LoadingSpinner,
+  Skeleton,
+  LoadingCard,
+  LoadingTable,
+  LoadingAvatar,
+  LoadingPage,
+  LoadingOverlay,
+  LoadingButton,
+} from './Loading'
+
 // Example exports (to be uncommented when components are added):
 // export { Badge } from './Badge'
 // export { Avatar } from './Avatar'

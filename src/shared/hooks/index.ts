@@ -1,13 +1,22 @@
-export { useLocalStorage } from './useLocalStorage'
-export { useTheme } from './useTheme'
-export { useResponsive, useBreakpoint, useMediaQuery } from './useResponsive'
+// Re-export core hooks for convenience
 export {
-  useAuth,
-  useAuthUser,
-  useAuthLoading,
-  useAuthError,
-  useIsAuthenticated,
-  useAuthActions,
-} from './useAuth'
-export { useCrud, useUsers, usePosts } from './useCrud'
+  useCrud,
+  usePosts,
+  useLocalStorage,
+  useResponsive,
+  useBreakpoint,
+  useMediaQuery,
+  usePrevious,
+} from '@/core/hooks'
+
+// Project-specific hooks
+export { useAuth } from './useAuth'
+export { useTheme } from './useTheme'
 export { useFormValidation } from './useValidatedForm'
+export {
+  useRoutePerformance,
+  useIntersectionObserver,
+  useMemoryMonitor,
+  usePerformanceBudget,
+  usePreloadResources,
+} from './usePerformance'

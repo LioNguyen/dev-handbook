@@ -9,10 +9,10 @@ import {
   Moon,
   Monitor,
 } from 'lucide-react'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@/components/atoms/Button'
 import { UserAvatar } from '@/components/molecules/UserAvatar'
 import { useTheme } from '@/shared/hooks/useTheme'
-import { cn } from '@/shared/lib/utils'
+import { cn } from '@/shared/utils/utils'
 
 // Theme toggle component for navigation bar
 const ThemeToggleButton = () => {

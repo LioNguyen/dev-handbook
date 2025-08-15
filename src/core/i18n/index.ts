@@ -1,5 +1,11 @@
 import { createContext, useContext } from 'react'
-import type { SupportedLocale } from '@/core/config'
+import en from './locale/en/default'
+import vi from './locale/vi/default'
+
+export const locales = {
+  en,
+  vi,
+} as const
 
 // Translation key type
 export type TranslationKey = string
@@ -76,3 +82,20 @@ export function formatDate(
   const dateObj = typeof date === 'string' ? new Date(date) : date
   return new Intl.DateTimeFormat(locale, options).format(dateObj)
 }
+
+// Type for all translation keys (using string values instead of literal types)
+export type TranslationKeys = Record<string, unknown>
+
+// Type for supported locales
+export type SupportedLocale = keyof typeof locales
+
+// Get locale data
+export function getLocaleData(
+  locale: SupportedLocale
+): Record<string, unknown> {
+  return locales[locale] || locales.en
+}
+
+// Export individual locales
+export { en, vi }
+export default locales

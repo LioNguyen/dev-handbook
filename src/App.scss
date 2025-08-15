@@ -1,0 +1,59 @@
+// Variables
+$primary-blue: #646cff;
+$react-blue: #61dafb;
+$text-muted: #888;
+$logo-size: 6em;
+$logo-padding: 1.5em;
+$card-padding: 2em;
+$content-padding: 2rem;
+$max-width: 1280px;
+
+// Root styles
+#root {
+  max-width: $max-width;
+  margin: 0 auto;
+  padding: $content-padding;
+  text-align: center;
+}
+
+// Logo styles
+.logo {
+  height: $logo-size;
+  padding: $logo-padding;
+  will-change: filter;
+  transition: filter 300ms;
+
+  &:hover {
+    filter: drop-shadow(0 0 2em #{$primary-blue}aa);
+  }
+
+  &.react:hover {
+    filter: drop-shadow(0 0 2em #{$react-blue}aa);
+  }
+}
+
+// Animations
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Media queries
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+// Components
+.card {
+  padding: $card-padding;
+}
+
+.read-the-docs {
+  color: $text-muted;
+}

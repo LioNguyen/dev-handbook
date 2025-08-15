@@ -1,4 +1,15 @@
-import type { User } from '@/shared/store/authStore'
+// Mock user type
+export interface User {
+  id: string
+  name: string
+  email: string
+  role: 'admin' | 'user' | 'moderator'
+  avatar?: string
+  createdAt: string
+  updatedAt: string
+  isActive: boolean
+  lastLoginAt?: string
+}
 
 // Mock user data
 export const mockUsers: User[] = [
@@ -11,6 +22,8 @@ export const mockUsers: User[] = [
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
     createdAt: '2024-01-01T00:00:00.000Z',
     updatedAt: '2024-01-01T00:00:00.000Z',
+    isActive: true,
+    lastLoginAt: '2024-01-20T10:30:00.000Z',
   },
   {
     id: '2',
@@ -21,6 +34,8 @@ export const mockUsers: User[] = [
       'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
     createdAt: '2024-01-02T00:00:00.000Z',
     updatedAt: '2024-01-02T00:00:00.000Z',
+    isActive: true,
+    lastLoginAt: '2024-01-19T14:15:00.000Z',
   },
   {
     id: '3',
@@ -31,6 +46,8 @@ export const mockUsers: User[] = [
       'https://images.unsplash.com/photo-1494790108755-2616b612d1bb?w=100&h=100&fit=crop&crop=face',
     createdAt: '2024-01-03T00:00:00.000Z',
     updatedAt: '2024-01-03T00:00:00.000Z',
+    isActive: true,
+    lastLoginAt: '2024-01-18T09:45:00.000Z',
   },
   {
     id: '4',
@@ -39,6 +56,7 @@ export const mockUsers: User[] = [
     role: 'user',
     createdAt: '2024-01-04T00:00:00.000Z',
     updatedAt: '2024-01-04T00:00:00.000Z',
+    isActive: false,
   },
   {
     id: '5',
@@ -49,6 +67,8 @@ export const mockUsers: User[] = [
       'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
     createdAt: '2024-01-05T00:00:00.000Z',
     updatedAt: '2024-01-05T00:00:00.000Z',
+    isActive: true,
+    lastLoginAt: '2024-01-17T16:20:00.000Z',
   },
 ]
 

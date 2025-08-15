@@ -6,6 +6,9 @@
 export { DashboardLayout } from './DashboardLayout'
 export { AuthLayout } from './AuthLayout'
 
+// Route templates
+export { ProtectedRoute } from './ProtectedRoute'
+
 // Example exports (to be uncommented when components are added):
 // export { PublicLayout } from './PublicLayout'
 // export { SettingsLayout } from './SettingsLayout'

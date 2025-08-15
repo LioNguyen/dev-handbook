@@ -3,7 +3,6 @@
 
 // Public pages
 export { HomePage } from './HomePage'
-export { LoginPage } from './LoginPage'
 
 // Protected pages
 export { DashboardPage } from './DashboardPage'

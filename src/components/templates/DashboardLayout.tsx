@@ -4,7 +4,7 @@ import {
   type NavigationItem,
   type User,
 } from '@/components/organisms/NavigationBar'
-import { cn } from '@/shared/lib/utils'
+import { cn } from '@/shared/utils/utils'
 
 export interface DashboardLayoutProps {
   children: React.ReactNode

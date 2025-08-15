@@ -64,7 +64,7 @@ export interface TopUser {
   avatar?: string
   sessionsCount: number
   lastActive: string
-  role: 'admin' | 'user'
+  role: 'admin' | 'user' | 'moderator'
 }
 
 export interface DashboardData {

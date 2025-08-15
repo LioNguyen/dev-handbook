@@ -5,8 +5,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/Card'
-import { cn } from '@/shared/lib/utils'
+} from '@/components/atoms/Card'
+import { cn } from '@/shared/utils/utils'
 
 export interface AuthLayoutProps {
   children: React.ReactNode

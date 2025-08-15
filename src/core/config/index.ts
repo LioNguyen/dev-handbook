@@ -53,7 +53,7 @@ export const config = {
   // Internationalization
   i18n: {
     defaultLocale: 'en',
-    supportedLocales: ['en', 'es', 'fr', 'de', 'ja', 'zh'],
+    supportedLocales: ['en', 'vi'],
     fallbackLocale: 'en',
   },
 
