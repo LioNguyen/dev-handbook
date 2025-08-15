@@ -11,8 +11,8 @@ export type {
 } from './auth/types'
 export type {
   User as UserType,
-  UsersListParams,
-  UsersListResponse,
+  UserListParams,
+  UserListResponse,
 } from './users/types'
 export type {
   DashboardStats,

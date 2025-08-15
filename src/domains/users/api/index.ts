@@ -1,2 +1,2 @@
-// Users API functions will be exported here
-// export { getUsers, getUser, createUser, updateUser, deleteUser } from './users'
+export { usersApi } from './users'
+export type { UsersApiInterface } from './users'

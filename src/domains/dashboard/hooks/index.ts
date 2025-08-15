@@ -1,3 +1,5 @@
-// Dashboard hooks will be exported here
-// export { useDashboardData } from './useDashboardData'
-// export { useDashboardStats } from './useDashboardStats'
+export { useDashboardData } from './useDashboardData'
+export { useDashboardStats } from './useDashboardStats'
+export { useRecentActivities } from './useRecentActivities'
+export { useSystemHealth } from './useSystemHealth'
+export { useTopUsers } from './useTopUsers'

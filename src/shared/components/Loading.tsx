@@ -268,29 +268,3 @@ export const LoadingButton = ({
     {loading && loadingText ? loadingText : children}
   </button>
 )
-
-// HOC for adding loading states
-export const withLoading = <P extends object>(
-  Component: React.ComponentType<P>,
-  LoadingComponent: React.ComponentType = () => <LoadingSpinner />
-) => {
-  return ({ isLoading, ...props }: P & { isLoading?: boolean }) => {
-    if (isLoading) {
-      return <LoadingComponent />
-    }
-
-    return <Component {...(props as P)} />
-  }
-}
-
-export default {
-  LoadingSpinner,
-  Skeleton,
-  LoadingCard,
-  LoadingTable,
-  LoadingAvatar,
-  LoadingPage,
-  LoadingOverlay,
-  LoadingButton,
-  withLoading,
-}

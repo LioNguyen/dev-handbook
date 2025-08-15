@@ -14,5 +14,5 @@ export {
   LoadingPage,
   LoadingOverlay,
   LoadingButton,
-  withLoading,
 } from './Loading'
+export { withLoading } from './withLoading'

@@ -1,3 +1,6 @@
-// Dashboard components will be exported here
-// export { DashboardStats } from './DashboardStats'
-// export { DashboardCharts } from './DashboardCharts'
+export { DashboardOverview } from './DashboardOverview'
+export { StatsCards } from './StatsCards'
+export { ChartCard } from './ChartCard'
+export { RecentActivityList } from './RecentActivityList'
+export { SystemHealthCard } from './SystemHealthCard'
+export { TopUsersList } from './TopUsersList'

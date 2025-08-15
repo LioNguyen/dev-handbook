@@ -2,7 +2,11 @@
 // Central export point for all page components
 
 // Public pages
-// export { HomePage } from './HomePage'
+export { HomePage } from './HomePage'
+export { LoginPage } from './LoginPage'
+
+// Protected pages
+export { DashboardPage } from './DashboardPage'
 // export { AboutPage } from './AboutPage'
 // export { ContactPage } from './ContactPage'
 // export { LandingPage } from './LandingPage'

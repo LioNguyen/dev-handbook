@@ -1,41 +1,34 @@
-export interface User {
-  id: string
-  email: string
-  firstName: string
-  lastName: string
-  avatar?: string
-  role: 'admin' | 'user'
-  status: 'active' | 'inactive' | 'pending'
-  createdAt: string
-  updatedAt: string
-}
+import type { User } from '@/shared/store/authStore'
+
+// Re-export User for convenience
+export type { User } from '@/shared/store/authStore'
 
 export interface CreateUserData {
   email: string
-  firstName: string
-  lastName: string
-  role?: 'admin' | 'user'
+  name: string
+  avatar?: string
+  role: 'admin' | 'user'
 }
 
 export interface UpdateUserData {
-  firstName?: string
-  lastName?: string
+  name?: string
   avatar?: string
   role?: 'admin' | 'user'
-  status?: 'active' | 'inactive' | 'pending'
 }
 
-export interface UsersListParams {
-  page?: number
-  limit?: number
+export interface UserFilters {
   search?: string
-  role?: 'admin' | 'user'
-  status?: 'active' | 'inactive' | 'pending'
-  sortBy?: 'firstName' | 'lastName' | 'email' | 'createdAt'
+  role?: 'admin' | 'user' | 'all'
+  sortBy?: 'name' | 'email' | 'createdAt' | 'updatedAt'
   sortOrder?: 'asc' | 'desc'
 }
 
-export interface UsersListResponse {
+export interface UserListParams extends UserFilters {
+  page?: number
+  limit?: number
+}
+
+export interface UserListResponse {
   users: User[]
   pagination: {
     page: number
@@ -43,4 +36,12 @@ export interface UsersListResponse {
     total: number
     totalPages: number
   }
+}
+
+export interface UserStats {
+  total: number
+  admins: number
+  users: number
+  active: number
+  recent: number
 }

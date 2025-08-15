@@ -1,3 +1,4 @@
-// Auth components will be exported here
-// export { LoginForm } from './LoginForm'
-// export { RegisterForm } from './RegisterForm'
+// Auth components
+export { LoginForm } from './LoginForm'
+export { RegisterForm } from './RegisterForm'
+export { LogoutButton } from './LogoutButton'
