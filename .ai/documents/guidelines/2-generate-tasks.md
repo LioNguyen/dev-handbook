@@ -132,7 +132,7 @@ To guide development teams in breaking down PRDs and requests into manageable, f
 
 ### Task Documentation Location
 
-**ALWAYS create task documents in the hierarchical `.github/documents/features/` folder structure:**
+**ALWAYS create task documents in the hierarchical `.ai/documents/features/` folder structure:**
 
 1. **Use hierarchical organization**: `/features/{domain}/{module}/{task}.md`
 2. **Domain-specific structure**: Use `auth`, `dashboard`, or `users` as top-level categories
@@ -147,7 +147,7 @@ To guide development teams in breaking down PRDs and requests into manageable, f
 
 **ALWAYS use the standardized task template for consistent documentation while ensuring rule compliance:**
 
-1. **Template Location**: `.github/documents/templates/2-task-template.md`
+1. **Template Location**: `.ai/documents/templates/2-task-template.md`
 2. **Mandatory Usage**: All task documents must follow this template structure and include compliance verification
 3. **Rule Compliance**: Each task must explicitly reference adherence to core development and technical architecture rules
 4. **Hierarchical Organization**: Place completed task documents in `/features/{domain}/{module}/` structure

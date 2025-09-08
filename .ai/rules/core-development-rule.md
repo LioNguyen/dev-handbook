@@ -1,14 +1,36 @@
 # Core Development Rules for React Boilerplate
 
-## Overview
+## Table of Contents
+
+- [Core Development Rules for React Boilerplate](#core-development-rules-for-react-boilerplate)
+  - [Table of Contents](#table-of-contents)
+  - [1. Overview](#1-overview)
+  - [2. ⚠️ CRITICAL: Modern React Application Scope](#2-️-critical-modern-react-application-scope)
+    - [2.1. Repository Scope Definition:](#21-repository-scope-definition)
+    - [2.2. Explicitly Out of Scope:](#22-explicitly-out-of-scope)
+  - [3. Core Principles](#3-core-principles)
+    - [3.1. Modern React Development Approach](#31-modern-react-development-approach)
+    - [3.2. Documentation as Critical Infrastructure](#32-documentation-as-critical-infrastructure)
+    - [3.3. Component-First Thinking](#33-component-first-thinking)
+  - [4. 🔥 Critical Rules (ALWAYS Follow)](#4--critical-rules-always-follow)
+    - [4.1. Build Validation Before Code Task Completion](#41-build-validation-before-code-task-completion)
+    - [4.2. Documentation-First Development](#42-documentation-first-development)
+    - [4.3. Critical Documentation Review](#43-critical-documentation-review)
+  - [5. 🏗️ React Architecture Rules](#5-️-react-architecture-rules)
+    - [5.1. Component Library Management](#51-component-library-management)
+    - [5.2. Domain Boundary Management](#52-domain-boundary-management)
+  - [6. 📋 Code Quality Standards for React](#6--code-quality-standards-for-react)
+  - [7. Related Guidelines](#7-related-guidelines)
+
+## 1. Overview
 
 This document establishes the fundamental development principles and standards for the React Boilerplate project. These rules ensure consistency, maintainability, and scalability across the modern React application built with Vite, TypeScript, and contemporary tooling.
 
-## ⚠️ CRITICAL: Modern React Application Scope
+## 2. ⚠️ CRITICAL: Modern React Application Scope
 
 **THIS IS A MODERN REACT APPLICATION REPOSITORY. All development activities must focus on frontend implementation using modern tools and practices.**
 
-### Repository Scope Definition:
+### 2.1. Repository Scope Definition:
 
 - **React Application**: Single-page application with React 19, TypeScript, and Vite
 - **Component Libraries**: Reusable UI components following atomic design principles
@@ -16,7 +38,7 @@ This document establishes the fundamental development principles and standards f
 - **API Integration**: Frontend service layers that consume external APIs
 - **State Management**: Zustand for state management, React Query for server state
 
-### Explicitly Out of Scope:
+### 2.2. Explicitly Out of Scope:
 
 - Backend API development or implementation
 - Database design, queries, or management
@@ -25,35 +47,13 @@ This document establishes the fundamental development principles and standards f
 - Server-side authentication systems
 - Backend data processing or analytics
 
-## Table of Contents
-
-- [Core Development Rules for React Boilerplate](#core-development-rules-for-react-boilerplate)
-  - [Overview](#overview)
-  - [⚠️ CRITICAL: Modern React Application Scope](#️-critical-modern-react-application-scope)
-    - [Repository Scope Definition:](#repository-scope-definition)
-    - [Explicitly Out of Scope:](#explicitly-out-of-scope)
-  - [Table of Contents](#table-of-contents)
-  - [Core Principles](#core-principles)
-    - [Modern React Development Approach](#modern-react-development-approach)
-    - [Documentation as Critical Infrastructure](#documentation-as-critical-infrastructure)
-    - [Component-First Thinking](#component-first-thinking)
-  - [🔥 Critical Rules (ALWAYS Follow)](#-critical-rules-always-follow)
-    - [1. Build Validation Before Task Completion](#1-build-validation-before-task-completion)
-    - [2. Documentation-First Development](#2-documentation-first-development)
-    - [3. Critical Documentation Review](#3-critical-documentation-review)
-  - [🏗️ React Architecture Rules](#️-react-architecture-rules)
-    - [9. Component Library Management](#9-component-library-management)
-    - [10. Domain Boundary Management](#10-domain-boundary-management)
-  - [📋 Code Quality Standards for React](#-code-quality-standards-for-react)
-  - [Related Guidelines](#related-guidelines)
-
-## Core Principles
+## 3. Core Principles
 
 These rules establish a **modern React, documentation-driven, component-aware development approach** that ensures scalability, maintainability, and knowledge retention across the React Boilerplate project. This workspace follows a domain-driven architecture with atomic design principles for component organization.
 
 > 📁 **For navigation and folder overview**, see [`../documents/index.md`](../documents/index.md)
 
-### Modern React Development Approach
+### 3.1. Modern React Development Approach
 
 **All development activities must focus on modern React implementation, with backend services treated as external dependencies.**
 
@@ -63,7 +63,7 @@ These rules establish a **modern React, documentation-driven, component-aware de
 - **Modern React Patterns**: Use functional components, hooks, and modern React patterns
 - **Performance Optimization**: Optimize for frontend performance using React best practices
 
-### Documentation as Critical Infrastructure
+### 3.2. Documentation as Critical Infrastructure
 
 In a modern React application, documentation is not optional—it's critical infrastructure that enables:
 
@@ -72,7 +72,7 @@ In a modern React application, documentation is not optional—it's critical inf
 - **State Management**: Understanding of state management patterns and data flow
 - **Knowledge Preservation**: Institutional memory for complex architectural decisions
 
-### Component-First Thinking
+### 3.3. Component-First Thinking
 
 Every development decision must consider:
 
@@ -81,17 +81,35 @@ Every development decision must consider:
 - **Composition**: How components compose together to build features
 - **Performance**: Impact on bundle size and runtime performance
 
-## 🔥 Critical Rules (ALWAYS Follow)
+## 4. 🔥 Critical Rules (ALWAYS Follow)
 
-### 1. Build Validation Before Task Completion
+### 4.1. Build Validation Before Code Task Completion
 
-**ALWAYS run build to verify no errors before completing any step:**
+**ALWAYS run build to verify no errors before completing code-related tasks:**
 
-- **Pre-completion Check**: Execute `bun run build` before marking any task as complete
+- **Code Tasks Only**: Execute `bun run build` before marking any **code implementation task** as complete
+- **Documentation Tasks Excluded**: Pure documentation tasks (writing docs, updating guides, creating templates) do not require build validation
 - **Error Resolution**: If build fails, immediately investigate and fix all compilation errors
 - **Type Safety**: Ensure TypeScript compilation passes without errors or warnings
 - **Bundle Verification**: Confirm production build generates successfully
 - **Dependency Check**: Verify all imports and dependencies resolve correctly
+
+**Tasks Requiring Build Validation:**
+
+- Component implementation or modification
+- API integration and service layer changes
+- State management updates (Zustand stores, React Query)
+- Routing and navigation changes
+- Configuration changes affecting build process
+- Dependency updates or package installations
+
+**Tasks NOT Requiring Build Validation:**
+
+- Pure documentation writing or updates
+- Template creation or modification
+- Guidelines and process documentation
+- README updates and project documentation
+- Design documentation and wireframes
 
 **Build Validation Process:**
 
@@ -109,11 +127,11 @@ Every development decision must consider:
 - `bun run build`: Production build verification
 - `bun run test:run`: Unit test validation
 
-### 2. Documentation-First Development
+### 4.2. Documentation-First Development
 
 **ALWAYS document first, for every task:**
 
-- **Scan existing documents** in `.github/documents/` before starting any task
+- **Scan existing documents** in `.ai/documents/` before starting any task
 - **Use relevant information** from existing documentation and update with latest requirements
 - **If no relevant documents exist**, write documentation before coding
 - **Update documentation** as requirements evolve during development
@@ -121,13 +139,13 @@ Every development decision must consider:
 
 **Implementation Process:**
 
-1. Search `.github/documents/` for relevant existing documentation
+1. Search `.ai/documents/` for relevant existing documentation
 2. Review and analyze existing content for applicability across domains
 3. Update existing documents OR create new ones as needed
 4. Consider impact on component library and shared utilities
 5. Proceed with implementation only after documentation is complete
 
-### 3. Critical Documentation Review
+### 4.3. Critical Documentation Review
 
 **BE CRITICAL AND STRICT on all documents:**
 
@@ -145,9 +163,9 @@ Every development decision must consider:
 4. Validate that document serves its intended purpose for the React architecture
 5. Update or reject documents that don't meet quality standards
 
-## 🏗️ React Architecture Rules
+## 5. 🏗️ React Architecture Rules
 
-### 9. Component Library Management
+### 5.1. Component Library Management
 
 **ALWAYS consider component reusability for cross-domain features:**
 
@@ -165,7 +183,7 @@ Every development decision must consider:
 4. **Plan maintenance**: How will updates be managed across usages?
 5. **Document decisions**: Record rationale for sharing vs. duplicating
 
-### 10. Domain Boundary Management
+### 5.2. Domain Boundary Management
 
 **ALWAYS maintain clear domain boundaries:**
 
@@ -183,7 +201,7 @@ Every development decision must consider:
 4. **Plan component structure**: How do components compose together?
 5. **Document boundaries**: Clear documentation of what belongs where
 
-## 📋 Code Quality Standards for React
+## 6. 📋 Code Quality Standards for React
 
 **ALWAYS maintain high code quality across the application:**
 
@@ -201,13 +219,13 @@ Every development decision must consider:
 4. **Type checking**: Strict TypeScript enforcement across the codebase
 5. **Documentation updates**: Code changes accompanied by documentation updates
 
-## Related Guidelines
+## 7. Related Guidelines
 
 For detailed guidelines on specific development processes, refer to:
 
-- **PRD Creation**: See `.github/documents/guidelines/1-create-prd.md`
-- **Task Generation**: See `.github/documents/guidelines/2-generate-tasks.md`
-- **Task Management**: See `.github/documents/guidelines/3-process-task-list.md`
+- **PRD Creation**: See `.ai/documents/guidelines/1-create-prd.md`
+- **Task Generation**: See `.ai/documents/guidelines/2-generate-tasks.md`
+- **Task Management**: See `.ai/documents/guidelines/3-process-task-list.md`
 
 ---
 

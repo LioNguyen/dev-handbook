@@ -123,10 +123,10 @@ When writing PRDs, consider the main domains in the React Boilerplate:
 ### Before Writing a PRD
 
 1. **Review Development Rules**: Study [Core Development Rules](../../rules/core-development-rule.md) and [Technical Architecture Rules](../../rules/technical-architecture-rule.md) to ensure compliance
-2. **Check Existing PRDs**: Review existing PRDs in `.github/documents/requirements/` folder to understand current numbering sequence
+2. **Check Existing PRDs**: Review existing PRDs in `.ai/documents/requirements/` folder to understand current numbering sequence
 3. **Sequential Numbering**: Continue PRD numbering from the highest existing number (e.g., if highest is `3-user-management-prd.md`, create `4-new-feature-prd.md`)
-4. **Document First**: Create or update PRD in `.github/documents/requirements/` with cross-domain analysis following documentation-first principles
-5. **Use PRD Template**: Start with the standardized PRD template at `.github/documents/templates/1-prd-template.md`
+4. **Document First**: Create or update PRD in `.ai/documents/requirements/` with cross-domain analysis following documentation-first principles
+5. **Use PRD Template**: Start with the standardized PRD template at `.ai/documents/templates/1-prd-template.md`
 6. **Set Creation Date**: Run `date +%Y-%m-%d` in terminal first, then use the output date when creating new PRDs
 7. **Architecture Decision**: Determine shared component vs. domain-specific implementation following technical architecture guidelines
 8. **Technical Design**: Create or update architecture docs with React component considerations ensuring alignment with established standards

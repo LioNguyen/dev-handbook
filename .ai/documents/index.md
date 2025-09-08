@@ -48,7 +48,7 @@ Welcome to the central navigation hub for the React Boilerplate documentation sy
 ## 1.2 Documentation Structure
 
 ```
-.github/
+.ai/
 ├── documents/
 │   ├── architecture/          # System design & technical specifications
 │   ├── requirements/          # Product requirements & feature specifications

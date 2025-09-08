@@ -1,11 +1,54 @@
 ````markdown
 # Technical Architecture Documentation
 
-## ⚠️ CRITICAL: Modern React Application Architecture
+## Table of Contents
+
+1. [⚠️ CRITICAL: Modern React Application Architecture](#1-️-critical-modern-react-application-architecture)
+   1.1. [Architecture Scope](#11-architecture-scope)
+   1.2. [Styling Standards](#12-styling-standards)
+   1.3. [shadcn/ui Integration Guidelines](#13-shadcnui-integration-guidelines)
+   1.4. [Version Compatibility Verification](#14-version-compatibility-verification)
+   1.5. [Version Check Process](#15-version-check-process)
+   1.6. [External Dependencies](#16-external-dependencies)
+2. [Overview](#2-overview)
+   2.1. [Project Description](#21-project-description)
+   2.2. [Technology Stack](#22-technology-stack)
+3. [Architecture Principles](#3-architecture-principles)
+   3.1. [Modern React Principles](#31-modern-react-principles)
+   3.2. [Code Organization Principles](#32-code-organization-principles)
+4. [System Architecture](#4-system-architecture)
+   4.1. [High-Level Architecture](#41-high-level-architecture)
+   4.2. [Application Communication](#42-application-communication)
+5. [Application Layer](#5-application-layer)
+   5.1. [Application Structure](#51-application-structure)
+   5.2. [Component Standards](#52-component-standards)
+   5.3. [Route Structure](#53-route-structure)
+   5.4. [State Management Patterns](#54-state-management-patterns)
+   5.5. [API Structure](#55-api-structure)
+6. [Component Architecture](#6-component-architecture)
+   6.1. [Atomic Design Structure](#61-atomic-design-structure)
+   6.2. [Component Organization](#62-component-organization)
+   6.3. [Component Documentation Standards](#63-component-documentation-standards)
+7. [Development Infrastructure](#7-development-infrastructure)
+   7.1. [Vite Configuration](#71-vite-configuration)
+   7.2. [Build Configuration](#72-build-configuration)
+8. [Build and Deployment](#8-build-and-deployment)
+   8.1. [Build Process](#81-build-process)
+   8.2. [Bun Scripts](#82-bun-scripts)
+9. [Testing Strategy](#9-testing-strategy)
+   9.1. [Unit Testing](#91-unit-testing)
+   9.2. [End-to-End Testing](#92-end-to-end-testing)
+   9.3. [Testing Best Practices](#93-testing-best-practices)
+10. [Development Guidelines](#10-development-guidelines)
+    10.1. [Architecture Guidelines](#101-architecture-guidelines)
+    10.2. [Performance Guidelines](#102-performance-guidelines)
+    10.3. [Documentation Standards](#103-documentation-standards)
+
+## 1. ⚠️ CRITICAL: Modern React Application Architecture
 
 **THIS REPOSITORY CONTAINS A MODERN REACT APPLICATION WITH CONTEMPORARY TOOLING. Backend services are external dependencies.**
 
-### Architecture Scope:
+### 1.1. Architecture Scope:
 
 - **React Application**: Single-page application built with React 19 and TypeScript
 - **Build System**: Vite bundler with modern development experience
@@ -14,7 +57,7 @@
 - **State Management**: Zustand for application state, React Query for server state
 - **Styling**: Tailwind CSS with shadcn/ui components for design system
 
-### Styling Standards:
+### 1.2. Styling Standards:
 
 **ALWAYS use Tailwind CSS with shadcn/ui for consistent styling across the application:**
 
@@ -24,7 +67,7 @@
 - **Customization**: Extend Tailwind config for project-specific design requirements
 - **Performance**: Optimized CSS bundle through utility purging
 
-**shadcn/ui Integration Guidelines:**
+### 1.3. shadcn/ui Integration Guidelines:
 
 - Use shadcn/ui components as foundation for custom component development
 - Customize shadcn/ui components through Tailwind utility classes
@@ -32,7 +75,7 @@
 - Follow shadcn/ui naming conventions and component structure
 - Leverage Radix UI primitives for accessibility and behavior
 
-### Version Compatibility Verification:
+### 1.4. Version Compatibility Verification:
 
 **ALWAYS check package.json for current versions and fetch online documentation:**
 
@@ -42,7 +85,7 @@
 - **API Compatibility**: Ensure code examples match current version capabilities
 - **Migration Guides**: Follow official migration guides for version updates
 
-**Version Check Process:**
+### 1.5. Version Check Process:
 
 1. Run `grep -E "(tailwindcss|@radix-ui)" package.json` to identify current versions
 2. Visit official documentation for exact version matches
@@ -50,7 +93,7 @@
 4. Check for deprecated features in current versions
 5. Update implementation to match current version best practices
 
-### External Dependencies (Not in This Repository):
+### 1.6. External Dependencies (Not in This Repository):
 
 - Backend APIs and microservices
 - Database systems and data storage
@@ -58,25 +101,13 @@
 - Backend infrastructure and DevOps systems
 - Server-side business logic and processing
 
-## Table of Contents
+## 2. Overview
 
-1. [Overview](#1-overview)
-2. [Architecture Principles](#2-architecture-principles)
-3. [System Architecture](#3-system-architecture)
-4. [Application Layer](#4-application-layer)
-5. [Component Architecture](#5-component-architecture)
-6. [Development Infrastructure](#6-development-infrastructure)
-7. [Build and Deployment](#7-build-and-deployment)
-8. [Testing Strategy](#8-testing-strategy)
-9. [Development Guidelines](#9-development-guidelines)
-
-## 1. Overview
-
-### 1.1 Project Description
+### 2.1. Project Description
 
 React Boilerplate is a modern React application built with contemporary tools and best practices. The system follows domain-driven design principles with atomic design methodology for component organization, providing a scalable foundation for building complex user interfaces.
 
-### 1.2 Technology Stack
+### 2.2. Technology Stack
 
 - **Framework**: React 19 with TypeScript (Latest React features)
 - **Build Tool**: Vite for fast development and optimized builds
@@ -87,25 +118,25 @@ React Boilerplate is a modern React application built with contemporary tools an
 - **Code Quality**: ESLint, Prettier, Husky for git hooks
 - **API Integration**: Axios for HTTP client with React Query integration
 
-## 2. Architecture Principles
+## 3. Architecture Principles
 
-### 2.1 Modern React Principles
+### 3.1. Modern React Principles
 
 - **Functional Components**: Use function components with hooks exclusively
 - **Composition over Inheritance**: Favor component composition patterns
 - **Declarative Programming**: Write declarative, predictable React code
 - **Performance by Default**: Implement performance optimizations from the start
 
-### 2.2 Code Organization Principles
+### 3.2. Code Organization Principles
 
 - **Domain-Driven Design**: Code organized by business domains
 - **Atomic Design**: UI components follow atomic design methodology
 - **Single Responsibility**: Each module has a single, well-defined purpose
 - **Dependency Inversion**: High-level modules don't depend on low-level modules
 
-## 3. System Architecture
+## 4. System Architecture
 
-### 3.1 High-Level Architecture
+### 4.1. High-Level Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -123,16 +154,16 @@ React Boilerplate is a modern React application built with contemporary tools an
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 3.2 Application Communication
+### 4.2. Application Communication
 
 - **Component Props**: Data flow through component hierarchy
 - **React Context**: Shared state for component trees
 - **Zustand Stores**: Global state management for complex state
 - **React Query**: Server state management and caching
 
-## 4. Application Layer
+## 5. Application Layer
 
-### 4.1 Application Structure
+### 5.1. Application Structure
 
 The application follows a domain-driven structure:
 
@@ -163,9 +194,9 @@ src/
     └── utils/             # Helper functions
 ```
 
-### 4.2 Component Standards
+### 5.2. Component Standards
 
-#### 4.2.1 React Component Standards
+#### 5.2.1. React Component Standards
 
 - **Use React.FC<> with memo**: All functional components must use React.FC<> type annotation and be wrapped with memo from React
 - **Props Interface**: Define props interface above component with alphabetical ordering
@@ -224,7 +255,7 @@ export const UserCard: FC<UserCardProps> = memo(({
 }, isEqual);
 ```
 
-#### 4.2.2 Import Organization Standards
+#### 5.2.2. Import Organization Standards
 
 - **Library imports first**: External libraries and React imports
 - **Custom imports second**: Internal modules and components
@@ -243,7 +274,7 @@ import { useAuthStore } from '@/shared/store/auth'
 import type { User } from '@/shared/types/User'
 ```
 
-#### 4.2.3 Technology Preferences
+#### 5.2.3. Technology Preferences
 
 - **State Management**: Use Zustand for new global state management
 - **Server State**: Use React Query (TanStack Query) for all server state
@@ -277,7 +308,7 @@ export const useUsers = () => {
 }
 ```
 
-### 4.3 Route Structure
+### 5.3. Route Structure
 
 ```typescript
 // Route configuration pattern
@@ -305,9 +336,9 @@ export const AppRoutes = () => {
 };
 ```
 
-### 4.4 State Management Patterns
+### 5.4. State Management Patterns
 
-#### 4.4.1 Zustand Store Template
+#### 5.4.1. Zustand Store Template
 
 ```typescript
 import { create } from 'zustand'
@@ -349,7 +380,7 @@ export const useUserStore = create<UserState & UserActions>()(
 )
 ```
 
-#### 4.4.2 React Query Integration
+#### 5.4.2. React Query Integration
 
 ```typescript
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -377,7 +408,7 @@ export const useCreateUser = () => {
 }
 ```
 
-### 4.5 API Structure
+### 5.5. API Structure
 
 ```typescript
 // Base API Service
@@ -424,16 +455,16 @@ export class UserService extends BaseApiService {
 export const userService = new UserService(process.env.VITE_API_URL!)
 ```
 
-## 5. Component Architecture
+## 6. Component Architecture
 
-### 5.1 Atomic Design Structure
+### 6.1. Atomic Design Structure
 
 - **Atoms**: Basic building blocks (Button, Input, Typography)
 - **Molecules**: Simple combinations (SearchInput, FormField)
 - **Organisms**: Complex UI sections (NavigationBar, UserCard)
 - **Templates**: Page layouts (AuthLayout, DashboardLayout)
 
-### 5.2 Component Organization
+### 6.2. Component Organization
 
 ```
 src/components/
@@ -463,7 +494,7 @@ src/components/
     └── index.ts
 ```
 
-### 5.3 Component Documentation Standards
+### 6.3. Component Documentation Standards
 
 Each component should include:
 
@@ -472,30 +503,30 @@ Each component should include:
 - **Test coverage** for all props and interactions
 - **Storybook stories** for visual documentation
 
-## 6. Development Infrastructure
+## 7. Development Infrastructure
 
-### 6.1 Vite Configuration
+### 7.1. Vite Configuration
 
 - **Fast Development**: Vite provides extremely fast HMR and development server
 - **Modern Build**: Optimized production builds with tree shaking and code splitting
 - **TypeScript Support**: First-class TypeScript support with type checking
 
-### 6.2 Build Configuration
+### 7.2. Build Configuration
 
 - **Vite**: Fast development server and optimized production builds
 - **TypeScript**: Strict type checking across the application
 - **Bundle Optimization**: Code splitting and tree shaking for optimal performance
 
-## 7. Build and Deployment
+## 8. Build and Deployment
 
-### 7.1 Build Process
+### 8.1. Build Process
 
 - **Development**: `bun dev` for local development with hot reload
 - **Production**: `bun build` for optimized production builds
 - **Testing**: `bun test` for running test suites
 - **Type Checking**: `bun type-check` for TypeScript validation
 
-### 7.2 Bun Scripts
+### 8.2. Bun Scripts
 
 ```json
 {
@@ -511,21 +542,21 @@ Each component should include:
 }
 ```
 
-## 8. Testing Strategy
+## 9. Testing Strategy
 
-### 8.1 Unit Testing
+### 9.1. Unit Testing
 
 - **Framework**: Vitest with React Testing Library
 - **Coverage**: Minimum 80% code coverage requirement
 - **Mocking**: Mock Service Worker (MSW) for API mocking
 
-### 8.2 End-to-End Testing
+### 9.2. End-to-End Testing
 
 - **Framework**: Playwright for cross-browser testing
 - **Test Organization**: Page Object Model pattern
 - **CI Integration**: Automated testing in deployment pipeline
 
-### 8.3 Testing Best Practices
+### 9.3. Testing Best Practices
 
 ```typescript
 // Component testing example
@@ -547,21 +578,21 @@ describe('Button', () => {
 });
 ```
 
-## 9. Development Guidelines
+## 10. Development Guidelines
 
-### 9.1 Architecture Guidelines
+### 10.1. Architecture Guidelines
 
 - **Domain Organization**: Domain-driven module structure
 - **Component Architecture**: Atomic design principles with React.FC and memo
 - **Import Standards**: Library imports first, alphabetical ordering, alias usage
 
-### 9.2 Performance Guidelines
+### 10.2. Performance Guidelines
 
 - **Optimization Strategies**: Code splitting, lazy loading, memoization
 - **Memory Management**: Proper cleanup of subscriptions and event listeners
 - **Bundle Analysis**: Regular monitoring of bundle sizes with Vite build analyzer
 
-### 9.3 Documentation Standards
+### 10.3. Documentation Standards
 
 - **Code Documentation**: Comprehensive inline comments for complex logic
 - **Component Documentation**: Props interfaces with JSDoc comments

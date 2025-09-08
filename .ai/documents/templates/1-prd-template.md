@@ -148,7 +148,7 @@
 
 - **Document Type**: Product Requirements Document
 - **Project Name**: [Project Name]
-- **PRD Number**: [Sequential number based on existing PRDs - check `.github/documents/requirements/` folder]
+- **PRD Number**: [Sequential number based on existing PRDs - check `.ai/documents/requirements/` folder]
 - **Version**: [Version Number]
 - **Date Created**: [Date - Run `date +%Y-%m-%d` in terminal first]
 - **Last Updated**: [Date - Run `date +%Y-%m-%d` in terminal first]
@@ -159,7 +159,7 @@
 
 ### PRD Numbering Guidelines
 
-1. **Check Existing PRDs**: Review all PRDs in `.github/documents/requirements/` folder
+1. **Check Existing PRDs**: Review all PRDs in `.ai/documents/requirements/` folder
 2. **Find Highest Number**: Identify the highest existing PRD number (e.g., `3-user-management-prd.md`)
 3. **Continue Sequence**: Use the next sequential number for this PRD (e.g., `4-new-feature-prd.md`)
 4. **Naming Convention**: Use format `[number]-[descriptive-name]-prd.md` (e.g., `5-user-authentication-prd.md`)
