@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "buildCommand": "cd ../.. && bun install && bun run build --filter=frontend --filter=backend",
+  "outputDirectory": "apps/frontend/dist",
+  "builds": [
+    {
+      "src": "apps/backend/package.json",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "apps/backend/dist/main.js"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "apps/frontend/dist/index.html"
+    }
+  ],
+  "env": {
+    "PYTHON_API_URL": "@python_api_url"
+  }
+}

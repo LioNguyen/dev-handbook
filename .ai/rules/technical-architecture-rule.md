@@ -1,19 +1,48 @@
 # Technical Architecture Documentation
 
-## 1. ⚠️ CRITICAL: Modern React Application Architecture
+## 1. ⚠️ CRITICAL: Bun + Turborepo Monorepo Architecture
 
-**THIS REPOSITORY CONTAINS A MODERN REACT APPLICATION WITH CONTEMPORARY TOOLING. Backend services are external dependencies.**
+**THIS REPOSITORY IS A PRODUCTION-READY MONOREPO featuring React frontend, NestJS backend, and Python FastAPI data service, orchestrated with Turborepo and Bun.**
 
 ### 1.1. Architecture Scope:
 
-- **React Application**: Single-page application built with React 19 and TypeScript
-- **Build System**: Vite bundler with modern development experience
+- **Monorepo Structure**: Turborepo workspace with multiple applications and shared packages
+- **Frontend Application**: React 19 + Vite + TypeScript single-page application
+- **Backend API**: NestJS API server for file upload and proxy to data service
+- **Data Service**: Python FastAPI service for data analysis (Excel, XML)
+- **Shared Package**: TypeScript types shared across frontend and backend
 - **Package Management**: Bun for fast package management and script execution
+- **Build Orchestration**: Turborepo for efficient task running and caching
 - **Testing Stack**: Vitest for unit testing, Playwright for end-to-end testing
 - **State Management**: Zustand for application state, React Query for server state
 - **Styling**: Tailwind CSS with shadcn/ui components for design system
 
-### 1.2. Styling Standards:
+### 1.2. Monorepo Structure:
+
+```
+monorepo/
+├── apps/
+│   ├── frontend/       # React 19 + Vite + TailwindCSS (Port 5173)
+│   ├── backend/        # NestJS API server (Port 3000)
+│   └── data-service/   # Python FastAPI data processing (Port 8000)
+├── packages/
+│   └── shared/         # Shared TypeScript types
+├── package.json        # Root workspace config
+├── turbo.json          # Turborepo configuration
+└── .env                # Environment variables
+```
+
+### 1.3. Service Communication:
+
+```
+Frontend (5173) → Backend (3000) → Python Service (8000)
+     ↓                ↓                    ↓
+  UI Layer      API Gateway        Data Processing
+     ↓                ↓                    ↓
+React Query      NestJS             FastAPI + Pandas
+```
+
+### 1.4. Styling Standards:
 
 **ALWAYS use Tailwind CSS with shadcn/ui for consistent styling across the application:**
 
@@ -43,93 +72,208 @@
 
 ### 1.5. Version Check Process:
 
-1. Run `grep -E "(tailwindcss|@radix-ui)" package.json` to identify current versions
+1. Run `grep -E "(tailwindcss|@radix-ui)" apps/frontend/package.json` to identify current versions
 2. Visit official documentation for exact version matches
 3. Verify API compatibility for all used features
 4. Check for deprecated features in current versions
 5. Update implementation to match current version best practices
 
-### 1.6. External Dependencies (Not in This Repository):
+### 1.6. Service Responsibilities:
 
-- Backend APIs and microservices
-- Database systems and data storage
-- Authentication servers and identity providers
-- Backend infrastructure and DevOps systems
-- Server-side business logic and processing
+**Frontend (apps/frontend):**
+
+- React 19 UI with Atomic Design components
+- Vite dev server with hot module replacement
+- API integration via React Query
+- File upload functionality for Excel/XML
+- Tailwind CSS + shadcn/ui styling
+
+**Backend (apps/backend):**
+
+- NestJS API gateway
+- CORS-enabled for frontend communication
+- Multer for file upload handling
+- Proxy layer to Python data service
+- Health check endpoints
+
+**Python Service (apps/data-service):**
+
+- FastAPI data processing service
+- Excel analysis with Pandas
+- XML structure analysis
+- File validation and cleanup
+- RESTful API endpoints
+
+**Shared Package (packages/shared):**
+
+- TypeScript type definitions for Excel/XML analysis
+- File validation utilities
+- Common constants and enums
+- Accessible via workspace protocol
 
 ## 2. Overview
 
 ### 2.1. Project Description
 
-React Boilerplate is a modern React application built with contemporary tools and best practices. The system follows domain-driven design principles with atomic design methodology for component organization, providing a scalable foundation for building complex user interfaces.
+This is a production-ready Bun + Turborepo monorepo featuring a modern React frontend, NestJS backend API, and Python FastAPI data processing service. The system follows domain-driven design principles with atomic design methodology for component organization, providing a scalable foundation for building full-stack applications with data analysis capabilities.
 
 ### 2.2. Technology Stack
 
-- **Framework**: React 19 with TypeScript (Latest React features)
-- **Build Tool**: Vite for fast development and optimized builds
-- **Package Manager**: Bun (ultra-fast JavaScript runtime and package manager)
-- **Styling**: Tailwind CSS with utility-first approach
-- **State Management**: Zustand for client state, React Query for server state
+**Workspace Tools:**
+
+- **Monorepo**: Turborepo 2.5.8 for task orchestration
+- **Package Manager**: Bun 1.1.33 (ultra-fast JavaScript runtime)
+- **Workspaces**: Bun workspaces for dependency management
+
+**Frontend (apps/frontend):**
+
+- **Framework**: React 19.1.1 with TypeScript 5.8.3
+- **Build Tool**: Vite 7.1.2 for fast development and optimized builds
+- **Styling**: TailwindCSS 4.1.12 with utility-first approach
+- **State Management**: Zustand 5.0.7 for client state, React Query 5.85.3 for server state
 - **Testing**: Vitest for unit testing, Playwright for E2E testing
 - **Code Quality**: ESLint, Prettier, Husky for git hooks
-- **API Integration**: Axios for HTTP client with React Query integration
+- **Routing**: React Router 7.8.0
+- **Forms**: React Hook Form with Zod validation
+
+**Backend (apps/backend):**
+
+- **Framework**: NestJS 10.3.0 with TypeScript 5.8.3
+- **File Upload**: Multer for multipart form data
+- **HTTP Client**: Axios for Python service communication
+- **CORS**: Enabled for frontend integration
+- **Build**: Webpack with ts-loader
+
+**Data Service (apps/data-service):**
+
+- **Framework**: FastAPI 0.109.0 (Python web framework)
+- **Server**: Uvicorn 0.27.0 (ASGI server)
+- **Data Processing**: Pandas 2.2.0 for data analysis
+- **Excel Support**: OpenPyXL 3.1.2 for Excel file handling
+- **CORS**: Configured for backend communication
+
+**Shared (packages/shared):**
+
+- **TypeScript**: Type definitions for cross-service communication
+- **Validators**: File validation utilities
+- **Constants**: Shared enumerations and constants
 
 ## 3. Architecture Principles
 
-### 3.1. Modern React Principles
+### 3.1. Monorepo Principles
+
+- **Workspace Isolation**: Each app has its own dependencies and build configuration
+- **Shared Code**: Common types and utilities in shared packages
+- **Task Pipeline**: Turborepo orchestrates builds, tests, and lints efficiently
+- **Caching**: Task outputs cached for faster subsequent runs
+- **Parallel Execution**: Independent tasks run concurrently
+
+### 3.2. Modern React Principles (Frontend)
 
 - **Functional Components**: Use function components with hooks exclusively
 - **Composition over Inheritance**: Favor component composition patterns
 - **Declarative Programming**: Write declarative, predictable React code
 - **Performance by Default**: Implement performance optimizations from the start
 
-### 3.2. Code Organization Principles
+### 3.3. Backend API Principles
 
-- **Domain-Driven Design**: Code organized by business domains
+- **API Gateway Pattern**: Backend acts as gateway to data processing service
+- **File Upload Handling**: Multer for robust file handling
+- **Proxy Architecture**: Clean separation between API layer and data processing
+- **Health Monitoring**: Health check endpoints for service monitoring
+
+### 3.4. Code Organization Principles
+
+- **Domain-Driven Design**: Code organized by business domains (frontend modules)
 - **Atomic Design**: UI components follow atomic design methodology
 - **Single Responsibility**: Each module has a single, well-defined purpose
 - **Dependency Inversion**: High-level modules don't depend on low-level modules
+- **Workspace Dependencies**: Shared package accessible via workspace protocol
 
 ## 4. System Architecture
 
 ### 4.1. High-Level Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    React Boilerplate                       │
-├─────────────────────────────────────────────────────────────┤
-│                     Single React App                       │
-│                     (Port 3000)                            │
-├─────────────────────────────────────────────────────────────┤
-│                    Component Layers                        │
-│  ┌─────────────┬─────────────┬─────────────┬─────────────┐  │
-│  │   Atoms     │  Molecules  │  Organisms  │  Templates  │  │
-│  │             │             │             │             │  │
-│  │        Core Components (Reusable UI)                  │  │
-│  ├─────────────┼─────────────┼─────────────┼─────────────┤  │
-│  │   Modules   │   Shared    │    Core     │    Pages    │  │
-│  │  (Domain)   │  (Utils)    │   (Infra)   │  (Routes)   │  │
-│  └─────────────┴─────────────┴─────────────┴─────────────┘  │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                  Bun + Turborepo Monorepo                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────┐  │
+│  │    Frontend      │  │     Backend      │  │    Python    │  │
+│  │   React + Vite   │→ │   NestJS API     │→ │   FastAPI    │  │
+│  │   Port 5173      │  │   Port 3000      │  │   Port 8000  │  │
+│  └──────────────────┘  └──────────────────┘  └──────────────┘  │
+│          ↓                      ↓                     ↓         │
+│   ┌─────────────┐        ┌──────────┐         ┌──────────────┐ │
+│   │  Component  │        │  Multer  │         │    Pandas    │ │
+│   │    Layer    │        │   CORS   │         │   OpenPyXL   │ │
+│   └─────────────┘        └──────────┘         └──────────────┘ │
+│          ↓                                                      │
+│   ┌─────────────────────────────────────────────────────────┐  │
+│   │              Shared TypeScript Types                    │  │
+│   │         (packages/shared - workspace protocol)          │  │
+│   └─────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### 4.2. Application Communication
+### 4.2. Service Communication Flow
 
-- **Component Props**: Data flow through component hierarchy
-- **React Context**: Shared state for component trees
-- **Zustand Stores**: Global state management for complex state
-- **React Query**: Server state management and caching
+```
+User Action (Upload File)
+        ↓
+Frontend: File Selection & Validation
+        ↓
+POST /api/data/excel (React Query)
+        ↓
+Backend: Multer File Upload
+        ↓
+POST http://localhost:8000/analyze/excel (Axios)
+        ↓
+Python: Pandas Analysis
+        ↓
+Return: ExcelAnalysisResult (from shared types)
+        ↓
+Backend: Proxy Response
+        ↓
+Frontend: Display Results
+```
+
+### 4.3. Application Communication
+
+**Frontend ↔ Backend:**
+
+- **Protocol**: HTTP/REST via Vite proxy
+- **Data Format**: JSON with TypeScript types from shared package
+- **State Management**: React Query for server state caching
+
+**Backend ↔ Python:**
+
+- **Protocol**: HTTP/REST via Axios
+- **Data Format**: JSON matching shared type definitions
+- **File Transfer**: Multipart form data via Axios
+
+**Shared Types:**
+
+- **Access Method**: Workspace protocol (`"shared": "workspace:*"`)
+- **Import Path**: `import type { ExcelAnalysisResult } from 'shared'`
+- **Type Safety**: Full TypeScript support across frontend and backend
 
 ## 5. Application Layer
 
-### 5.1. Application Structure
+### 5.1. Frontend Application Structure (apps/frontend)
 
-The application follows a modular structure with atomic design principles:
+The frontend follows a modular structure with atomic design principles:
 
 ```
-src/
+apps/frontend/src/
 ├── core/                  # Core application infrastructure
 │   ├── api/               # API layer and React Query setup
+│   │   ├── client.ts      # Axios client configuration
+│   │   ├── dataApi.ts     # NEW: Excel/XML upload API
+│   │   ├── endpoints.ts   # API endpoint definitions
+│   │   ├── queryClient.ts # React Query client
+│   │   └── QueryProvider.tsx
 │   ├── components/        # Reusable UI components (Atomic Design)
 │   │   ├── atoms/         # Basic UI building blocks
 │   │   ├── molecules/     # Composite components
@@ -149,7 +293,6 @@ src/
 │   │   ├── components/    # Domain-specific components
 │   │   └── hooks/         # Domain-specific hooks
 │   └── users/             # User management module
-│       └── (same structure)
 ├── pages/                 # Page components
 ├── shared/                # Shared utilities and resources
 │   ├── assets/            # Static assets
@@ -163,9 +306,48 @@ src/
 └── test/                  # Test configuration and utilities
 ```
 
-### 5.2. Component Standards
+### 5.2. Backend Application Structure (apps/backend)
 
-#### 5.2.1. React Component Standards
+```
+apps/backend/src/
+├── main.ts                # NestJS bootstrap with CORS
+├── app.module.ts          # Root module
+├── app.controller.ts      # Health check endpoint
+├── app.service.ts         # Root service
+└── data/                  # Data processing module
+    ├── data.module.ts     # Module definition
+    ├── data.controller.ts # File upload endpoints
+    └── data.service.ts    # Proxy to Python service
+```
+
+### 5.3. Python Service Structure (apps/data-service)
+
+```
+apps/data-service/
+├── main.py                # FastAPI app with analysis endpoints
+├── requirements.txt       # Python dependencies
+├── Procfile              # Railway deployment
+├── railway.json          # Railway configuration
+└── runtime.txt           # Python version
+```
+
+### 5.4. Shared Package Structure (packages/shared)
+
+```
+packages/shared/src/
+├── types/
+│   ├── excel.ts          # ExcelAnalysisResult interface
+│   ├── xml.ts            # XMLAnalysisResult interface
+│   └── index.ts
+├── utils/
+│   ├── validators.ts     # File validation utilities
+│   └── index.ts
+└── index.ts              # Package exports
+```
+
+### 5.5. Component Standards (Frontend)
+
+#### 5.5.1. React Component Standards
 
 - **Use React.FC<> with memo**: All functional components must use React.FC<> type annotation and be wrapped with memo from React
 - **Props Interface**: Define props interface above component with alphabetical ordering
@@ -224,17 +406,18 @@ export const UserCard: FC<UserCardProps> = memo(({
 }, isEqual);
 ```
 
-#### 5.2.2. Import Organization Standards
+#### 5.5.2. Import Organization Standards (Frontend)
 
 - **Library imports first**: External libraries and React imports
 - **Custom imports second**: Internal modules and components
 - **Alphabetical ordering**: Within each group, maintain alphabetical order
-- **Alias imports**: Use @/ for internal module imports
+- **Alias imports**: Use @/ for internal module imports (apps/frontend only)
 - **Core Components**: Import from `@/core/components/` for reusable UI components
 - **Module Components**: Import from `@/modules/[module-name]/` for domain-specific components
+- **Shared Package**: Import types from `shared` package using workspace protocol
 
 ```typescript
-// ✅ Correct import organization
+// ✅ Correct import organization in frontend
 import { memo, useCallback, useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import type { FC } from 'react'
@@ -243,18 +426,56 @@ import { Button } from '@/core/components/atoms'
 import { UserService } from '@/core/api/UserService'
 import { useAuthStore } from '@/shared/store/auth'
 import type { User } from '@/modules/users/domain/types'
+
+// Import from shared package
+import type { ExcelAnalysisResult } from 'shared'
 ```
 
-#### 5.2.3. Technology Preferences
+**Backend Import Standards:**
+
+```typescript
+// ✅ Correct import organization in backend
+import { Injectable, HttpException } from '@nestjs/common'
+import { HttpService } from '@nestjs/axios'
+import type { AxiosResponse } from 'axios'
+
+// Import from shared package
+import type { ExcelAnalysisResult, XMLAnalysisResult } from 'shared'
+```
+
+#### 5.5.3. Technology Preferences
+
+**Frontend:**
 
 - **State Management**: Use Zustand for new global state management
 - **Server State**: Use React Query (TanStack Query) for all server state
 - **Styling**: Use Tailwind CSS utility classes for styling
-- **Components**: Build components following atomic design principles in `src/core/components/`
-- **Module Organization**: Organize domain logic in `src/modules/` with domain/types/enums structure
+- **Components**: Build components following atomic design principles in `apps/frontend/src/core/components/`
+- **Module Organization**: Organize domain logic in `apps/frontend/src/modules/` with domain/types/enums structure
+- **API Layer**: Use data API client from `apps/frontend/src/core/api/dataApi.ts` for file uploads
+
+**Backend:**
+
+- **Framework**: NestJS with modular architecture
+- **File Handling**: Multer for file uploads
+- **HTTP Client**: Axios for Python service communication
+- **Validation**: Class-validator for DTO validation
+- **Configuration**: @nestjs/config for environment variables
+
+**Python:**
+
+- **Framework**: FastAPI for high-performance APIs
+- **Data Processing**: Pandas for Excel/CSV analysis
+- **Excel Handling**: OpenPyXL for Excel file operations
+- **Server**: Uvicorn ASGI server
+
+**Shared:**
+
+- **Type Definitions**: TypeScript interfaces for cross-service communication
+- **Validation**: Shared validation utilities accessible to frontend and backend
 
 ```typescript
-// State management with Zustand
+// State management with Zustand (Frontend)
 import { create } from 'zustand'
 
 interface CounterStore {
@@ -269,21 +490,24 @@ export const useCounterStore = create<CounterStore>((set) => ({
   decrement: () => set((state) => ({ count: state.count - 1 })),
 }))
 
-// Server state with React Query
+// Server state with React Query (Frontend)
 import { useQuery } from '@tanstack/react-query'
+import { uploadExcelFile } from '@/core/api/dataApi'
+import type { ExcelAnalysisResult } from 'shared'
 
-export const useUsers = () => {
-  return useQuery({
-    queryKey: ['users'],
-    queryFn: () => userService.getUsers(),
+export const useExcelUpload = (file: File) => {
+  return useQuery<ExcelAnalysisResult>({
+    queryKey: ['excel-analysis', file.name],
+    queryFn: () => uploadExcelFile(file),
+    enabled: !!file,
   })
 }
 ```
 
-**Module Structure Pattern:**
+**Module Structure Pattern (Frontend):**
 
 ```typescript
-// Module organization example: src/modules/auth/
+// Module organization example: apps/frontend/src/modules/auth/
 auth/
 ├── domain/           # Domain layer
 │   ├── types/        # Type definitions
@@ -300,10 +524,20 @@ auth/
 └── index.ts          # Module exports
 ```
 
-### 5.3. Route Structure
+**Backend Module Pattern:**
 
 ```typescript
-// Route configuration pattern
+// NestJS module: apps/backend/src/data/
+data/
+├── data.module.ts     # Module definition with Multer config
+├── data.controller.ts # REST endpoints (POST /data/excel, /data/xml)
+└── data.service.ts    # Business logic (proxy to Python service)
+```
+
+### 5.6. Route Structure (Frontend)
+
+```typescript
+// Route configuration pattern in apps/frontend/src/core/routing/
 export const appRoutes = {
   home: '/',
   dashboard: '/dashboard',
@@ -328,9 +562,72 @@ export const AppRoutes = () => {
 };
 ```
 
-### 5.4. State Management Patterns
+### 5.7. Backend API Endpoints
 
-#### 5.4.1. Zustand Store Template
+```typescript
+// NestJS controllers in apps/backend/src/
+// Health check endpoint
+@Get('health')
+getHealth() {
+  return { status: 'ok', service: 'backend', timestamp: new Date().toISOString() };
+}
+
+// Excel upload endpoint
+@Post('data/excel')
+@UseInterceptors(FileInterceptor('file'))
+async uploadExcel(@UploadedFile() file: Express.Multer.File) {
+  // Proxy to Python service at http://localhost:8000/analyze/excel
+  return await this.dataService.analyzeExcel(file);
+}
+
+// XML upload endpoint
+@Post('data/xml')
+@UseInterceptors(FileInterceptor('file'))
+async uploadXML(@UploadedFile() file: Express.Multer.File) {
+  // Proxy to Python service at http://localhost:8000/analyze/xml
+  return await this.dataService.analyzeXML(file);
+}
+```
+
+### 5.8. Python Service Endpoints
+
+```python
+# FastAPI endpoints in apps/data-service/main.py
+@app.get("/")
+async def root():
+    return {"message": "Python Data Service", "version": "1.0.0"}
+
+@app.get("/health")
+async def health():
+    return {"status": "ok", "service": "python-data-service", "timestamp": datetime.now().isoformat()}
+
+@app.post("/analyze/excel")
+async def analyze_excel(file: UploadFile = File(...)):
+    # Pandas analysis returning ExcelAnalysisResult
+    df = pd.read_excel(file.file)
+    return {
+        "columns": df.columns.tolist(),
+        "rows": len(df),
+        "shape": list(df.shape),
+        "dtypes": {col: str(dtype) for col, dtype in df.dtypes.items()}
+    }
+
+@app.post("/analyze/xml")
+async def analyze_xml(file: UploadFile = File(...)):
+    # XML parsing returning XMLAnalysisResult
+    tree = ET.parse(file.file)
+    root = tree.getroot()
+    return {
+        "root": root.tag,
+        "childCount": len(root),
+        "allElements": list(set([elem.tag for elem in root.iter()])),
+        "attributes": root.attrib
+    }
+```
+
+### 5.9. State Management Patterns (Frontend)
+
+#### 5.9.1. Zustand Store Template
 
 ```typescript
 import { create } from 'zustand'
@@ -372,79 +669,134 @@ export const useUserStore = create<UserState & UserActions>()(
 )
 ```
 
-#### 5.4.2. React Query Integration
+#### 5.9.2. React Query Integration
 
 ```typescript
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { userService } from '@/core/api/userService'
+import { uploadExcelFile, uploadXMLFile } from '@/core/api/dataApi'
+import type { ExcelAnalysisResult, XMLAnalysisResult } from 'shared'
 
-// Query hook
-export const useUsers = () => {
-  return useQuery({
-    queryKey: ['users'],
-    queryFn: userService.getUsers,
+// Query hook for Excel upload
+export const useExcelAnalysis = (file: File | null) => {
+  return useQuery<ExcelAnalysisResult>({
+    queryKey: ['excel-analysis', file?.name],
+    queryFn: () => uploadExcelFile(file!),
+    enabled: !!file,
     staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }
 
-// Mutation hook
-export const useCreateUser = () => {
+// Mutation hook for file upload
+export const useFileUpload = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: userService.createUser,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] })
+    mutationFn: (data: { file: File; type: 'excel' | 'xml' }) => {
+      return data.type === 'excel'
+        ? uploadExcelFile(data.file)
+        : uploadXMLFile(data.file)
+    },
+    onSuccess: (data, variables) => {
+      queryClient.setQueryData(['file-analysis', variables.file.name], data)
     },
   })
 }
 ```
 
-### 5.5. API Structure
+### 5.10. API Structure
+
+#### 5.10.1. Frontend API Client
 
 ```typescript
-// Base API Service
-export class BaseApiService {
-  protected baseURL: string
+// Frontend data API in apps/frontend/src/core/api/dataApi.ts
+import axios from 'axios'
+import type { ExcelAnalysisResult, XMLAnalysisResult } from 'shared'
 
-  constructor(baseURL: string) {
-    this.baseURL = baseURL
-  }
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
-  protected async request<T>(
-    endpoint: string,
-    options?: RequestInit
-  ): Promise<ApiResponse<T>> {
-    const response = await fetch(`${this.baseURL}${endpoint}`, {
-      headers: { 'Content-Type': 'application/json' },
-      ...options,
-    })
+export async function uploadExcelFile(
+  file: File
+): Promise<ExcelAnalysisResult> {
+  const formData = new FormData()
+  formData.append('file', file)
 
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.statusText}`)
+  const response = await axios.post<ExcelAnalysisResult>(
+    `${API_BASE_URL}/data/excel`,
+    formData,
+    { headers: { 'Content-Type': 'multipart/form-data' } }
+  )
+
+  return response.data
+}
+
+export async function uploadXMLFile(file: File): Promise<XMLAnalysisResult> {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  const response = await axios.post<XMLAnalysisResult>(
+    `${API_BASE_URL}/data/xml`,
+    formData,
+    { headers: { 'Content-Type': 'multipart/form-data' } }
+  )
+
+  return response.data
+}
+```
+
+#### 5.10.2. Backend Service Layer
+
+```typescript
+// Backend service in apps/backend/src/data/data.service.ts
+import { Injectable, HttpException } from '@nestjs/common'
+import { HttpService } from '@nestjs/axios'
+import { firstValueFrom } from 'rxjs'
+import * as FormData from 'form-data'
+import * as fs from 'fs'
+import type { ExcelAnalysisResult, XMLAnalysisResult } from 'shared'
+
+@Injectable()
+export class DataService {
+  private readonly pythonApiUrl =
+    process.env.PYTHON_API_URL || 'http://localhost:8000'
+
+  constructor(private readonly httpService: HttpService) {}
+
+  async analyzeExcel(file: Express.Multer.File): Promise<ExcelAnalysisResult> {
+    const formData = new FormData()
+    formData.append('file', fs.createReadStream(file.path), file.originalname)
+
+    try {
+      const response = await firstValueFrom(
+        this.httpService.post<ExcelAnalysisResult>(
+          `${this.pythonApiUrl}/analyze/excel`,
+          formData,
+          { headers: formData.getHeaders() }
+        )
+      )
+      return response.data
+    } finally {
+      fs.unlinkSync(file.path) // Cleanup uploaded file
     }
+  }
 
-    return response.json()
+  async analyzeXML(file: Express.Multer.File): Promise<XMLAnalysisResult> {
+    const formData = new FormData()
+    formData.append('file', fs.createReadStream(file.path), file.originalname)
+
+    try {
+      const response = await firstValueFrom(
+        this.httpService.post<XMLAnalysisResult>(
+          `${this.pythonApiUrl}/analyze/xml`,
+          formData,
+          { headers: formData.getHeaders() }
+        )
+      )
+      return response.data
+    } finally {
+      fs.unlinkSync(file.path) // Cleanup uploaded file
+    }
   }
 }
-
-// Domain-specific service
-export class UserService extends BaseApiService {
-  async getUsers(): Promise<User[]> {
-    const response = await this.request<User[]>('/users')
-    return response.data
-  }
-
-  async createUser(userData: CreateUserRequest): Promise<User> {
-    const response = await this.request<User>('/users', {
-      method: 'POST',
-      body: JSON.stringify(userData),
-    })
-    return response.data
-  }
-}
-
-export const userService = new UserService(process.env.VITE_API_URL!)
 ```
 
 ## 6. Component Architecture
@@ -456,10 +808,10 @@ export const userService = new UserService(process.env.VITE_API_URL!)
 - **Organisms**: Complex UI sections (NavigationBar, UserCard)
 - **Templates**: Page layouts (AuthLayout, DashboardLayout)
 
-### 6.2. Component Organization
+### 6.2. Component Organization (Frontend)
 
 ```
-src/core/components/
+apps/frontend/src/core/components/
 ├── atoms/
 │   ├── Button/
 │   │   ├── Button.tsx
@@ -477,7 +829,7 @@ src/core/components/
 │   ├── SearchInput/
 │   ├── UserAvatar/
 │   ├── ValidatedInput/
-│   ├── LazyErrorFallback/
+│   ├── FileUploader/       # NEW: File upload component
 │   └── index.ts
 ├── organisms/
 │   ├── ErrorBoundary/
@@ -485,8 +837,7 @@ src/core/components/
 │   │   ├── ErrorBoundary.test.tsx
 │   │   └── index.ts
 │   ├── NavigationBar/
-│   ├── LazyComponentWrapper/
-│   ├── ThemeProvider/
+│   ├── DataAnalysisPanel/  # NEW: Data analysis display
 │   └── index.ts
 └── templates/
     ├── AuthLayout/
@@ -494,7 +845,6 @@ src/core/components/
     │   ├── AuthLayout.test.tsx
     │   └── index.ts
     ├── DashboardLayout/
-    ├── ProtectedRoute/
     └── index.ts
 ```
 
@@ -509,61 +859,251 @@ Each component should include:
 
 ## 7. Development Infrastructure
 
-### 7.1. Vite Configuration
+### 7.1. Turborepo Configuration
 
-- **Fast Development**: Vite provides extremely fast HMR and development server
-- **Modern Build**: Optimized production builds with tree shaking and code splitting
-- **TypeScript Support**: First-class TypeScript support with type checking
+```json
+// turbo.json - Task orchestration
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "build/**"]
+    },
+    "test": {
+      "cache": true,
+      "outputs": ["coverage/**"]
+    },
+    "lint": {
+      "cache": true,
+      "outputs": []
+    }
+  }
+}
+```
 
-### 7.2. Build Configuration
+### 7.2. Bun Workspace Configuration
 
-- **Vite**: Fast development server and optimized production builds
-- **TypeScript**: Strict type checking across the application
-- **Bundle Optimization**: Code splitting and tree shaking for optimal performance
+```json
+// Root package.json
+{
+  "name": "monorepo",
+  "private": true,
+  "packageManager": "bun@1.1.33",
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev": "bunx turbo run dev --parallel",
+    "dev:all": "bunx concurrently -n frontend,backend,python ...",
+    "build": "bunx turbo run build",
+    "test": "bunx turbo run test",
+    "lint": "bunx turbo run lint",
+    "type-check": "bunx turbo run type-check"
+  }
+}
+```
+
+### 7.3. Vite Configuration (Frontend)
+
+```typescript
+// apps/frontend/vite.config.ts
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import path from 'path'
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+  server: {
+    port: 5173,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+    },
+  },
+})
+```
+
+### 7.4. NestJS Configuration (Backend)
+
+```json
+// apps/backend/nest-cli.json
+{
+  "sourceRoot": "src",
+  "entryFile": "apps/backend/src/main",
+  "compilerOptions": {
+    "deleteOutDir": true
+  }
+}
+```
+
+```typescript
+// apps/backend/src/main.ts
+import { NestFactory } from '@nestjs/core'
+import { AppModule } from './app.module'
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule)
+
+  app.enableCors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+  })
+
+  await app.listen(3000)
+}
+bootstrap()
+```
+
+### 7.5. Python Configuration (Data Service)
+
+```python
+# apps/data-service/main.py
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+```
 
 ## 8. Build and Deployment
 
 ### 8.1. Build Process
 
-- **Development**: `bun dev` for local development with hot reload
-- **Production**: `bun build` for optimized production builds
-- **Testing**: `bun test` for running test suites
-- **Type Checking**: `bun type-check` for TypeScript validation
+**Development:**
 
-### 8.2. Bun Scripts
+- `bun run dev` - Start all Node.js services via Turborepo
+- `bun run dev:all` - Start all services including Python via concurrently
+- `bun run dev:python` - Start Python service only
+
+**Production:**
+
+- `bun run build` - Build all apps via Turborepo pipeline
+- Frontend: `bunx vite build` → `apps/frontend/dist/`
+- Backend: `bunx nest build` → `apps/backend/dist/apps/backend/src/`
+- Python: Pre-built, runs with `uvicorn main:app`
+
+**Testing:**
+
+- `bun run test` - Run all test suites
+- `bun run test:e2e` - Run E2E tests (frontend)
+- `bun run type-check` - TypeScript validation across all apps
+
+### 8.2. Deployment Configuration
+
+**Vercel (Frontend + Backend):**
+
+```json
+// vercel.json
+{
+  "buildCommand": "bunx turbo run build --filter=frontend --filter=backend",
+  "outputDirectory": "apps/frontend/dist",
+  "framework": "vite",
+  "env": {
+    "PYTHON_API_URL": "@python-api-url"
+  }
+}
+```
+
+**Railway (Python Service):**
+
+```json
+// apps/data-service/railway.json
+{
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "uvicorn main:app --host 0.0.0.0 --port $PORT",
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
+  }
+}
+```
+
+### 8.3. Environment Variables
+
+**Root `.env`:**
+
+```env
+NODE_ENV=development
+PORT=3000
+PYTHON_API_URL=http://localhost:8000
+VITE_API_URL=http://localhost:3000
+```
+
+**Production:**
+
+```env
+NODE_ENV=production
+PORT=3000
+PYTHON_API_URL=https://your-app.railway.app
+VITE_API_URL=https://your-app.vercel.app
+```
+
+### 8.4. Bun Scripts (Root)
 
 ```json
 {
   "scripts": {
-    "dev": "npx vite",
-    "build": "npx tsc -b && npx vite build",
-    "preview": "npx vite preview",
-    "lint": "npx eslint .",
-    "test": "npx vitest",
-    "test:e2e": "npx playwright test",
-    "type-check": "npx tsc --noEmit"
+    "dev": "bunx turbo run dev --parallel",
+    "dev:all": "bunx concurrently -n frontend,backend,python \"bunx turbo run dev --filter=frontend\" \"bunx turbo run dev --filter=backend\" \"bun run dev:python\"",
+    "dev:python": "/path/to/python main.py",
+    "build": "bunx turbo run build",
+    "test": "bunx turbo run test",
+    "test:e2e": "bunx turbo run test:e2e",
+    "lint": "bunx turbo run lint",
+    "lint:fix": "bunx turbo run lint:fix",
+    "type-check": "bunx turbo run type-check",
+    "clean": "bunx turbo run clean",
+    "clean:all": "bun run clean && rm -rf node_modules apps/*/node_modules packages/*/node_modules"
   }
 }
 ```
 
 ## 9. Testing Strategy
 
-### 9.1. Unit Testing
+### 9.1. Frontend Testing (Vitest + Playwright)
 
 - **Framework**: Vitest with React Testing Library
 - **Coverage**: Minimum 80% code coverage requirement
 - **Mocking**: Mock Service Worker (MSW) for API mocking
+- **E2E**: Playwright for cross-browser testing
+- **Location**: `apps/frontend/src/**/*.test.tsx` and `apps/frontend/tests/e2e/`
 
-### 9.2. End-to-End Testing
+### 9.2. Backend Testing (Jest)
 
-- **Framework**: Playwright for cross-browser testing
-- **Test Organization**: Page Object Model pattern
-- **CI Integration**: Automated testing in deployment pipeline
+- **Framework**: Jest (NestJS default)
+- **Unit Tests**: Service and controller testing
+- **Integration Tests**: Full request/response cycle testing
+- **Location**: `apps/backend/src/**/*.spec.ts`
 
-### 9.3. Testing Best Practices
+### 9.3. Python Testing (pytest)
+
+- **Framework**: pytest for Python testing
+- **Coverage**: Unit tests for analysis functions
+- **Location**: `apps/data-service/tests/`
+
+### 9.4. Testing Best Practices
 
 ```typescript
-// Component testing example
+// Frontend component testing
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Button } from './Button';
@@ -580,31 +1120,83 @@ describe('Button', () => {
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 });
+
+// Backend controller testing
+import { Test, TestingModule } from '@nestjs/testing';
+import { DataController } from './data.controller';
+import { DataService } from './data.service';
+
+describe('DataController', () => {
+  let controller: DataController;
+  let service: DataService;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [DataController],
+      providers: [DataService],
+    }).compile();
+
+    controller = module.get<DataController>(DataController);
+    service = module.get<DataService>(DataService);
+  });
+
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
+  });
+});
 ```
 
 ## 10. Development Guidelines
 
-### 10.1. Architecture Guidelines
+### 10.1. Monorepo Architecture Guidelines
 
-- **Module Organization**: Business logic organized in `src/modules/` with domain/types/enums structure
-- **Component Architecture**: Atomic design principles in `src/core/components/` with React.FC and memo
-- **Import Standards**: Library imports first, alphabetical ordering, alias usage (@/)
-- **Domain Layer**: Each module has a `domain/` folder containing types and enums
-- **Core Infrastructure**: Shared functionality in `src/core/` (API, routing, hooks, i18n)
+- **Workspace Organization**: Apps in `apps/`, shared code in `packages/`
+- **Service Independence**: Each service can be developed and deployed independently
+- **Shared Types**: Use workspace protocol for TypeScript types across services
+- **Task Orchestration**: Leverage Turborepo for efficient builds and tests
+- **Port Management**: Frontend (5173), Backend (3000), Python (8000)
 
-### 10.2. Performance Guidelines
+### 10.2. Frontend Architecture Guidelines
 
-- **Optimization Strategies**: Code splitting, lazy loading, memoization
-- **Memory Management**: Proper cleanup of subscriptions and event listeners
-- **Bundle Analysis**: Regular monitoring of bundle sizes with Vite build analyzer
+- **Module Organization**: Business logic in `apps/frontend/src/modules/` with domain/types/enums
+- **Component Architecture**: Atomic design in `apps/frontend/src/core/components/`
+- **Import Standards**: Library imports first, alphabetical ordering, @/ alias
+- **State Management**: Zustand for client state, React Query for server state
+- **API Integration**: Use dataApi.ts for file uploads, React Query for caching
 
-### 10.3. Documentation Standards
+### 10.3. Backend Architecture Guidelines
+
+- **Modular Structure**: NestJS modules for different features
+- **API Gateway Pattern**: Backend proxies to Python service for data processing
+- **File Handling**: Multer middleware for multipart uploads
+- **CORS Configuration**: Enabled for frontend origin
+- **Error Handling**: Proper HTTP exceptions and error responses
+
+### 10.4. Python Service Guidelines
+
+- **FastAPI Structure**: RESTful endpoints for data analysis
+- **Data Processing**: Pandas for Excel, ElementTree for XML
+- **File Validation**: Proper file type validation before processing
+- **CORS**: Configured for backend communication
+- **Cleanup**: Remove uploaded files after processing
+
+### 10.5. Performance Guidelines
+
+- **Frontend Optimization**: Code splitting, lazy loading, memoization with React.memo
+- **Backend Optimization**: Efficient file streaming, proper memory management
+- **Python Optimization**: Pandas optimizations for large datasets
+- **Caching**: Turborepo caching for builds, React Query for API responses
+- **Bundle Analysis**: Regular monitoring with Vite build analyzer
+
+### 10.6. Documentation Standards
 
 - **Code Documentation**: Comprehensive inline comments for complex logic
 - **Component Documentation**: Props interfaces with JSDoc comments
 - **API Documentation**: Clear documentation for all service endpoints
+- **Type Documentation**: Shared types fully documented in packages/shared
+- **Architecture Docs**: Keep technical-architecture-rule.md updated
 
-This document serves as the comprehensive guide for developing within the React Boilerplate workspace, ensuring consistency, maintainability, and scalability across the application.
+This document serves as the comprehensive guide for developing within the Bun + Turborepo monorepo, ensuring consistency, maintainability, and scalability across all services.
 
 ```
 

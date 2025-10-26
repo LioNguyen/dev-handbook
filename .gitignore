@@ -50,3 +50,25 @@ temp/
 # OS generated files
 Thumbs.db
 ehthumbs.db
+
+# Turborepo
+.turbo/
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+*.egg
+*.egg-info/
+.pytest_cache/
+
+# Backend uploads
+uploads/
+apps/backend/uploads/
+
+# Build outputs
+build/

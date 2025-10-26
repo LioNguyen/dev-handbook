@@ -32,6 +32,7 @@ export default defineConfig({
       '@/store': path.resolve(__dirname, './src/shared/store'),
       '@/types': path.resolve(__dirname, './src/shared/types'),
       '@/styles': path.resolve(__dirname, './src/shared/styles'),
+      shared: path.resolve(__dirname, '../../packages/shared/src'),
     },
   },
   build: {
@@ -50,11 +51,17 @@ export default defineConfig({
   },
   server: {
     host: true,
-    port: 3000,
+    port: 5173,
     open: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+    },
   },
   preview: {
     host: true,
-    port: 3000,
+    port: 4173,
   },
 })

@@ -1,0 +1,36 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "bunx nest start --watch",
+    "build": "bunx nest build",
+    "start": "node dist/apps/backend/src/main",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "type-check": "bunx tsc --noEmit",
+    "clean": "rm -rf dist",
+    "clean:all": "rm -rf dist node_modules && bun install"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.3.0",
+    "@nestjs/core": "^10.3.0",
+    "@nestjs/platform-express": "^10.3.0",
+    "@nestjs/config": "^3.1.1",
+    "axios": "^1.11.0",
+    "form-data": "^4.0.0",
+    "multer": "^1.4.5-lts.1",
+    "reflect-metadata": "^0.2.1",
+    "rxjs": "^7.8.1",
+    "shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^10.3.0",
+    "@nestjs/schematics": "^10.1.0",
+    "@types/express": "^4.17.21",
+    "@types/multer": "^1.4.11",
+    "@types/node": "^24.2.1",
+    "eslint": "^9.33.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "~5.8.3"
+  }
+}
