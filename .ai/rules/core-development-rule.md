@@ -1,27 +1,5 @@
 # Core Development Rules for React Boilerplate
 
-## Table of Contents
-
-- [Core Development Rules for React Boilerplate](#core-development-rules-for-react-boilerplate)
-  - [Table of Contents](#table-of-contents)
-  - [1. Overview](#1-overview)
-  - [2. ⚠️ CRITICAL: Modern React Application Scope](#2-️-critical-modern-react-application-scope)
-    - [2.1. Repository Scope Definition:](#21-repository-scope-definition)
-    - [2.2. Explicitly Out of Scope:](#22-explicitly-out-of-scope)
-  - [3. Core Principles](#3-core-principles)
-    - [3.1. Modern React Development Approach](#31-modern-react-development-approach)
-    - [3.2. Documentation as Critical Infrastructure](#32-documentation-as-critical-infrastructure)
-    - [3.3. Component-First Thinking](#33-component-first-thinking)
-  - [4. 🔥 Critical Rules (ALWAYS Follow)](#4--critical-rules-always-follow)
-    - [4.1. Build Validation Before Code Task Completion](#41-build-validation-before-code-task-completion)
-    - [4.2. Documentation-First Development](#42-documentation-first-development)
-    - [4.3. Critical Documentation Review](#43-critical-documentation-review)
-  - [5. 🏗️ React Architecture Rules](#5-️-react-architecture-rules)
-    - [5.1. Component Library Management](#51-component-library-management)
-    - [5.2. Domain Boundary Management](#52-domain-boundary-management)
-  - [6. 📋 Code Quality Standards for React](#6--code-quality-standards-for-react)
-  - [7. Related Guidelines](#7-related-guidelines)
-
 ## 1. Overview
 
 This document establishes the fundamental development principles and standards for the React Boilerplate project. These rules ensure consistency, maintainability, and scalability across the modern React application built with Vite, TypeScript, and contemporary tooling.

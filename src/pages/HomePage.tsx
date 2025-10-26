@@ -1,30 +1,5 @@
-import { Link } from 'react-router-dom'
-import { ArrowRight, Shield, Zap, Users, Code } from 'lucide-react'
-import { Button, Card } from '@/components/atoms'
-
-import { type LucideIcon } from 'lucide-react'
-
-const FeatureCard = ({
-  icon: Icon,
-  title,
-  description,
-}: {
-  icon: LucideIcon
-  title: string
-  description: string
-}) => (
-  <Card className="p-6 text-center">
-    <div className="mb-4 flex justify-center">
-      <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-        <Icon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-      </div>
-    </div>
-    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
-      {title}
-    </h3>
-    <p className="text-gray-600 dark:text-gray-400">{description}</p>
-  </Card>
-)
+import { ArrowRight, Code } from 'lucide-react'
+import { Button } from '@/core/components/atoms'
 
 export const HomePage = () => {
   return (
@@ -41,19 +16,13 @@ export const HomePage = () => {
                 React Boilerplate
               </span>
             </div>
-
-            <div className="flex items-center gap-4">
-              <Link to="/dashboard">
-                <Button>Go to Dashboard</Button>
-              </Link>
-            </div>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto text-center">
+        <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-gray-100 mb-6">
             Production-Ready
             <span className="text-blue-600 dark:text-blue-400">
@@ -68,75 +37,14 @@ export const HomePage = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/dashboard">
-              <Button size="lg" className="w-full sm:w-auto">
-                Get Started
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
+            <Button size="lg" className="w-full sm:w-auto">
+              Get Started
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
             <Button variant="outline" size="lg" className="w-full sm:w-auto">
               View Documentation
             </Button>
           </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-800">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-              Everything You Need
-            </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-400">
-              Built with modern tools and best practices for enterprise
-              applications
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <FeatureCard
-              icon={Shield}
-              title="Type Safe"
-              description="Full TypeScript support with strict type checking and inference"
-            />
-            <FeatureCard
-              icon={Zap}
-              title="Fast Development"
-              description="Hot reload, dev tools, and optimized build process with Vite"
-            />
-            <FeatureCard
-              icon={Users}
-              title="Authentication"
-              description="Complete auth system with login, register, and protected routes"
-            />
-            <FeatureCard
-              icon={Code}
-              title="Modern Stack"
-              description="React 19, TanStack Query, Zustand, and Tailwind CSS"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <Card className="p-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-              Ready to Build Something Amazing?
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Start with a solid foundation and focus on building your features.
-            </p>
-
-            <Link to="/dashboard">
-              <Button size="lg">
-                Get Started Now
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </Card>
         </div>
       </section>
 

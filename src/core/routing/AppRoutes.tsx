@@ -1,9 +1,9 @@
 import { Suspense } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import { LoadingPage } from '@/components/atoms'
-import { ErrorBoundary } from '@/components/organisms'
+import { LoadingPage } from '@/core/components/atoms'
+import { ErrorBoundary } from '@/core/components/organisms'
 import { useRoutePerformance } from '@/shared/hooks/usePerformance'
-import { HomePage, DashboardPage, NotFoundPage } from './routes'
+import { HomePage, NotFoundPage } from './routes'
 
 // Route wrapper with performance monitoring
 interface PerformantRouteProps {
@@ -50,16 +50,6 @@ export const AppRoutes = () => {
         element={
           <LazyRoute routeName="home">
             <HomePage />
-          </LazyRoute>
-        }
-      />
-
-      {/* Dashboard route */}
-      <Route
-        path="/dashboard"
-        element={
-          <LazyRoute routeName="dashboard">
-            <DashboardPage />
           </LazyRoute>
         }
       />

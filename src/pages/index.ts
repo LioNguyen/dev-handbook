@@ -5,7 +5,7 @@
 export { HomePage } from './HomePage'
 
 // Protected pages
-export { DashboardPage } from './DashboardPage'
+// export { DashboardPage } from './DashboardPage'
 // export { AboutPage } from './AboutPage'
 // export { ContactPage } from './ContactPage'
 // export { LandingPage } from './LandingPage'

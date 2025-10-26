@@ -1,5 +1,13 @@
 ## User Preferences Rules for AI Interaction
 
+### 0. **Project Architecture Compliance**
+
+- **Follow Core Development Rules**: ALWAYS adhere to the principles and guidelines defined in `.ai/rules/core-development-rule.md`
+- **Follow Technical Architecture**: ALWAYS follow the technical architecture standards and patterns defined in `.ai/rules/technical-architecture-rule.md`
+- **Critical Rules Priority**: These architectural documents take precedence over general preferences when conflicts arise
+- **Documentation-First**: Follow the documentation-first development approach mandated in core development rules
+- **Build Validation**: Execute build validation process for all code-related tasks as specified in core rules
+
 ### 1. **Language & Clarity**
 
 - **Use English**: Respond exclusively in English to ensure clear communication.

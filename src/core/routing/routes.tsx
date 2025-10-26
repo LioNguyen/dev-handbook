@@ -6,12 +6,6 @@ export const HomePage = lazyLoaders.page(
   'HomePage'
 )
 
-export const DashboardPage = lazyLoaders.page(
-  () =>
-    import('@/pages/DashboardPage').then((m) => ({ default: m.DashboardPage })),
-  'DashboardPage'
-)
-
 // Not found page (keep this non-lazy for immediate feedback)
 export const NotFoundPage = () => (
   <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">

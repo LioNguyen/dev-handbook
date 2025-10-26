@@ -21,5 +21,8 @@ export { useI18n } from './i18n'
 export { locales, getLocaleData } from './i18n'
 export type { SupportedLocale } from './i18n'
 
+// Components exports
+export * from './components'
+
 // Re-export commonly used items for convenience
 export { API_ENDPOINTS } from './api/endpoints'

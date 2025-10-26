@@ -1,5 +1,5 @@
 import React from 'react'
-import { LoadingSpinner } from '@/components/atoms'
+import { LoadingSpinner } from '@/core/components/atoms'
 
 // HOC for adding loading states
 export const withLoading = <P extends object>(

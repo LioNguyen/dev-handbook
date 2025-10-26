@@ -1,5 +1,5 @@
 import type { ComponentType, ReactNode } from 'react'
-import { LazyComponentWrapper } from '@/components/organisms'
+import { LazyComponentWrapper } from '@/core/components/organisms'
 
 /**
  * Higher-order component to wrap lazy components with error boundary and suspense

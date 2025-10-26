@@ -1,48 +1,4 @@
-````markdown
 # Technical Architecture Documentation
-
-## Table of Contents
-
-1. [⚠️ CRITICAL: Modern React Application Architecture](#1-️-critical-modern-react-application-architecture)
-   1.1. [Architecture Scope](#11-architecture-scope)
-   1.2. [Styling Standards](#12-styling-standards)
-   1.3. [shadcn/ui Integration Guidelines](#13-shadcnui-integration-guidelines)
-   1.4. [Version Compatibility Verification](#14-version-compatibility-verification)
-   1.5. [Version Check Process](#15-version-check-process)
-   1.6. [External Dependencies](#16-external-dependencies)
-2. [Overview](#2-overview)
-   2.1. [Project Description](#21-project-description)
-   2.2. [Technology Stack](#22-technology-stack)
-3. [Architecture Principles](#3-architecture-principles)
-   3.1. [Modern React Principles](#31-modern-react-principles)
-   3.2. [Code Organization Principles](#32-code-organization-principles)
-4. [System Architecture](#4-system-architecture)
-   4.1. [High-Level Architecture](#41-high-level-architecture)
-   4.2. [Application Communication](#42-application-communication)
-5. [Application Layer](#5-application-layer)
-   5.1. [Application Structure](#51-application-structure)
-   5.2. [Component Standards](#52-component-standards)
-   5.3. [Route Structure](#53-route-structure)
-   5.4. [State Management Patterns](#54-state-management-patterns)
-   5.5. [API Structure](#55-api-structure)
-6. [Component Architecture](#6-component-architecture)
-   6.1. [Atomic Design Structure](#61-atomic-design-structure)
-   6.2. [Component Organization](#62-component-organization)
-   6.3. [Component Documentation Standards](#63-component-documentation-standards)
-7. [Development Infrastructure](#7-development-infrastructure)
-   7.1. [Vite Configuration](#71-vite-configuration)
-   7.2. [Build Configuration](#72-build-configuration)
-8. [Build and Deployment](#8-build-and-deployment)
-   8.1. [Build Process](#81-build-process)
-   8.2. [Bun Scripts](#82-bun-scripts)
-9. [Testing Strategy](#9-testing-strategy)
-   9.1. [Unit Testing](#91-unit-testing)
-   9.2. [End-to-End Testing](#92-end-to-end-testing)
-   9.3. [Testing Best Practices](#93-testing-best-practices)
-10. [Development Guidelines](#10-development-guidelines)
-    10.1. [Architecture Guidelines](#101-architecture-guidelines)
-    10.2. [Performance Guidelines](#102-performance-guidelines)
-    10.3. [Documentation Standards](#103-documentation-standards)
 
 ## 1. ⚠️ CRITICAL: Modern React Application Architecture
 
@@ -148,8 +104,11 @@ React Boilerplate is a modern React application built with contemporary tools an
 │                    Component Layers                        │
 │  ┌─────────────┬─────────────┬─────────────┬─────────────┐  │
 │  │   Atoms     │  Molecules  │  Organisms  │  Templates  │  │
+│  │             │             │             │             │  │
+│  │        Core Components (Reusable UI)                  │  │
 │  ├─────────────┼─────────────┼─────────────┼─────────────┤  │
-│  │   Domains   │   Shared    │    Core     │    Pages    │  │
+│  │   Modules   │   Shared    │    Core     │    Pages    │  │
+│  │  (Domain)   │  (Utils)    │   (Infra)   │  (Routes)   │  │
 │  └─────────────┴─────────────┴─────────────┴─────────────┘  │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -165,33 +124,43 @@ React Boilerplate is a modern React application built with contemporary tools an
 
 ### 5.1. Application Structure
 
-The application follows a domain-driven structure:
+The application follows a modular structure with atomic design principles:
 
 ```
 src/
-├── components/
-│   ├── atoms/             # Basic UI building blocks
-│   ├── molecules/         # Composite components
-│   ├── organisms/         # Complex UI sections
-│   └── templates/         # Page layout components
-├── domains/               # Business domain modules
-│   ├── auth/              # Authentication domain
-│   ├── dashboard/         # Dashboard domain
-│   └── users/             # User management domain
-├── pages/                 # Page components
-├── core/                  # Core application logic
+├── core/                  # Core application infrastructure
 │   ├── api/               # API layer and React Query setup
+│   ├── components/        # Reusable UI components (Atomic Design)
+│   │   ├── atoms/         # Basic UI building blocks
+│   │   ├── molecules/     # Composite components
+│   │   ├── organisms/     # Complex UI sections
+│   │   └── templates/     # Page layout components
 │   ├── config/            # Application configuration
 │   ├── hooks/             # Shared custom hooks
 │   ├── i18n/              # Internationalization
+│   ├── locale/            # Locale translations
 │   └── routing/           # Route configuration
-└── shared/                # Shared utilities and resources
-    ├── components/        # Shared UI components
-    ├── hooks/             # Shared custom hooks
-    ├── lib/               # Utility functions
-    ├── store/             # Global state stores
-    ├── types/             # TypeScript type definitions
-    └── utils/             # Helper functions
+├── modules/               # Business domain modules
+│   ├── auth/              # Authentication module
+│   │   ├── domain/        # Domain layer
+│   │   │   ├── types/     # Type definitions
+│   │   │   └── enums/     # Enumerations
+│   │   ├── api/           # API services
+│   │   ├── components/    # Domain-specific components
+│   │   └── hooks/         # Domain-specific hooks
+│   └── users/             # User management module
+│       └── (same structure)
+├── pages/                 # Page components
+├── shared/                # Shared utilities and resources
+│   ├── assets/            # Static assets
+│   ├── hooks/             # Shared custom hooks
+│   ├── lib/               # Utility functions
+│   ├── mocks/             # Mock data for development
+│   ├── store/             # Global state stores (Zustand)
+│   ├── styles/            # Global styles
+│   ├── types/             # Shared TypeScript types
+│   └── utils/             # Helper functions
+└── test/                  # Test configuration and utilities
 ```
 
 ### 5.2. Component Standards
@@ -261,6 +230,8 @@ export const UserCard: FC<UserCardProps> = memo(({
 - **Custom imports second**: Internal modules and components
 - **Alphabetical ordering**: Within each group, maintain alphabetical order
 - **Alias imports**: Use @/ for internal module imports
+- **Core Components**: Import from `@/core/components/` for reusable UI components
+- **Module Components**: Import from `@/modules/[module-name]/` for domain-specific components
 
 ```typescript
 // ✅ Correct import organization
@@ -268,10 +239,10 @@ import { memo, useCallback, useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import type { FC } from 'react'
 
-import { Button } from '@/components/atoms'
+import { Button } from '@/core/components/atoms'
 import { UserService } from '@/core/api/UserService'
 import { useAuthStore } from '@/shared/store/auth'
-import type { User } from '@/shared/types/User'
+import type { User } from '@/modules/users/domain/types'
 ```
 
 #### 5.2.3. Technology Preferences
@@ -279,7 +250,8 @@ import type { User } from '@/shared/types/User'
 - **State Management**: Use Zustand for new global state management
 - **Server State**: Use React Query (TanStack Query) for all server state
 - **Styling**: Use Tailwind CSS utility classes for styling
-- **Components**: Build components following atomic design principles
+- **Components**: Build components following atomic design principles in `src/core/components/`
+- **Module Organization**: Organize domain logic in `src/modules/` with domain/types/enums structure
 
 ```typescript
 // State management with Zustand
@@ -306,6 +278,26 @@ export const useUsers = () => {
     queryFn: () => userService.getUsers(),
   })
 }
+```
+
+**Module Structure Pattern:**
+
+```typescript
+// Module organization example: src/modules/auth/
+auth/
+├── domain/           # Domain layer
+│   ├── types/        # Type definitions
+│   │   └── index.ts
+│   ├── enums/        # Enumerations
+│   │   └── index.ts
+│   └── index.ts      # Domain exports
+├── api/              # API services
+│   └── authService.ts
+├── components/       # Module-specific components
+│   └── LoginForm.tsx
+├── hooks/            # Module-specific hooks
+│   └── useAuth.ts
+└── index.ts          # Module exports
 ```
 
 ### 5.3. Route Structure
@@ -467,30 +459,42 @@ export const userService = new UserService(process.env.VITE_API_URL!)
 ### 6.2. Component Organization
 
 ```
-src/components/
+src/core/components/
 ├── atoms/
 │   ├── Button/
 │   │   ├── Button.tsx
 │   │   ├── Button.test.tsx
 │   │   └── index.ts
+│   ├── Card/
+│   ├── Input/
+│   ├── Loading/
 │   └── index.ts
 ├── molecules/
-│   ├── SearchInput/
-│   │   ├── SearchInput.tsx
-│   │   ├── SearchInput.test.tsx
+│   ├── FormErrors/
+│   │   ├── FormErrors.tsx
+│   │   ├── FormErrors.test.tsx
 │   │   └── index.ts
+│   ├── SearchInput/
+│   ├── UserAvatar/
+│   ├── ValidatedInput/
+│   ├── LazyErrorFallback/
 │   └── index.ts
 ├── organisms/
-│   ├── NavigationBar/
-│   │   ├── NavigationBar.tsx
-│   │   ├── NavigationBar.test.tsx
+│   ├── ErrorBoundary/
+│   │   ├── ErrorBoundary.tsx
+│   │   ├── ErrorBoundary.test.tsx
 │   │   └── index.ts
+│   ├── NavigationBar/
+│   ├── LazyComponentWrapper/
+│   ├── ThemeProvider/
 │   └── index.ts
 └── templates/
-    ├── DashboardLayout/
-    │   ├── DashboardLayout.tsx
-    │   ├── DashboardLayout.test.tsx
+    ├── AuthLayout/
+    │   ├── AuthLayout.tsx
+    │   ├── AuthLayout.test.tsx
     │   └── index.ts
+    ├── DashboardLayout/
+    ├── ProtectedRoute/
     └── index.ts
 ```
 
@@ -582,9 +586,11 @@ describe('Button', () => {
 
 ### 10.1. Architecture Guidelines
 
-- **Domain Organization**: Domain-driven module structure
-- **Component Architecture**: Atomic design principles with React.FC and memo
-- **Import Standards**: Library imports first, alphabetical ordering, alias usage
+- **Module Organization**: Business logic organized in `src/modules/` with domain/types/enums structure
+- **Component Architecture**: Atomic design principles in `src/core/components/` with React.FC and memo
+- **Import Standards**: Library imports first, alphabetical ordering, alias usage (@/)
+- **Domain Layer**: Each module has a `domain/` folder containing types and enums
+- **Core Infrastructure**: Shared functionality in `src/core/` (API, routing, hooks, i18n)
 
 ### 10.2. Performance Guidelines
 
@@ -599,4 +605,7 @@ describe('Button', () => {
 - **API Documentation**: Clear documentation for all service endpoints
 
 This document serves as the comprehensive guide for developing within the React Boilerplate workspace, ensuring consistency, maintainability, and scalability across the application.
-````
+
+```
+
+```
