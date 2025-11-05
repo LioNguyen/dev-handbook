@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/shared/store/authStore'
+import { useAuthStore } from '@/modules/zustand-demo/store'
 import { useCallback } from 'react'
 
 /**

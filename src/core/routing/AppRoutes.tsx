@@ -1,9 +1,15 @@
-import { Suspense } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import { LoadingPage } from '@/core/components/atoms'
 import { ErrorBoundary } from '@/core/components/organisms'
 import { useRoutePerformance } from '@/shared/hooks/usePerformance'
-import { HomePage, NotFoundPage } from './routes'
+import {
+  HomePage,
+  NotFoundPage,
+  StateManagementDemosPage,
+  ContextDemoPage,
+  ReduxDemoPage,
+  ReduxSagaDemoPage,
+  ZustandDemoPage,
+} from './routes'
 
 // Route wrapper with performance monitoring
 interface PerformantRouteProps {
@@ -25,17 +31,15 @@ const PerformantRoute = ({ children, routeName }: PerformantRouteProps) => {
   return <>{children}</>
 }
 
-// Route wrapper with suspense and error boundary
-interface LazyRouteProps {
+// Route wrapper with error boundary
+interface RouteWrapperProps {
   children: React.ReactNode
   routeName: string
 }
 
-const LazyRoute = ({ children, routeName }: LazyRouteProps) => (
+const RouteWrapper = ({ children, routeName }: RouteWrapperProps) => (
   <ErrorBoundary>
-    <Suspense fallback={<LoadingPage />}>
-      <PerformantRoute routeName={routeName}>{children}</PerformantRoute>
-    </Suspense>
+    <PerformantRoute routeName={routeName}>{children}</PerformantRoute>
   </ErrorBoundary>
 )
 
@@ -48,9 +52,55 @@ export const AppRoutes = () => {
       <Route
         path="/"
         element={
-          <LazyRoute routeName="home">
+          <RouteWrapper routeName="home">
             <HomePage />
-          </LazyRoute>
+          </RouteWrapper>
+        }
+      />
+
+      {/* State Management Demos */}
+      <Route
+        path="/demos"
+        element={
+          <RouteWrapper routeName="state-management-demos">
+            <StateManagementDemosPage />
+          </RouteWrapper>
+        }
+      />
+
+      <Route
+        path="/demos/context"
+        element={
+          <RouteWrapper routeName="context-demo">
+            <ContextDemoPage />
+          </RouteWrapper>
+        }
+      />
+
+      <Route
+        path="/demos/redux"
+        element={
+          <RouteWrapper routeName="redux-demo">
+            <ReduxDemoPage />
+          </RouteWrapper>
+        }
+      />
+
+      <Route
+        path="/demos/redux-saga"
+        element={
+          <RouteWrapper routeName="redux-saga-demo">
+            <ReduxSagaDemoPage />
+          </RouteWrapper>
+        }
+      />
+
+      <Route
+        path="/demos/zustand"
+        element={
+          <RouteWrapper routeName="zustand-demo">
+            <ZustandDemoPage />
+          </RouteWrapper>
         }
       />
 

@@ -6,6 +6,8 @@ import { AppRoutes } from '@/core/routing'
 import { usePerformanceBudget } from '@/shared/hooks/usePerformance'
 import { useEffect } from 'react'
 import './App.scss'
+import { Provider } from 'react-redux'
+import { store } from '@/modules/redux-demo/store'
 
 function App() {
   const budgetResults = usePerformanceBudget()
@@ -22,7 +24,9 @@ function App() {
       <BrowserRouter>
         <QueryProvider>
           <ThemeProvider>
-            <AppRoutes />
+            <Provider store={store}>
+              <AppRoutes />
+            </Provider>
           </ThemeProvider>
         </QueryProvider>
       </BrowserRouter>

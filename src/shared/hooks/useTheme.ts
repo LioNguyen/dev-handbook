@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useThemeStore } from '@/shared/store/themeStore'
+import { useThemeStore } from '@/modules/zustand-demo/store'
 
 export function useTheme() {
   const {

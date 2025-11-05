@@ -3,6 +3,7 @@
 
 // Public pages
 export { HomePage } from './HomePage'
+export { StateManagementDemos } from './StateManagementDemos'
 
 // Protected pages
 // export { DashboardPage } from './DashboardPage'

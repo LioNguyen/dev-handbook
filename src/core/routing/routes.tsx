@@ -1,10 +1,10 @@
-import { lazyLoaders } from './lazyLoader'
-
-// Lazy load page components with enhanced loading
-export const HomePage = lazyLoaders.page(
-  () => import('@/pages/HomePage').then((m) => ({ default: m.HomePage })),
-  'HomePage'
-)
+// Direct imports without lazy loading
+export { HomePage } from '@/pages/HomePage'
+export { StateManagementDemos as StateManagementDemosPage } from '@/pages/StateManagementDemos'
+export { ContextDemoPage } from '@/modules/context-demo/components'
+export { ReduxDemoPage } from '@/modules/redux-demo/components'
+export { ZustandDemoPage } from '@/modules/zustand-demo/components'
+export { ReduxSagaDemoPage } from '@/modules/redux-saga-demo/components'
 
 // Not found page (keep this non-lazy for immediate feedback)
 export const NotFoundPage = () => (
